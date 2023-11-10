@@ -1,13 +1,26 @@
 {
   "ignorePatterns": ["!**/*"],
+  "parserOptions": {
+    "project": ["tsconfig.json", "tsconfig.app.json"]
+  },
   "overrides": [
     {
-      "files": ["*.ts", "*.tsx"],
-      "rules": {}
+      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "rules": {
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            "selector": "variable",
+            "format": ["camelCase", "snake_case", "PascalCase"]
+          }
+        ]
+      }
     },
     {
-      "files": ["*.js", "*.jsx"],
-      "rules": {}
+      "files": ["*.jsx", "*.tsx"],
+      "rules": {
+        "jsdoc/require-jsdoc": "off"
+      }
     }
   ],
   "extends": ["plugin:@nx/react", "./.eslintrc.base.json"]

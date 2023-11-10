@@ -5,10 +5,14 @@
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "extends": ["@saritasa/eslint-config-saritasa"],
       "rules": {
+        "no-tabs": "off",
+        "@typescript-eslint/indent": ["error", "tab"],
         "@nx/enforce-module-boundaries": [
           "error",
           {
+            "allowCircularSelfDependency": true,
             "enforceBuildableLibDependency": true,
             "allow": [],
             "depConstraints": [
