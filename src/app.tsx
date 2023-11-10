@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Outlet } from 'react-router-dom';
+import { ConfigProvider } from 'antd';
 
 // Create a client
 const queryClient = new QueryClient();
@@ -7,7 +8,9 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
+      <ConfigProvider>
+        <Outlet />
+      </ConfigProvider>
     </QueryClientProvider>
   );
 }
