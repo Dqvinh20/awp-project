@@ -38,11 +38,12 @@ function Hero() {
         {/* Hero content */}
         <div className="pt-32 pb-12 md:pt-40 md:pb-20">
           {/* Section header */}
-          <Parallax
-            animation={[{ opacity: 0, playScale: [0.8, 1] }]}
-            style={{ opacity: 1 }}
-          >
-            <div className="text-center pb-12 md:pb-16">
+
+          <div className="text-center pb-12 md:pb-16">
+            <Parallax
+              animation={[{ opacity: 0, playScale: [0.8, 1] }]}
+              style={{ opacity: 1 }}
+            >
               <h1
                 className="text-5xl md:text-6xl font-extrabold leading-tighter tracking-tighter mb-4"
                 data-aos="zoom-y-out"
@@ -52,7 +53,12 @@ function Hero() {
                   classroom
                 </span>
               </h1>
-              <div className="max-w-3xl mx-auto">
+            </Parallax>
+            <div className="max-w-3xl mx-auto">
+              <Parallax
+                animation={[{ opacity: 0, playScale: [0.7, 1] }]}
+                style={{ opacity: 1 }}
+              >
                 <p
                   className="text-xl text-gray-600 mb-8"
                   data-aos="zoom-y-out"
@@ -60,14 +66,19 @@ function Hero() {
                 >
                   A advanced online classroom for students and teachers.
                 </p>
+              </Parallax>
+              <Parallax
+                animation={[{ opacity: 0, playScale: [0.6, 1] }]}
+                style={{ opacity: 1 }}
+              >
                 <div
-                  className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center"
+                  className="max-w-full grid grid-rows-2 sm:mx-auto sm:max-w-none sm:flex sm:justify-center"
                   data-aos="zoom-y-out"
                   data-aos-delay="300"
                 >
                   <div>
                     <a
-                      className="px-6 py-3 rounded btn text-white hover:text-white bg-blue-600 hover:bg-blue-700 w-full mb-4 sm:w-auto sm:mb-0"
+                      className="block w-full mb-4  px-6 py-3 rounded btn text-white hover:text-white bg-blue-600 hover:bg-blue-700 sm:w-auto sm:mb-0"
                       href="#0"
                     >
                       Start free trial
@@ -75,16 +86,16 @@ function Hero() {
                   </div>
                   <div>
                     <a
-                      className="px-6 py-3 rounded btn text-white hover:text-white bg-gray-900 hover:bg-gray-800 w-full sm:w-auto sm:ml-4"
+                      className="block w-full px-6 py-3 rounded btn text-white hover:text-white bg-gray-900 hover:bg-gray-800 sm:w-auto sm:ml-4"
                       href="#0"
                     >
                       Learn more
                     </a>
                   </div>
                 </div>
-              </div>
+              </Parallax>
             </div>
-          </Parallax>
+          </div>
           <div style={{ height: '145px' }}></div>
         </div>
       </div>
