@@ -2,7 +2,7 @@ import { Navigate, Outlet } from 'react-router-dom';
 
 function AppLayout() {
   // TODO: Replace this with your own authentication logic.
-  const isAuthenticated = false;
+  const isAuthenticated = true;
 
   const renderBody = () => (
     <>
