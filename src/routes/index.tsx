@@ -7,8 +7,10 @@ import Home from '@/pages/HomePage';
 import AuthLayout from '@/layouts/AuthLayout';
 import SignInPage from '@/pages/Auth/SignInPage';
 import LandingPage from '@/pages/LandingPage/index';
+import UserRouter from '@/pages/User/UserRouter';
 
-const router = createBrowserRouter([
+const 
+router = createBrowserRouter([
   {
     element: <App />,
     errorElement: <ErrorPage />,
@@ -33,6 +35,15 @@ const router = createBrowserRouter([
           {
             path: '/sign-in',
             element: <SignInPage />,
+          },
+        ],
+      },
+      {
+        element: <AppLayout />,
+        children: [
+          {
+            path: '/user/edit/:id',
+            element: < UserRouter/>,
           },
         ],
       },

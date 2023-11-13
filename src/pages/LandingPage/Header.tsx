@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-function Header() {
+function Header({avatar ,fullname}: any) {
   const [top, setTop] = useState<boolean>(true);
   const [showMenu, setShowMenu] = useState<boolean>(false);
 
@@ -30,6 +30,7 @@ function Header() {
           <nav className="hidden md:flex md:grow">
             {/* Desktop sign in links */}
             <ul className="flex grow justify-end flex-wrap items-center">
+              {!avatar && <>
               <li>
                 <a
                   href="/sign-in"
@@ -56,6 +57,7 @@ function Header() {
                   </svg>
                 </a>
               </li>
+              </>}
             </ul>
           </nav>
 
@@ -77,9 +79,10 @@ function Header() {
               </svg>
             </div>
             {/* Mobile navigation */}
-            {showMenu && (
+            { showMenu && (
               <div className="absolute top-full h-screen pb-16 z-20 left-0 w-full overflow-y-hidden bg-white">
                 <ul className="px-5 py-2 grid grid-rows-2 gap-2">
+                  {!avatar && <>
                   <li className="flex justify-center items-center">
                     <a
                       href="/sign-in"
@@ -106,6 +109,15 @@ function Header() {
                       </svg>
                     </a>
                   </li>
+                  </>}
+                  {avatar && <li className="flex justify-center items-center">
+                    <a
+                      href="/sign-in"
+                      className="font-medium text-gray-500 hover:text-gray-950 transition duration-150 ease-in-out"
+                    >
+                      {fullname}
+                    </a>
+                  </li>}
                 </ul>
               </div>
             )}

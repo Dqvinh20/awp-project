@@ -1,6 +1,6 @@
 import axios, { AxiosRequestHeaders } from 'axios';
 
-import { API_URL } from '@/config';
+import { API_URL } from '@/config/index';
 import jwtService from '@/services/JwtService';
 import authService from '@/services/AuthService';
 
@@ -8,7 +8,8 @@ const axiosClient = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': 'http://localhost:4200/*',
+    // crossDomain: true /
   },
   withCredentials: true,
 });
