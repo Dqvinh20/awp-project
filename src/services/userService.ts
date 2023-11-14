@@ -1,4 +1,5 @@
 import axiosClient from '@/app/AxiosClient';
+import { User } from '@/app/store/server/features/users/interfaces';
 
 /**
  * UserService.ts.
@@ -11,9 +12,9 @@ const userService = {
    * @param id - Get user.
    * @returns
    */
-  async getUser(id: string): Promise<any> {
-    const response: any = await axiosClient.get(`/users/${id}`);
-    return response;
+  async getUser(id?: string): Promise<User> {
+    const response = await axiosClient.get<User>(`/users/${id}`);
+    return response.data;
   },
 
   /**
@@ -23,8 +24,8 @@ const userService = {
    * @returns
    */
   async saveUser(id: string, data: object): Promise<any> {
-    const response: any = await axiosClient.patch(`/users/${id}`, data);
-    return response;
+    const response = await axiosClient.patch(`/users/${id}`, data);
+    return response.data;
   },
 };
 

@@ -9,9 +9,10 @@ import userService from '@/services/UserService';
  * @param userId - User id.
  * @returns
  */
-export const useGetUser = (userId: string) =>
+export const useGetUser = (userId?: string) =>
   useQuery<User>({
     queryKey: ['user', userId],
     queryFn: () => userService.getUser(userId),
     retry: false,
+    enabled: !!userId,
   });
