@@ -2,12 +2,13 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import App from '@/app';
 import ErrorPage from '@/pages/ErrorPage';
-import AppLayout from '@/layouts/AppLayout';
-import Home from '@/pages/HomePage';
+import AppLayout from '@/layouts/AppLayout/index';
+import Home from '@/pages/HomePage/index';
 import AuthLayout from '@/layouts/AuthLayout';
 import SignInPage from '@/pages/Auth/SignInPage';
 import LandingPage from '@/pages/LandingPage/index';
 import UserRouter from '@/pages/User/UserRouter';
+import ProtectedPage from '@/pages/ProtectedPage';
 
 const router = createBrowserRouter([
   {
@@ -19,11 +20,16 @@ const router = createBrowserRouter([
         element: <LandingPage />,
       },
       {
-        element: <AppLayout />,
+        element: <ProtectedPage />,
         children: [
           {
-            path: '/home',
-            element: <Home />,
+            element: <AppLayout />,
+            children: [
+              {
+                path: '/home',
+                element: <Home />,
+              },
+            ],
           },
           {
             path: '/users/edit/:id',
@@ -31,7 +37,6 @@ const router = createBrowserRouter([
           },
         ],
       },
-
       {
         element: <AuthLayout />,
         children: [

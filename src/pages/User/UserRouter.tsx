@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { Routes, Route, Navigate, Link, useParams } from 'react-router-dom';
 import { PlusOutlined } from '@ant-design/icons';
 import {
@@ -20,6 +20,7 @@ import {
 import EditUser from './EditUser';
 
 import useAuth from '@/hooks/useAuth';
+import { useGetUser } from '@/app/store/server/features/users/queries';
 
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
@@ -30,19 +31,25 @@ const normFile = (e: any) => {
   return e?.fileList;
 };
 
+const isMyProfile = false;
+
 export default function UserRouter() {
   const { id } = useParams();
-  const [componentDisabled, setComponentDisabled] = useState<boolean>(true);
   const { user_id } = useAuth();
 
-  useEffect(() => {
-    console.log(user_id, id);
-    console.log(user_id != id);
-    if (user_id != id) {
-      setComponentDisabled(true);
-    }
-  }, []);
-  return (
+  const [componentDisabled, setComponentDisabled] = useState<boolean>(
+    user_id !== id
+  );
+
+  const { isLoading, data, isError, error } = useGetUser(id);
+
+  if (isError) {
+    return <div>Error + {error.message}</div>;
+  }
+
+  return isLoading ? (
+    <div>Loading...</div>
+  ) : (
     <Form
       labelCol={{ span: 4 }}
       wrapperCol={{ span: 14 }}
