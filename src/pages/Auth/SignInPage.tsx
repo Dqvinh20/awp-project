@@ -2,9 +2,42 @@ import { Form, Input, Button, Checkbox, Card, ConfigProvider } from 'antd';
 import { MailOutlined, LockOutlined} from '@ant-design/icons';
 import { useState } from 'react';
 
+import { AxiosError } from 'axios';
+
+import { useSignIn } from '@/app/store/server/features/auth/mutations';
+import { SigninData } from '@/app/store/server/features/auth/interfaces';
+
+
 
 function SignInPage() {
+  const [form] = Form.useForm();
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const signIn = useSignIn();
+  
+  const onFinish = (values: SigninData) => {
+    signIn.mutate({
+      email: values.email,
+      password: values.password
+    
+    }, {onError(error) {
+      if(error instanceof AxiosError) {
+        if(error.response?.data.message === 'Wrong credentials!!') {
+          form.setFields([
+            {
+              name: 'email',
+              errors: [""],
+            },
+            {
+              name: 'password',
+              errors: ['Invalid email or password'],
+            },
+          ]);
+      }  
+      }
+    }
+    }
+    );  
+  }
   return (
     <ConfigProvider
       theme={{
@@ -15,26 +48,30 @@ function SignInPage() {
     >
       <div className="flex justify-center items-center h-screen bg-[url(../../src/assets/mountain.jpg)] bg-no-repeat bg-cover">
         <Card style={{ width: 400, height: 380}} className="bg-white bg-opacity-50 backdrop-blur">
-          <h1 className="text-center text-3xl font-bold ">Log In</h1>
-          <p className="text-center text-xs">Don't have an account yet? <a href="/sign-up" className='text-[#0AAE67]'>Register now!</a></p>
+          <h1 className="text-center text-3xl font-bold ">Sign In</h1>
+          <p className="text-center text-sm">Don't have an account yet? <a href="/sign-up" className='text-[#0AAE67]'>Register now!</a></p>
           <Form
             className="color-primary-500"
+            form={form}
             initialValues={{
               remember: true,
             }}
-            onFinish={() => {}}
+            onFinish={onFinish}
           >
             <Form.Item
-              name="username"
+              name="email"
+      
               className="my-5"
               rules={[
                 {
                   required: true,
-                  message: 'Please input your Username!',
+                  message: 'Please input your Email!',
                 },
               ]}
             >
-              <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder="Email" />
+              <Input 
+              defaultValue="johndoe@example.com"
+              prefix={<MailOutlined className="site-form-item-icon" />} placeholder="Email" />
             </Form.Item>
             <Form.Item
               className="my-5"
@@ -47,6 +84,8 @@ function SignInPage() {
               ]}
             >
               <Input.Password
+                
+                defaultValue="1232@asdS"
                 prefix={<LockOutlined className="site-form-item-icon" />}
                 type="password"
                 placeholder="Password"
@@ -67,7 +106,7 @@ function SignInPage() {
               className="mt-10"
               >
               <Button block type="primary"  htmlType="submit">
-                Log in
+                Sign in
               </Button>
             </Form.Item>
           </Form>
