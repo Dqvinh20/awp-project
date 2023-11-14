@@ -1,12 +1,8 @@
-/* eslint-disable no-console */
-import { Avatar, Dropdown, MenuProps } from 'antd';
-import {
-  AntDesignOutlined,
-  LogoutOutlined,
-  EditOutlined,
-} from '@ant-design/icons';
+import { Avatar, Dropdown, MenuProps, Spin } from 'antd';
+import { UserOutlined, LogoutOutlined, EditOutlined } from '@ant-design/icons';
 
 import jwtService from '@/services/JwtService';
+import { useGetMyInfo } from '@/app/store/server/features/users/queries';
 
 const items: MenuProps['items'] = [
   {
@@ -26,12 +22,14 @@ const items: MenuProps['items'] = [
 
 const menuItemClick: MenuProps['onClick'] = ({ key }) => {
   if (key === 'logout') {
-    window.location.href = '/';
     jwtService.removeToken();
+    window.location.href = '/';
   }
 };
 
 function AvatarMenu() {
+  const { isLoading, data, isError } = useGetMyInfo();
+
   return (
     <Dropdown
       menu={{
@@ -39,20 +37,27 @@ function AvatarMenu() {
         onClick: menuItemClick,
       }}
       trigger={['click']}
+      disabled={isLoading}
       className="flex items-center"
       placement="bottomLeft"
       arrow
     >
       <div
         onClick={(e) => e.preventDefault()}
-        className="cursor-pointer rounded-full p-0.5 hover:bg-gray-300"
+        className={`cursor-pointer rounded-full ${
+          isLoading ? 'p-3' : 'p-0.5 hover:bg-gray-300'
+        }`}
       >
-        <Avatar
-          size={{ xs: 34, sm: 34, md: 42, lg: 42, xl: 42, xxl: 42 }}
-          icon={<AntDesignOutlined />}
-          alt="Your profile picture"
-          src="https://i.pravatar.cc/300"
-        />
+        {isLoading ? (
+          <Spin />
+        ) : (
+          <Avatar
+            size={{ xs: 34, sm: 34, md: 42, lg: 42, xl: 42, xxl: 42 }}
+            icon={<UserOutlined />}
+            alt="Your profile picture"
+            src={isError ? null : data?.avatar}
+          />
+        )}
       </div>
     </Dropdown>
   );
