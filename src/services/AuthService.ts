@@ -17,11 +17,11 @@ const authService = {
    * @param password - User password.
    */
   async signin(email: string, password: string): Promise<LoginResponse> {
-    const response: LoginResponse = await axiosClient.post('/auth/sign-in', {
+    const response = await axiosClient.post('/auth/sign-in', {
       email,
       password,
     });
-    return response;
+    return response.data;
   },
 
   /**
