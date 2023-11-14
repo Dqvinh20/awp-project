@@ -85,7 +85,7 @@ function createAxiosResponseInterceptor(): void {
         .catch((refreshError) => {
           // Remove the access token and redirect to sign in page
           jwtService.removeToken();
-          window.location.href = '/sign-in';
+          window.location.href = '/';
           return Promise.reject(refreshError);
         })
         .finally(createAxiosResponseInterceptor);
