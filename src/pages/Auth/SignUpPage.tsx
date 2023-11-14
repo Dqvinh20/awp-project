@@ -1,19 +1,58 @@
 /* eslint-disable max-lines-per-function */
-import {
-  Form,
-  Input,
-  Button,
-  Checkbox,
-  Card,
-  ConfigProvider,
-  Space,
-} from 'antd';
+import { Form, Input, Button, Card, ConfigProvider, Space } from 'antd';
 import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 import { useState } from 'react';
+
+import { AxiosError } from 'axios';
+
+import { useSignUp } from '@/app/store/server/features/auth/mutations';
+import { SignupData } from '@/app/store/server/features/auth/interfaces';
 
 function SignUpPage() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+  const [form] = Form.useForm();
+  const signUp = useSignUp();
+
+  const onFinish = (values: SignupData) => {
+    signUp.mutate(values, {
+      onError(error) {
+        if (error instanceof AxiosError) {
+          if (error.response?.data.statusCode === 409) {
+            form.setFields([
+              {
+                name: 'email',
+                errors: ['Email already exists'],
+              },
+            ]);
+          }
+          if (
+            error.response?.data.message.some(
+              (msg: string) => msg === 'password is not strong enough'
+            )
+          ) {
+            form.setFields([
+              {
+                name: 'password',
+                errors: [''],
+              },
+              {
+                name: 'confirm-password',
+                errors: ['Password is not strong enough'],
+              },
+            ]);
+          } else {
+            form.setFields([
+              {
+                name: 'email',
+                errors: ['Email must be valid'],
+              },
+            ]);
+          }
+        }
+      },
+    });
+  };
   return (
     <ConfigProvider
       theme={{
@@ -36,14 +75,15 @@ function SignUpPage() {
           </p>
           <Form
             className="color-primary-500"
+            form={form}
             initialValues={{
               remember: true,
             }}
-            onFinish={() => {}}
+            onFinish={onFinish}
           >
             <Space direction="horizontal">
               <Form.Item
-                name="firstName"
+                name="first_name"
                 rules={[
                   {
                     required: true,
@@ -57,7 +97,7 @@ function SignUpPage() {
                 />
               </Form.Item>
               <Form.Item
-                name="lastName"
+                name="last_name"
                 rules={[
                   {
                     required: true,
@@ -92,7 +132,7 @@ function SignUpPage() {
               ]}
             >
               <Input.Password
-                prefix={<LockOutlined className="site-form-item-icon" />}
+                prefix={<LockOutlined />}
                 type="password"
                 placeholder="Password"
                 visibilityToggle={{
@@ -102,12 +142,24 @@ function SignUpPage() {
               />
             </Form.Item>
             <Form.Item
-              name="repeat-password"
+              name="confirm-password"
               rules={[
                 {
                   required: true,
-                  message: 'Please repeat your Password!',
+                  message: 'Please confirm your password!',
                 },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue('password') === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error(
+                        'The new password that you entered do not match!'
+                      )
+                    );
+                  },
+                }),
               ]}
             >
               <Input.Password
