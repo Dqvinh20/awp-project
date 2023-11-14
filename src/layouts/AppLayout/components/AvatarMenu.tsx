@@ -1,14 +1,17 @@
 import { Avatar, Dropdown, MenuProps, Spin } from 'antd';
 import { UserOutlined, LogoutOutlined, EditOutlined } from '@ant-design/icons';
 
+import { useMemo } from 'react';
+
 import jwtService from '@/services/JwtService';
 import { useGetMyInfo } from '@/app/store/server/features/users/queries';
+import useAuth from '@/hooks/useAuth';
 
-const items: MenuProps['items'] = [
+const menuItemBuilder = (user_id: string | null): MenuProps['items'] => [
   {
     key: 'editProfile',
     icon: <EditOutlined />,
-    label: <a href="/profile/edit">Edit Profile</a>,
+    label: <a href={`/users/edit/${user_id}`}>Edit Profile</a>,
   },
   {
     type: 'divider',
@@ -29,6 +32,9 @@ const menuItemClick: MenuProps['onClick'] = ({ key }) => {
 
 function AvatarMenu() {
   const { isLoading, data, isError } = useGetMyInfo();
+  const { user_id } = useAuth();
+
+  const items = useMemo(() => menuItemBuilder(user_id), [user_id]);
 
   return (
     <Dropdown
