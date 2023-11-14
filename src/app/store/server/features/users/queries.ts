@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { User } from './interfaces';
 
 import userService from '@/services/UserService';
+import jwtService from '@/services/JwtService';
 
 /**
  * Get user by id.
@@ -15,4 +16,16 @@ export const useGetUser = (userId?: string) =>
     queryFn: () => userService.getUser(userId),
     retry: false,
     enabled: !!userId,
+  });
+
+/**
+ * Get current logged user's info.
+ * @returns
+ */
+export const useGetMyInfo = () =>
+  useQuery<User>({
+    queryKey: ['user', 'me'],
+    queryFn: () => userService.getMyInfo(),
+    retry: false,
+    enabled: !!jwtService.getToken(),
   });

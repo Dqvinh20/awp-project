@@ -27,6 +27,11 @@ const userService = {
     const response = await axiosClient.patch(`/users/${id}`, data);
     return response.data;
   },
+
+  async getMyInfo(): Promise<User> {
+    const response = await axiosClient.get<User>(`/me`);
+    return response.data;
+  },
 };
 
 export default userService;
