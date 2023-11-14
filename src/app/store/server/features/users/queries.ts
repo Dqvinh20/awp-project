@@ -1,8 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 import { User } from './interfaces';
 
-import userService from '@/services/UserService';
+import userService from '@/services/userService';
 
 /**
  * Get user by id.
@@ -16,3 +16,10 @@ export const useGetUser = (userId?: string) =>
     retry: false,
     enabled: !!userId,
   });
+export const useUpdateUser = () =>
+  useMutation<any>({
+    mutationFn: async (data:any) => {
+      return  await userService.saveUser(data?.userId,data.formdata)
+    },
+    retry: false,
+});

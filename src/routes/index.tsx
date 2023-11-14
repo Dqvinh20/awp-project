@@ -7,8 +7,8 @@ import Home from '@/pages/HomePage/index';
 import AuthLayout from '@/layouts/AuthLayout';
 import SignInPage from '@/pages/Auth/SignInPage';
 import LandingPage from '@/pages/LandingPage/index';
-import UserRouter from '@/pages/User/UserRouter';
 import ProtectedPage from '@/pages/ProtectedPage';
+import EditUser from '@/pages/User/EditUser';
 
 const router = createBrowserRouter([
   {
@@ -33,7 +33,7 @@ const router = createBrowserRouter([
           },
           {
             path: '/users/edit/:id',
-            element: <UserRouter />,
+            element: <EditUser />,
           },
         ],
       },
