@@ -1,4 +1,4 @@
-import axiosClient from '@/api/AxiosClient';
+import axiosClient from '@/app/AxiosClient';
 import {
   LoginResponse,
   RefreshTokenResponse,

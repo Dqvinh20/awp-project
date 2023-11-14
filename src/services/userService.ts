@@ -1,31 +1,31 @@
-import axiosClient from "@/api/AxiosClient";
+import axiosClient from '@/app/AxiosClient';
 
 /**
- * userService.ts.
- * @description service to call and get interact with user.
+ * UserService.ts.
+ * @description Service to call and get interact with user.
  * @author Vo Minh Thong <vmthong20@clc.fitus.edu.vn>
  */
 const userService = {
   /**
-   * get user by id.
-   * @param id - get user.
+   * Get user by id.
+   * @param id - Get user.
    * @returns
    */
   async getUser(id: string): Promise<any> {
-    const response: any = await axiosClient.get('/users/'+id);
+    const response: any = await axiosClient.get(`/users/${id}`);
     return response;
   },
 
   /**
-   * saveUser.
+   * SaveUser.
+   * @param id - User id.
+   * @param data - User data.
    * @returns
    */
-  async saveUser(id: string,data: object): Promise<any> {
-    const response: any = await axiosClient.patch('/users/'+id,data);
+  async saveUser(id: string, data: object): Promise<any> {
+    const response: any = await axiosClient.patch(`/users/${id}`, data);
     return response;
   },
-
-
 };
 
 export default userService;

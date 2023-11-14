@@ -8,7 +8,7 @@ const axiosClient = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': 'http://localhost:4200/*',
+    'Access-Control-Allow-Origin': 'http://localhost:4200',
     // crossDomain: true /
   },
   withCredentials: true,
@@ -42,6 +42,10 @@ function createAxiosResponseInterceptor(): void {
   const interceptor = axiosClient.interceptors.response.use(
     (response) => response,
     (error) => {
+      if (!error.response) {
+        return Promise.reject(error);
+      }
+
       const {
         response: { config, status },
       } = error;
