@@ -8,8 +8,9 @@ const axiosClient = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': 'http://localhost:4200',
-    // crossDomain: true /
+    'Access-Control-Allow-Origin': import.meta.env.DEV
+      ? 'http://localhost:4200'
+      : 'https://awp_project.hausuper-s.me',
   },
   withCredentials: true,
 });
