@@ -40,7 +40,7 @@ axiosClient.interceptors.request.use(
  */
 function createAxiosResponseInterceptor(): void {
   const interceptor = axiosClient.interceptors.response.use(
-    (response) => response,
+    (response) => response.data,
     (error) => {
       if (!error.response) {
         return Promise.reject(error);
