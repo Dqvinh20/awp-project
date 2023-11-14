@@ -3,6 +3,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { User } from './interfaces';
 
 import userService from '@/services/userService';
+import jwtService from '@/services/JwtService';
 
 /**
  * Get user by id.
@@ -16,10 +17,15 @@ export const useGetUser = (userId?: string) =>
     retry: false,
     enabled: !!userId,
   });
-export const useUpdateUser = () =>
-  useMutation<any>({
-    mutationFn: async (data:any) => {
-      return  await userService.saveUser(data?.userId,data.formdata)
-    },
+
+/**
+ * Get current logged user's info.
+ * @returns
+ */
+export const useGetMyInfo = () =>
+  useQuery<User>({
+    queryKey: ['user', 'me'],
+    queryFn: () => userService.getMyInfo(),
     retry: false,
-});
+    enabled: !!jwtService.getToken(),
+  });
