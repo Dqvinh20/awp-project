@@ -12,6 +12,8 @@ function SignInPage() {
   const { notification } = App.useApp();
   const [form] = Form.useForm();
   const [passwordVisible, setPasswordVisible] = useState(false);
+
+  // React Query
   const signIn = useSignIn();
 
   const onFinish = (values: SigninData) => {
@@ -23,7 +25,7 @@ function SignInPage() {
       {
         onSuccess() {
           notification.success({
-            message: 'Sign in successfully',
+            message: 'Sign In Successfully',
           });
         },
         onError(error) {
@@ -39,6 +41,14 @@ function SignInPage() {
                   errors: ['Invalid email or password'],
                 },
               ]);
+            }
+
+            if (!Array.isArray(error.response?.data.message)) {
+              notification.error({
+                message: 'Something went wrong!',
+                description: 'Please try again later.',
+              });
+              form.setFields([]);
             }
           }
         },

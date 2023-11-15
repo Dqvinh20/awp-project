@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Form, Input, Button, Card, ConfigProvider, Space } from 'antd';
+import { Form, Input, Button, Card, ConfigProvider, Space, App } from 'antd';
 import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 
@@ -9,25 +9,45 @@ import { useSignUp } from '@/app/store/server/features/auth/mutations';
 import { SignupData } from '@/app/store/server/features/auth/interfaces';
 
 function SignUpPage() {
+  const { notification } = App.useApp();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const [form] = Form.useForm();
+
+  // React Query
   const signUp = useSignUp();
 
   const onFinish = (values: SignupData) => {
     signUp.mutate(values, {
+      onSuccess() {
+        notification.success({
+          message: 'Sign Up Successfully',
+        });
+      },
       onError(error) {
         if (error instanceof AxiosError) {
-          if (error.response?.data.statusCode === 409) {
+          const { response } = error;
+          if (response?.data.statusCode === 409) {
             form.setFields([
               {
                 name: 'email',
                 errors: ['Email already exists'],
               },
             ]);
+            return;
           }
+
+          if (!Array.isArray(response?.data.message)) {
+            notification.error({
+              message: 'Something went wrong!',
+              description: 'Please try again later.',
+            });
+            form.setFields([]);
+            return;
+          }
+
           if (
-            error.response?.data.message.some(
+            response?.data.message.some(
               (msg: string) => msg === 'password is not strong enough'
             )
           ) {
@@ -41,11 +61,15 @@ function SignUpPage() {
                 errors: ['Password is not strong enough'],
               },
             ]);
-          } else {
+          } else if (
+            error.response?.data.message.some(
+              (msg: string) => msg === 'email must be an email'
+            )
+          ) {
             form.setFields([
               {
                 name: 'email',
-                errors: ['Email must be valid'],
+                errors: ['Invalid email'],
               },
             ]);
           }
@@ -143,6 +167,7 @@ function SignUpPage() {
             </Form.Item>
             <Form.Item
               name="confirm-password"
+              dependencies={['password']}
               rules={[
                 {
                   required: true,
@@ -174,7 +199,12 @@ function SignUpPage() {
             </Form.Item>
 
             <Form.Item>
-              <Button block type="primary" htmlType="submit">
+              <Button
+                block
+                type="primary"
+                htmlType="submit"
+                loading={signUp.isPending}
+              >
                 Register
               </Button>
             </Form.Item>
