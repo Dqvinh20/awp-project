@@ -10,7 +10,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ConfigProvider>
-        <AntApp>
+        <AntApp notification={{ placement: 'topRight' }}>
           <Outlet />
         </AntApp>
       </ConfigProvider>

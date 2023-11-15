@@ -1,4 +1,5 @@
-import { Form, Input, Button, Checkbox, Card, ConfigProvider } from 'antd';
+/* eslint-disable max-lines-per-function */
+import { App, Form, Input, Button, Checkbox, Card, ConfigProvider } from 'antd';
 import { MailOutlined, LockOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 
@@ -8,6 +9,7 @@ import { useSignIn } from '@/app/store/server/features/auth/mutations';
 import { SigninData } from '@/app/store/server/features/auth/interfaces';
 
 function SignInPage() {
+  const { notification } = App.useApp();
   const [form] = Form.useForm();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const signIn = useSignIn();
@@ -19,6 +21,11 @@ function SignInPage() {
         password: values.password,
       },
       {
+        onSuccess() {
+          notification.success({
+            message: 'Sign in successfully',
+          });
+        },
         onError(error) {
           if (error instanceof AxiosError) {
             if (error.response?.data.message === 'Wrong credentials!!') {
@@ -106,12 +113,17 @@ function SignInPage() {
                 <Checkbox className="">Remember me</Checkbox>
               </Form.Item>
 
-              <a className="text-[#0AAE67]" href="">
+              <a className="text-[#0AAE67]" href="#0">
                 Forgot password
               </a>
             </div>
             <Form.Item className="mt-10">
-              <Button block type="primary" htmlType="submit">
+              <Button
+                block
+                type="primary"
+                htmlType="submit"
+                loading={signIn.isPending}
+              >
                 Sign in
               </Button>
             </Form.Item>
