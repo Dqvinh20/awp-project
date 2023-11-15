@@ -23,7 +23,7 @@ const userService = {
    * @param data - User data.
    * @returns
    */
-  async saveUser(id: string, data: object): Promise<any> {
+  async saveUser(id?: string, data?: object): Promise<any> {
     const response = await axiosClient.patch(`/users/${id}`, data);
     return response.data;
   },

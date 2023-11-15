@@ -25,6 +25,8 @@ export interface User {
   updated_at?: Date;
   /** Deleted time. */
   deleted_at?: Date;
+
+  gender?: String;
 }
 
 /**
