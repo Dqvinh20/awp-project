@@ -1,12 +1,7 @@
-/* eslint-disable no-console */
 import { useState } from 'react';
-import { Menu, MenuProps, theme } from 'antd';
+import { Menu, MenuProps } from 'antd';
 import Sider from 'antd/es/layout/Sider';
-import {
-  HomeOutlined,
-  AppstoreOutlined,
-  SettingOutlined,
-} from '@ant-design/icons';
+import { HomeOutlined, SettingOutlined } from '@ant-design/icons';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
