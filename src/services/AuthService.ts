@@ -1,4 +1,5 @@
 import axiosClient from '@/app/AxiosClient';
+import { SignupData } from '@/app/store/server/features/auth/interfaces';
 import {
   LoginResponse,
   RefreshTokenResponse,
@@ -17,24 +18,22 @@ const authService = {
    * @param password - User password.
    */
   async signin(email: string, password: string): Promise<LoginResponse> {
-    const response: LoginResponse = await axiosClient.post('/auth/sign-in', {
+    const response = await axiosClient.post('/auth/sign-in', {
       email,
       password,
     });
-    return response;
+    return response.data;
   },
 
   /**
    * Sign up to the server.
-   * @param email - User email.
-   * @param password - User password.
+   * @param signupData - Signup data.
+   * @see {@link SignupData}.
+   * @returns
    */
-  async signup(email: string, password: string): Promise<SignupResponse> {
-    const response: SignupResponse = await axiosClient.post('/auth/sign-up', {
-      email,
-      password,
-    });
-    return response;
+  async signup(signupData: SignupData): Promise<SignupResponse> {
+    const response = await axiosClient.post('/auth/sign-up', signupData);
+    return response.data;
   },
 
   /**

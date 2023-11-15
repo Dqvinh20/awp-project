@@ -1,12 +1,17 @@
 /* eslint-disable max-lines-per-function */
 import { Parallax } from 'rc-scroll-anim';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
+
+import VinhAvatar from '@/assets/vinh_avatar.jpg';
+import QuanAvatar from '@/assets/quan_avatar.jpg';
+import ThongAvatar from '@/assets/thong_avatar.jpg';
 
 const people = [
   {
     name: 'Trần Hồng Quân',
     role: 'Front End Developer',
-    imageUrl:
-      'https://scontent.fsgn5-11.fna.fbcdn.net/v/t39.30808-6/329365302_554627920065568_8882302061123792337_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=5f2048&_nc_ohc=yOJ1qgJWl6gAX-vsmKw&_nc_ht=scontent.fsgn5-11.fna&oh=00_AfBJbJaPy7qIB38eiEKvRQqgXOIdsJm7vtwp_R_hNAQPvg&oe=65532A79',
+    avatar: QuanAvatar,
     githubUrl: 'https://github.com/thq1706',
     animation: { x: 0, opacity: 1, playScale: [0, 0.4] },
     style: { transform: 'translateX(-100px)', opacity: 0 },
@@ -14,8 +19,7 @@ const people = [
   {
     name: 'Võ Minh Thông',
     role: 'Full Stack Developer',
-    imageUrl:
-      'https://scontent.fsgn5-6.fna.fbcdn.net/v/t39.30808-1/399307914_2008273119546629_4266619818288363925_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=5f2048&_nc_ohc=bg6WDSwNxhAAX8xTkbb&_nc_ht=scontent.fsgn5-6.fna&oh=00_AfAt_u8Ukecz4GlGIaofPsmxdkPJ7i3F5JsnFub71M8ZFQ&oe=655478D8',
+    avatar: ThongAvatar,
     githubUrl: 'https://github.com/thong89x',
     animation: { y: 0, opacity: 1, playScale: [0, 0.4] },
     style: { transform: 'translateY(100px)', opacity: 0 },
@@ -23,8 +27,7 @@ const people = [
   {
     name: 'Dương Quang Vinh',
     role: 'Full Stack Developer',
-    imageUrl:
-      'https://lh3.googleusercontent.com/a/ACg8ocIO8vW3ruvUI1w04TFc08AqrUcncOGaq7g6zy_7WDd-=s432-c-no',
+    avatar: VinhAvatar,
     githubUrl: 'https://github.com/dqvinh20',
     animation: { x: 0, opacity: 1, playScale: [0, 0.4] },
     style: { transform: 'translateX(100px)', opacity: 0 },
@@ -58,11 +61,14 @@ function TeamMembers() {
               >
                 <li>
                   <div className="flex items-center flex-col gap-x-6">
-                    <img
-                      className="h-56 w-56 rounded-full"
-                      src={person.imageUrl}
-                      alt=""
-                    />
+                    <div className="h-56 w-56 rounded-full">
+                      <LazyLoadImage
+                        src={person.avatar}
+                        alt={person.name}
+                        effect="blur"
+                        className="rounded-full"
+                      />
+                    </div>
                     <h3 className="mt-6 text-base font-semibold leading-7 tracking-tight text-gray-900">
                       {person.name}
                     </h3>

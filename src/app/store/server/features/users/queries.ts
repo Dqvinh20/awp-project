@@ -1,8 +1,8 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import { User } from './interfaces';
 
-import userService from '@/services/userService';
+import userService from '@/services/UserService';
 import jwtService from '@/services/JwtService';
 
 /**
