@@ -4,7 +4,11 @@ import { scopedPreflightStyles } from 'tailwindcss-scoped-preflight';
 module.exports = {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        'auth-bg': "url('./assets/mountain.jpg')",
+      },
+    },
   },
   plugins: [
     scopedPreflightStyles({

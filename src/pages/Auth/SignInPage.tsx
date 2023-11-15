@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { App, Form, Input, Button, Checkbox, Card, ConfigProvider } from 'antd';
+import { App, Form, Input, Button, Checkbox, Card } from 'antd';
 import { MailOutlined, LockOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 
@@ -56,91 +56,81 @@ function SignInPage() {
     );
   };
   return (
-    <ConfigProvider
-      theme={{
-        token: {
-          colorPrimary: '#2C2A4A',
-        },
-      }}
+    <Card
+      style={{ width: 400, height: 380 }}
+      className="bg-white bg-opacity-50 backdrop-blur"
     >
-      <div className="flex justify-center items-center h-screen bg-[url(../../src/assets/mountain.jpg)] bg-no-repeat bg-cover">
-        <Card
-          style={{ width: 400, height: 380 }}
-          className="bg-white bg-opacity-50 backdrop-blur"
+      <h1 className="text-center text-3xl font-bold ">Sign In</h1>
+      <p className="text-center text-sm">
+        Don't have an account yet?{' '}
+        <a href="/sign-up" className="text-[#0AAE67]">
+          Register now!
+        </a>
+      </p>
+      <Form
+        className="color-primary-500"
+        form={form}
+        initialValues={{
+          remember: true,
+        }}
+        onFinish={onFinish}
+      >
+        <Form.Item
+          name="email"
+          className="my-5"
+          rules={[
+            {
+              required: true,
+              message: 'Please input your Email!',
+            },
+          ]}
         >
-          <h1 className="text-center text-3xl font-bold ">Sign In</h1>
-          <p className="text-center text-sm">
-            Don't have an account yet?{' '}
-            <a href="/sign-up" className="text-[#0AAE67]">
-              Register now!
-            </a>
-          </p>
-          <Form
-            className="color-primary-500"
-            form={form}
-            initialValues={{
-              remember: true,
+          <Input
+            prefix={<MailOutlined className="site-form-item-icon" />}
+            placeholder="Email"
+          />
+        </Form.Item>
+        <Form.Item
+          className="my-5"
+          name="password"
+          rules={[
+            {
+              required: true,
+              message: 'Please input your Password!',
+            },
+          ]}
+        >
+          <Input.Password
+            prefix={<LockOutlined className="site-form-item-icon" />}
+            type="password"
+            placeholder="Password"
+            visibilityToggle={{
+              visible: passwordVisible,
+              onVisibleChange: setPasswordVisible,
             }}
-            onFinish={onFinish}
-          >
-            <Form.Item
-              name="email"
-              className="my-5"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please input your Email!',
-                },
-              ]}
-            >
-              <Input
-                prefix={<MailOutlined className="site-form-item-icon" />}
-                placeholder="Email"
-              />
-            </Form.Item>
-            <Form.Item
-              className="my-5"
-              name="password"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please input your Password!',
-                },
-              ]}
-            >
-              <Input.Password
-                prefix={<LockOutlined className="site-form-item-icon" />}
-                type="password"
-                placeholder="Password"
-                visibilityToggle={{
-                  visible: passwordVisible,
-                  onVisibleChange: setPasswordVisible,
-                }}
-              />
-            </Form.Item>
-            <div className="flex justify-between my-5">
-              <Form.Item name="remember" valuePropName="checked" noStyle>
-                <Checkbox className="">Remember me</Checkbox>
-              </Form.Item>
+          />
+        </Form.Item>
+        <div className="flex justify-between my-5">
+          <Form.Item name="remember" valuePropName="checked" noStyle>
+            <Checkbox className="">Remember me</Checkbox>
+          </Form.Item>
 
-              <a className="text-[#0AAE67]" href="#0">
-                Forgot password
-              </a>
-            </div>
-            <Form.Item className="mt-10">
-              <Button
-                block
-                type="primary"
-                htmlType="submit"
-                loading={signIn.isPending}
-              >
-                Sign in
-              </Button>
-            </Form.Item>
-          </Form>
-        </Card>
-      </div>
-    </ConfigProvider>
+          <a className="text-[#0AAE67]" href="#0">
+            Forgot password
+          </a>
+        </div>
+        <Form.Item className="mt-10">
+          <Button
+            block
+            type="primary"
+            htmlType="submit"
+            loading={signIn.isPending}
+          >
+            Sign in
+          </Button>
+        </Form.Item>
+      </Form>
+    </Card>
   );
 }
 
