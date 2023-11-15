@@ -1,7 +1,7 @@
-import { Avatar, Dropdown, MenuProps, Spin } from 'antd';
+import { Avatar, Dropdown, Flex, MenuProps, Spin } from 'antd';
 import { UserOutlined, LogoutOutlined, EditOutlined } from '@ant-design/icons';
 
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 
 import jwtService from '@/services/JwtService';
 import { useGetMyInfo } from '@/app/store/server/features/users/queries';
@@ -31,6 +31,14 @@ const menuItemClick: MenuProps['onClick'] = ({ key }) => {
 };
 
 function AvatarMenu() {
+  const contentStyle: React.CSSProperties = {
+    borderRadius: '32px',
+  };
+
+  const menuStyle: React.CSSProperties = {
+    boxShadow: 'none',
+  };
+
   const { isLoading, data, isError } = useGetMyInfo();
   const { user_id } = useAuth();
 
@@ -46,7 +54,37 @@ function AvatarMenu() {
       disabled={isLoading}
       className="flex items-center"
       placement="bottomLeft"
-      arrow
+      dropdownRender={(menu) => (
+        <div
+          style={contentStyle}
+          className="p-4 w-52 sm:w-72 z-30 bg-emerald-100 shadow-[-1px_1px_3px_3px_rgba(0,0,0,0.2)]"
+        >
+          <Flex vertical gap={12}>
+            <span className="text-center font-semibold text-base">
+              {data?.email}
+            </span>
+            <Flex vertical gap={4}>
+              <Avatar
+                size={52}
+                icon={<UserOutlined />}
+                alt="Your profile picture"
+                src={isError ? null : data?.avatar}
+                className="mx-auto"
+              />
+              <span className="text-center uppercase text-lg/relaxed font-sans">
+                Hi, {data?.first_name ?? data?.last_name ?? 'Welcome back'}!
+              </span>
+            </Flex>
+          </Flex>
+
+          <div className="h-3"></div>
+          <div>
+            {React.cloneElement(menu as React.ReactElement, {
+              style: menuStyle,
+            })}
+          </div>
+        </div>
+      )}
     >
       <div
         onClick={(e) => e.preventDefault()}
@@ -58,7 +96,7 @@ function AvatarMenu() {
           <Spin />
         ) : (
           <Avatar
-            size={{ xs: 34, sm: 34, md: 42, lg: 42, xl: 42, xxl: 42 }}
+            size={{ sm: 40 }}
             icon={<UserOutlined />}
             alt="Your profile picture"
             src={isError ? null : data?.avatar}

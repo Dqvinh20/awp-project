@@ -1,13 +1,18 @@
 /* eslint-disable max-lines-per-function */
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {} from '@ant-design/icons';
 import { Button, Cascader, Form, Input, Select, CascaderProps } from 'antd';
 
 import Swal from 'sweetalert2';
 
+import { useQueryClient } from '@tanstack/react-query';
+
 import useAuth from '@/hooks/useAuth';
-import { useGetUser } from '@/app/store/server/features/users/queries';
+import {
+  useGetMyInfo,
+  useGetUser,
+} from '@/app/store/server/features/users/queries';
 import userService from '@/services/UserService';
 
 export default function EditUser() {
@@ -16,7 +21,10 @@ export default function EditUser() {
   const [form] = Form.useForm();
   const [componentDisabled] = useState<boolean>(user_id !== id);
 
+  useGetMyInfo();
+
   const { isLoading, data, isError, error } = useGetUser(id);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (data) {
@@ -57,6 +65,9 @@ export default function EditUser() {
 
     try {
       await userService.saveUser(id, formData);
+      await queryClient.invalidateQueries({
+        queryKey: ['user', 'me'],
+      });
       Swal.fire({
         title: 'Success!',
         text: "Update user's profile successfully!",
@@ -154,7 +165,7 @@ export default function EditUser() {
               >
                 <Input placeholder="Input street name" />
               </Form.Item>
-              <Form.Item
+              {/* <Form.Item
                 name="postal_code"
                 rules={[
                   { required: true, message: 'Please input postal_code!' },
@@ -166,11 +177,20 @@ export default function EditUser() {
                 }}
               >
                 <Input placeholder="Input postal_code" />
-              </Form.Item>
+              </Form.Item> */}
             </Form.Item>
             <Form.Item label=" " colon={false}>
               <Button type="primary" htmlType="submit">
                 Edit
+              </Button>
+
+              <Button
+                className="ml-2"
+                onClick={() => {
+                  window.history.back();
+                }}
+              >
+                Back
               </Button>
             </Form.Item>
           </Form>
