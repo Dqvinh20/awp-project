@@ -3,8 +3,8 @@ import { Outlet } from 'react-router-dom';
 
 import { useState } from 'react';
 
-import AppHeader from './components/Header';
-import AppSider from './components/Sider';
+import AppHeader from '../components/Header';
+import AppSider from '../components/Sider';
 
 const { Content } = Layout;
 
