@@ -10,6 +10,7 @@ import LandingPage from '@/pages/LandingPage/index';
 import ProtectedPage from '@/pages/ProtectedPage';
 import SignUpPage from '@/pages/Auth/SignUpPage';
 import EditUser from '@/pages/User/EditUser';
+import JoinClass from '@/pages/Student/JoinClass';
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
               {
                 path: '/home',
                 element: <Home />,
+              },
+              {
+                path: '/joinclass/:id',
+                element: <JoinClass />,
               },
             ],
           },
