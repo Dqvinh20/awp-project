@@ -1,14 +1,29 @@
-import { Layout, Flex } from 'antd';
+import { Layout, Flex, Button, Modal } from 'antd';
 
 import AvatarMenu from './AvatarMenu';
+import { PlusOutlined } from '@ant-design/icons';
+import CreateClassModal from '@/components/Modal/CreateClassModal';
+import { useState } from 'react';
 
 interface AppHeaderProps {
   toggleCollapsed: () => void;
 }
-
+var key = 0;
 function AppHeader({ toggleCollapsed }: AppHeaderProps) {
+  const [openCreateClassModal, setOpenCreateClassModal] = useState(false);
+
   return (
-    <Layout.Header className="twp px-7 bg-white border-b border-b-gray-300">
+    <Layout.Header
+      style={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 1,
+        width: '100%',
+        // display: 'flex',
+        // alignItems: 'center',
+      }}
+      className="twp px-7 bg-white border-b border-b-gray-300"
+    >
       <div className="flex items-center justify-between h-16">
         <Flex align="center" gap="middle">
           <div className="cursor-pointer" onClick={toggleCollapsed}>
@@ -27,7 +42,15 @@ function AppHeader({ toggleCollapsed }: AppHeaderProps) {
             AWP Classroom
           </h2>
         </Flex>
-        <AvatarMenu />
+        <div className="flex flex-column items-center gap-x-2">
+          <Button
+            shape="circle"
+            icon={<PlusOutlined twoToneColor="#52c41a"/>}
+            onClick={()=>setOpenCreateClassModal(true)}
+          />
+          <CreateClassModal open={openCreateClassModal} setOpen={setOpenCreateClassModal} key={key}/>
+          <AvatarMenu />
+        </div>
       </div>
     </Layout.Header>
   );

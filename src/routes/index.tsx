@@ -32,6 +32,10 @@ const router = createBrowserRouter([
                 element: <Home />,
               },
               {
+                path: '/class/*',
+                element: <Home />,
+              },
+              {
                 path: '/joinclass/:id',
                 element: <JoinClass />,
               },

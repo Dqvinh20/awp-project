@@ -18,7 +18,7 @@ export interface User {
   /** User Address.
    * @see {@link Address}.
    */
-  address: Address[];
+  address?: Address[];
   /** Created time. */
   created_at?: Date;
   /** Updated time. */

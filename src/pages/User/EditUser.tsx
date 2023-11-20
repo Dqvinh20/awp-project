@@ -33,8 +33,8 @@ export default function EditUser() {
         first_name: data.first_name,
         last_name: data.last_name,
         gender: data?.gender,
-        street: data.address[0]?.street,
-        postal_code: data.address[0]?.postal_code,
+        street: data.address ? data.address[0]?.street : '',
+        postal_code: data.address ? data.address[0]?.postal_code: '',
         'address-more': '..',
         Address: data.address
           ? [

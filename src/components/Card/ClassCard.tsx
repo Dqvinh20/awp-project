@@ -8,9 +8,11 @@ export default function ClassCard(props: {
   description: string;
   avatarSrc: string;
   coverImageSrc: string;
+  index: Number;
 }) {
   return (
     <Card
+      key={`card-class-${props.index}`}
       bordered
       hoverable
       className="text-sm border-slate-300"
@@ -25,9 +27,6 @@ export default function ClassCard(props: {
         />
       }
       actions={[
-        <FloatButton
-          icon={<RiseOutlined title="Mở sổ điểm của lớp" key="grade1" />}
-        />,
         <RiseOutlined title={`Mở sổ điểm cho "${props.title}"`} key="grade" />,
       ]}
     >
