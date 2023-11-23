@@ -20,3 +20,16 @@ export interface ClassRoom {
   /** ClassRoom deleted time. */
   deleted_at?: Date;
 }
+
+export interface PaginationResult<T> {
+  docs: T[];
+  totalDocs: number,
+  limit: number,
+  totalPages: number,
+  page: number,
+  pagingCounter: number,
+  hasPrevPage: boolean,
+  hasNextPage: boolean,
+  prevPage: string,
+  nextPage: string
+}

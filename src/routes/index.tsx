@@ -45,6 +45,7 @@ const router = createBrowserRouter([
                       element: <ClassLayOut />,
                       children: [
                         {
+                          index: true,
                           path: 'news',
                           element: <ClassRoom />
                         },

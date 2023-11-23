@@ -1,5 +1,5 @@
 import axiosClient from '@/app/AxiosClient';
-import { ClassRoom } from '@/app/store/server/features/classroom/interfaces';
+import { ClassRoom, PaginationResult } from '@/app/store/server/features/classroom/interfaces';
 var classListDemo: ClassRoom[] = [
     {
       id: 'class1',
@@ -81,19 +81,25 @@ const ClassRoomService = {
    * @param userId user id
    * @returns
    */
-  async getAllClassRoomByUserId(userId: string): Promise<ClassRoom[]> {
-    // const response = await axiosClient.get<ClassRoom[]>(`/classes`, {
-    //   params: {
-    //     userId,
-    //   },
-    // });
-    // return response.data;
+  async getAllClassRoomByUserId(): Promise<PaginationResult<ClassRoom>> {
+    const response = await axiosClient.get<PaginationResult<ClassRoom>>(`/classes`, {
+      params: {
+      },
+    })
+    console.log(response.data)
+    return response.data;
 
-    console.log("getAllClassRoomByUserId")
-    console.log(this.classListDemo)
-    return await new Promise((res)=>{
-        res(this.classListDemo)
-    });
+    // console.log("getAllClassRoomByUserId")
+    // console.log(this.classListDemo)
+    // return await new Promise((res)=>{
+    //     res(this.classListDemo)
+    // });
+  },
+
+  async getClassDetail(classID:string): Promise<ClassRoom> {
+    const response = await axiosClient.get<ClassRoom>(`/classes/${classID}`)
+    console.log(response.data)
+    return response.data;
   },
 
   /**

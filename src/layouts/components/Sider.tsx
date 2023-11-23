@@ -1,7 +1,10 @@
 import { useState } from 'react';
-import { Menu, MenuProps } from 'antd';
+import { Divider, Menu, MenuProps } from 'antd';
 import Sider from 'antd/es/layout/Sider';
 import { HomeOutlined, SettingOutlined } from '@ant-design/icons';
+import { NavLink } from 'react-router-dom';
+import SubMenu from 'antd/es/menu/SubMenu';
+import Icon from '@ant-design/icons/lib/components/Icon';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -63,8 +66,25 @@ function AppSider({ collapsed, setCollapsed }: AppSiderProps) {
         mode="inline"
         defaultSelectedKeys={['home']}
         style={{ height: '100%', borderRight: 0 }}
-        items={items}
-      />
+      >
+        <Menu.Item className="" key={'home'} style={{ float: 'right' }}>
+          <NavLink to={'home'}>Home</NavLink>
+        </Menu.Item>
+        <Divider className='m-0'></Divider>
+        <SubMenu
+          key="sub1"
+          title={'Class'
+          }
+        >
+          <Menu.Item className="" key={'home2'} style={{ float: 'right' }}>
+            <NavLink to={'home2'}>Home</NavLink>
+          </Menu.Item>
+          <Menu.Item className="" key={'home1'} style={{ float: 'right' }}>
+            <NavLink to={'home1'}>Home1</NavLink>
+          </Menu.Item>
+        </SubMenu>
+        
+      </Menu>
     </Sider>
   );
 }

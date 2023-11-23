@@ -21,6 +21,7 @@ export default function CreateClassModal(props: {
   const queryClient = useQueryClient()
   const createClassRoomMutation = useMutation<ClassRoom[]>({
     mutationFn: (data:any) => ClassRoomService.saveClassRoom(data),
+    
     onSuccess: (newClassRoom:any) =>{
       console.log("onSuccess :",newClassRoom)
 

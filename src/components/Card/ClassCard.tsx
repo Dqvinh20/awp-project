@@ -14,7 +14,7 @@ export default function ClassCard(props: {
 }) {
   const navigate = useNavigate();
   const handleClickCard = ()=>{
-    navigate("/class/"+props.classId)
+    navigate("/class/"+props.classId+'/news')
   }
   return (
     <Card

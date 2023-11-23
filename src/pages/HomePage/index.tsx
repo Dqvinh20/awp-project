@@ -23,16 +23,16 @@ function HomePage() {
     return <Navigate to="/" />;
   }
   // const { isLoading, data, isError, error} = useClassRoomByUserId(user_id)
-  const { isLoading, data, isError, error,isRefetching} = useQuery<ClassRoom[]>({
+  const { isLoading, data, isError, error,isRefetching} = useQuery({
     queryKey: ['classes'],
-    queryFn: () => ClassRoomService.getAllClassRoomByUserId(user_id || ''),
+    queryFn: () => ClassRoomService.getAllClassRoomByUserId(),
     retry: false,
   });
   if(isLoading) return <h1>Loading...</h1>
   if(isError) return <div>Error + {error.message}</div>;
   return (
-    <div className="w-full flex flex-wrap gap-x-6 gap-y-6">
-      {data && data.map((myclass, index) => (
+    <div className="w-full flex flex-wrap gap-x-6 gap-y-6 p-6">
+      {data && data.docs.map((myclass, index) => (
         <ClassCard
           classId={myclass.id}
           key={`class-component-${myclass.id}-${index}`}
