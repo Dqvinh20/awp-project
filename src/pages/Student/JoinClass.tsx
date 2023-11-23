@@ -16,21 +16,21 @@ export default function JoinClass() {
   const [profile, setProfile] = useState(user);
   return (
     <div className="flex justify-center align-middle h-full w-full">
-      <div className="rounded w-1/2 h-fit border-solid border-2 border-gray-300 overflow-hidden">
-        <div className="bg-slate-100 p-4 flex flex-col justify-center align-middle">
+      <div className="rounded w-2/5 h-fit border-solid border-2 border-gray-300 overflow-hidden">
+        <div className="bg-slate-100 p-8 flex flex-col justify-center align-middle">
           <div className="flex justify-center align-middle">
             <img
               src="https://www.gstatic.com/classroom/logo_square_rounded.svg"
-              className="w-16"
+              className="w-24 mb-4"
               alt="Google Classroom"
               data-iml="28027"
             />
           </div>
           <div className="flex justify-center align-middle text-center gap-x-1.5">
-            <strong className="text-lg">AWP </strong>
-            <span className="text-end text-lg">Classroom</span>
+            <strong className="text-2xl">AWP </strong>
+            <span className="text-end text-2xl">Classroom</span>
           </div>
-          <div className="text-center text-xs flex justify-center align-middle w-full">
+          <div className="text-center text-sm flex justify-center align-middle w-full">
             <p className="w-1/2">
               Classroom helps classes communicate, save time, and stay
               organized.
@@ -44,7 +44,7 @@ export default function JoinClass() {
             </p>
           </div>
         </div>
-        <div className="p-4">
+        <div className="p-8">
           <div className="flex flex-column justify-center align-middle text-center">
             <Card
               // extra={<CaretLeftOutlined />}
@@ -75,7 +75,7 @@ export default function JoinClass() {
           <div className="flex justify-center align-middle text-center text-xs">
             <Button
               className=""
-              size="middle"
+              size='middle'
               type="primary"
               href="https://ant.design/index-cn"
             >

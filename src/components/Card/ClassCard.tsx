@@ -2,16 +2,25 @@ import { RiseOutlined } from '@ant-design/icons';
 import { Avatar, Card, FloatButton } from 'antd';
 import Meta from 'antd/es/card/Meta';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function ClassCard(props: {
+  classId: string
   title: string;
   description: string;
   avatarSrc: string;
   coverImageSrc: string;
   index: Number;
 }) {
+  const navigate = useNavigate();
+  const handleClickCard = ()=>{
+    navigate("/class/"+props.classId)
+  }
   return (
     <Card
+      onClick={()=>{
+        handleClickCard()
+      }}
       key={`card-class-${props.index}`}
       bordered
       hoverable

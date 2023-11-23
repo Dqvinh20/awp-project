@@ -16,7 +16,7 @@ function AppLayout() {
       <AppHeader toggleCollapsed={() => setCollapsed(!collapsed)} />
       <Layout hasSider>
         <AppSider collapsed={collapsed} setCollapsed={setCollapsed} />
-        <Content className=" bg-white p-6 m-0">
+        <Content className=" bg-white m-0 h-full w-full">
           <Outlet />
         </Content>
       </Layout>

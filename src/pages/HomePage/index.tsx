@@ -34,6 +34,7 @@ function HomePage() {
     <div className="w-full flex flex-wrap gap-x-6 gap-y-6">
       {data && data.map((myclass, index) => (
         <ClassCard
+          classId={myclass.id}
           key={`class-component-${myclass.id}-${index}`}
           index={index}
           title={myclass.name}
