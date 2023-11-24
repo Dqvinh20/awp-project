@@ -15,7 +15,7 @@ export default function MemberClass() {
   return (
     <div className="h-full text-center flex flex-col justify-start bg-slate-50">
       <div className="flex flex-col justify-center items-center w-full h-fit mt-2">
-        <div className="flex flex-col w-3/5 mt-5 gap-x-3 bg-white p-5">
+        <div className="flex flex-col w-3/5 mt-5 gap-x-3 bg-white p-5 rounded-md">
           <div className="flex flex-row">
             <div className="title grow text-3xl text-left text-blue-600">
               Teacher
@@ -32,6 +32,7 @@ export default function MemberClass() {
             data.teachers.map((teacher: User, index: number) => (
               <>
                 <MemberCard
+                  key={'member-card-teacher-'+index}
                   email={teacher.email}
                   avatar={teacher.avatar || ''}
                 />
@@ -44,14 +45,12 @@ export default function MemberClass() {
               </>
             ))}
         </div>
-        <div className="flex flex-col w-3/5 mt-5 gap-x-5 bg-white p-5">
+        <div className="flex flex-col w-3/5 mt-5 gap-x-5 bg-white p-5 rounded-md">
           <div className="flex flex-row gap-x-5">
             <div className="title grow text-3xl text-left text-blue-600">
               Student
             </div>
-            <div className="text-blue-600">
-              {data.students.length} students
-            </div>
+            <div className="text-blue-600">{data.students.length} students</div>
             <a href="javascript:void(0)">
               <UserAddOutlined className="text-3xl" />{' '}
             </a>
@@ -64,6 +63,7 @@ export default function MemberClass() {
             data.students.map((student: User, index: number) => (
               <>
                 <MemberCard
+                  key={'member-card-student-'+index}
                   email={student.email}
                   avatar={student.avatar || ''}
                 />

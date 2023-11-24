@@ -12,7 +12,7 @@ export default function ClassRoom() {
   if (isLoading) return <h1>Loading...</h1>;
   if (isError) return <div>Error + {error.message}</div>;
   return (
-    <div className="h-full text-center flex flex-col justify-start bg-slate-50">
+    <div className="h-full text-center flex flex-col justify-start bg-slate-50 pt-5">
       <div className="flex flex-col justify-center items-center w-full h-fit mt-2">
         <BannerClass title={data.name} />
         <div className="flex flex-row w-3/5 mt-5 gap-x-3">

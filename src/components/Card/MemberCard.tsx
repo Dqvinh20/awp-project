@@ -5,18 +5,7 @@ import React from 'react';
 
 export default function MemberCard(props: { email: string; avatar: string }) {
   return (
-    // <Card
-    // bordered={false} >
-    //   <Meta
-    //     // style={{marginBottom: "2rem"}}
-    //     className="text-lg"
-    //     avatar={
-    //       <Avatar src={'https://xsgames.co/randomusers/avatar.php?g=pixel'} />
-    //     }
-    //     title={'h1'}
-    //   />
-    // </Card>
-    <div className="flex flex-row p-5 gap-x-5 text-base">
+    <div key={'member-card'+props.email} className="flex flex-row p-5 gap-x-5 text-base">
       <div className="">
         <Avatar src={props.avatar} />
       </div>

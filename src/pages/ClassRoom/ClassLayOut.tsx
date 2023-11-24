@@ -33,13 +33,19 @@ export default function ClassLayOut() {
   return (
     <Layout className="bg-white m-0 h-full w-full">
       <Header className="twp px-7 bg-white border-b border-b-gray-300">
-        <Menu theme="light" mode="horizontal" defaultSelectedKeys={[window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1)]}>
+        <Menu
+          theme="light"
+          mode="horizontal"
+          defaultSelectedKeys={[
+            window.location.pathname.substring(
+              window.location.pathname.lastIndexOf('/') + 1
+            ),
+          ]}
+          // items={items}
+        >
           {LinkMenuClassRoom.map((item) => (
             <Menu.Item className="" key={item.path} style={{ float: 'right' }}>
-              <NavLink
-                className='p-4'
-                to={item.path}
-              >
+              <NavLink className="p-4" to={item.path}>
                 {item.lable}
               </NavLink>
             </Menu.Item>
@@ -47,8 +53,17 @@ export default function ClassLayOut() {
         </Menu>
       </Header>
       <Content className="bg-white m-0 h-full w-full d-flex justify-center items-center">
-        <Outlet  />
+        <Outlet />
       </Content>
     </Layout>
   );
 }
+const items: MenuProps['items'] = 
+LinkMenuClassRoom.map((item,index)=>({
+  label: (
+    <NavLink className="p-4" to={item.path}>
+      {item.lable}
+    </NavLink>
+  ),
+  key: item.path,
+}))

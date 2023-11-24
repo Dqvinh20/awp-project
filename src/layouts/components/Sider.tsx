@@ -5,6 +5,7 @@ import { HomeOutlined, SettingOutlined } from '@ant-design/icons';
 import { NavLink } from 'react-router-dom';
 import SubMenu from 'antd/es/menu/SubMenu';
 import Icon from '@ant-design/icons/lib/components/Icon';
+import ClassSubMenu from './ClassSubMenu';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -23,14 +24,6 @@ function getItem(
     type,
   } as MenuItem;
 }
-
-const items: MenuProps['items'] = [
-  getItem('Home', 'home', <HomeOutlined />),
-
-  { type: 'divider' },
-
-  getItem('Setting', 'setting', <SettingOutlined />),
-];
 
 interface AppSiderProps {
   collapsed: boolean;
@@ -70,20 +63,8 @@ function AppSider({ collapsed, setCollapsed }: AppSiderProps) {
         <Menu.Item className="" key={'home'} style={{ float: 'right' }}>
           <NavLink to={'home'}>Home</NavLink>
         </Menu.Item>
-        <Divider className='m-0'></Divider>
-        <SubMenu
-          key="sub1"
-          title={'Class'
-          }
-        >
-          <Menu.Item className="" key={'home2'} style={{ float: 'right' }}>
-            <NavLink to={'home2'}>Home</NavLink>
-          </Menu.Item>
-          <Menu.Item className="" key={'home1'} style={{ float: 'right' }}>
-            <NavLink to={'home1'}>Home1</NavLink>
-          </Menu.Item>
-        </SubMenu>
-        
+        <Divider className="m-0"></Divider>
+        <ClassSubMenu />
       </Menu>
     </Sider>
   );
