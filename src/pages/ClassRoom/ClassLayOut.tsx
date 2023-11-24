@@ -47,7 +47,7 @@ export default function ClassLayOut() {
         </Menu>
       </Header>
       <Content className="bg-white m-0 h-full w-full d-flex justify-center items-center">
-        <Outlet />
+        <Outlet  />
       </Content>
     </Layout>
   );
