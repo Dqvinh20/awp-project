@@ -32,7 +32,7 @@ export default function ClassRoom() {
             <div className="text-left text-3xl mt-2 ">{data.code}</div>
           </div>
           <div className="grow p-5 bg-white rounded-md border-solid border-2 border-slate-300 items-center">
-            <div className="text-left text-base h-full">
+            <div className="text-left text-base  h-full">
               {data.description}
             </div>
           </div>
