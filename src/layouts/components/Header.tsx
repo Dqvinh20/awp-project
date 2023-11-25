@@ -1,21 +1,18 @@
-import { Layout, Flex, Button, Modal } from 'antd';
+import { Layout, Flex } from 'antd';
 
 import AvatarMenu from './AvatarMenu';
-import { PlusOutlined } from '@ant-design/icons';
-import CreateClassModal from '@/components/Modal/CreateClassModal';
-import { useState } from 'react';
+
+import CreateClassButton from '@/components/Button/CreateClassButton';
 
 interface AppHeaderProps {
   toggleCollapsed: () => void;
 }
-var key = 0;
-function AppHeader({ toggleCollapsed }: AppHeaderProps) {
-  const [openCreateClassModal, setOpenCreateClassModal] = useState(false);
 
+function AppHeader({ toggleCollapsed }: AppHeaderProps) {
   return (
     <Layout.Header
       style={{
-        position: 'sticky',
+        position: 'fixed',
         top: 0,
         zIndex: 1,
         width: '100%',
@@ -43,12 +40,7 @@ function AppHeader({ toggleCollapsed }: AppHeaderProps) {
           </h2>
         </Flex>
         <div className="flex flex-column items-center gap-x-2">
-          <Button
-            shape="circle"
-            icon={<PlusOutlined twoToneColor="#52c41a"/>}
-            onClick={()=>setOpenCreateClassModal(true)}
-          />
-          <CreateClassModal open={openCreateClassModal} setOpen={setOpenCreateClassModal} key={key}/>
+          <CreateClassButton />
           <AvatarMenu />
         </div>
       </div>
