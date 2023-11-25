@@ -1,76 +1,64 @@
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  Button,
-  Cascader,
-  Form,
-  Input,
-  Modal,
-  Select,
-  CascaderProps,
-} from 'antd';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { ClassRoom } from '@/app/store/server/features/classroom/interfaces';
-import ClassRoomService from '@/services/ClassService';
+import React, { useEffect, useState } from 'react';
+import { Form, Input, Modal } from 'antd';
+import { useQueryClient } from '@tanstack/react-query';
 
-export default function CreateClassModal(props: {
+import { useAddClass } from '@/app/store/server/features/classroom/mutations';
+
+interface CreateClassProps {
   open: boolean;
-  setOpen: Function;
-}) {
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export default function CreateClassModal({ open, setOpen }: CreateClassProps) {
   const [form] = Form.useForm();
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const queryClient = useQueryClient()
-  const createClassRoomMutation = useMutation<ClassRoom[]>({
-    mutationFn: (data:any) => ClassRoomService.saveClassRoom(data),
-    
-    onSuccess: (newClassRoom:any) =>{
-      console.log("onSuccess :",newClassRoom)
+  const queryClient = useQueryClient();
+  const addClass = useAddClass();
 
-      if(newClassRoom.success){
-        queryClient.invalidateQueries({ queryKey: ['classes'] })
-        
-      }
-    },
-    onError:(error)=>{
-      console.log("Error :",error)
-    }
-  });
- 
+  const handleSubmit = (values: any) => {
+    addClass.mutate(values, {
+      onSuccess() {
+        queryClient.invalidateQueries({ queryKey: ['classes'] });
+      },
+    });
+  };
 
-  const handlesubmit =  async (values: any) => {
+  const handleOk = () => {
     setConfirmLoading(true);
-    createClassRoomMutation.mutate(values)
+    form.submit();
   };
+
   const handleCancel = () => {
-    props.setOpen(false);
+    form.resetFields();
+    setOpen(false);
   };
-  useEffect(()=>{
-    props.setOpen(false);
+
+  useEffect(() => {
+    setOpen(false);
     setConfirmLoading(false);
-  },[createClassRoomMutation.isSuccess])
+  }, [addClass.isSuccess, setOpen]);
+
   return (
     <Modal
-      title="Create Class"
-      open={props.open}
-      onOk={()=>form.submit()}
-      confirmLoading={confirmLoading}
+      title="Create new class"
+      open={open}
+      onOk={handleOk}
       onCancel={handleCancel}
+      confirmLoading={confirmLoading}
     >
-      <div className="">
-        <Form 
-            form={form}
-            onFinish={handlesubmit}>
-          <Form.Item
-            rules={[{ required: true, message: 'Please input class name!' }]}
-            label="Class Name"
-            name="class_name"
-            style={{ marginBottom: 0 }}
-          >
-            <Input
-              placeholder="Input Class Name"
-            />
-          </Form.Item>
-        </Form>
-      </div>
+      <Form form={form} onFinish={handleSubmit} layout="vertical">
+        <Form.Item
+          rules={[{ required: true, message: 'Please input class name!' }]}
+          label="Class Name"
+          name="name"
+        >
+          <Input placeholder="Input Class Name" />
+        </Form.Item>
+
+        <Form.Item label="Class Description" name="description">
+          <Input placeholder="Input class description" />
+        </Form.Item>
+      </Form>
     </Modal>
   );
 }
