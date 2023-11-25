@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { Divider, Menu, MenuProps } from 'antd';
+import { Menu, MenuProps } from 'antd';
 import Sider from 'antd/es/layout/Sider';
-import { HomeOutlined, SettingOutlined } from '@ant-design/icons';
 import { NavLink } from 'react-router-dom';
-import SubMenu from 'antd/es/menu/SubMenu';
-import Icon from '@ant-design/icons/lib/components/Icon';
+
+import { useSideMenu } from '@/hooks/useSideMenu';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -24,32 +23,41 @@ function getItem(
   } as MenuItem;
 }
 
-const items: MenuProps['items'] = [
-  getItem('Home', 'home', <HomeOutlined />),
-
+const staticItems: MenuProps['items'] = [
+  getItem(<NavLink to={'home'}>Home</NavLink>, 'home'),
   { type: 'divider' },
-
-  getItem('Setting', 'setting', <SettingOutlined />),
+  getItem('Enrolled', 'enrolled', null, [
+    getItem('Web', 'home6'),
+    getItem('Class', 'home5'),
+  ]),
+  { type: 'divider' },
+  getItem('Setting', 'setting'),
 ];
 
 interface AppSiderProps {
   collapsed: boolean;
   setCollapsed(value: boolean): void;
+  isMobile: boolean;
+  setIsMobile(value: boolean): void;
 }
 
-function AppSider({ collapsed, setCollapsed }: AppSiderProps) {
-  const [isMobile, setIsMobile] = useState<boolean>(false);
-
+function AppSider({
+  collapsed,
+  setCollapsed,
+  isMobile,
+  setIsMobile,
+}: AppSiderProps) {
+  const menuItems = useSideMenu();
   return (
     <Sider
-      // style={{
-      //   overflow: 'auto',
-      //   height: '100vh',
-      //   position: 'fixed',
-      //   left: 0,
-      //   top: 0,
-      //   bottom: 0,
-      // }}
+      style={{
+        overflow: 'auto',
+        height: '100vh',
+        position: 'fixed',
+        left: 0,
+        top: 64,
+        bottom: 0,
+      }}
       className="twp !border-r !border-r-gray-300"
       width={200}
       trigger={null}
@@ -66,24 +74,20 @@ function AppSider({ collapsed, setCollapsed }: AppSiderProps) {
         mode="inline"
         defaultSelectedKeys={['home']}
         style={{ height: '100%', borderRight: 0 }}
+        items={menuItems}
       >
-        <Menu.Item className="" key={'home'} style={{ float: 'right' }}>
+        {/* <Menu.Item className="" key={'home'} style={{ float: 'right' }}>
           <NavLink to={'home'}>Home</NavLink>
         </Menu.Item>
-        <Divider className='m-0'></Divider>
-        <SubMenu
-          key="sub1"
-          title={'Class'
-          }
-        >
+        <Divider className="m-0"></Divider>
+        <SubMenu key="sub1" title={'Class'}>
           <Menu.Item className="" key={'home2'} style={{ float: 'right' }}>
             <NavLink to={'home2'}>Home</NavLink>
           </Menu.Item>
           <Menu.Item className="" key={'home1'} style={{ float: 'right' }}>
             <NavLink to={'home1'}>Home1</NavLink>
           </Menu.Item>
-        </SubMenu>
-        
+        </SubMenu> */}
       </Menu>
     </Sider>
   );

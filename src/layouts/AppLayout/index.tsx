@@ -9,14 +9,32 @@ import AppSider from '../components/Sider';
 const { Content } = Layout;
 
 function AppLayout() {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState<boolean>(false);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  const margin_left_sider = () => {
+    if (isMobile && collapsed) return 0;
+    if (collapsed) return 80;
+    return 200;
+  };
 
   return (
     <Layout className="h-screen">
       <AppHeader toggleCollapsed={() => setCollapsed(!collapsed)} />
       <Layout hasSider>
-        <AppSider collapsed={collapsed} setCollapsed={setCollapsed} />
-        <Content className=" bg-white m-0 h-full w-full">
+        <AppSider
+          collapsed={collapsed}
+          setCollapsed={setCollapsed}
+          isMobile={isMobile}
+          setIsMobile={setIsMobile}
+        />
+        <Content
+          style={{
+            marginLeft: margin_left_sider(),
+            marginTop: 64,
+          }}
+          className=" bg-white m-0 h-full w-full"
+        >
           <Outlet />
         </Content>
       </Layout>
