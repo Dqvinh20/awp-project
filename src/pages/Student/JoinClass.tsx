@@ -8,6 +8,8 @@ import {
 import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import ClassRoomService from '@/services/ClassService';
 import { useGetMyInfo } from '@/app/store/server/features/users/queries';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { ClassRoom } from '@/app/store/server/features/classroom/interfaces';
 
 const { Meta } = Card;
 
@@ -17,20 +19,39 @@ const user = {
 };
 export default function JoinClass() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const queryClient = useQueryClient()
+
   const t = searchParams.get('t');
   const c = searchParams.get('c');
   const navigate = useNavigate();
-  const HandleJoin = async (params: { t: string } | { c: string }) => {
-    try {
-      const data = await ClassRoomService.joinClass(params);
-      const urlClass = `/classes/${data.class_id}/news`;
-      // navigate(urlClass);
-    } catch {
+  const joinClassRoomMutation = useMutation<ClassRoom>({
+    mutationFn: (params: any) => ClassRoomService.joinClass(params),
+    
+    onSuccess: (data:any) =>{
+      const urlClass = `/class/${data.id}/news`;
+      queryClient.invalidateQueries({ queryKey: ['classes'] })
+      navigate(urlClass);
+    },
+    onError:(error)=>{
+      console.log("Error :",error)
       // navigate('/');
     }
+  });
+  const HandleJoin = async (params: { t: string } | { c: string } | any) => {
+    joinClassRoomMutation.mutate(params)
+    // try {
+    //   const data = await ClassRoomService.joinClass(params);
+    //   const urlClass = `/class/${data.id}/news`;
+    //   navigate(urlClass);
+    // } catch {
+    //   // navigate('/');
+    // }
   };
-  if (t) {
+  useEffect(()=>{
     HandleJoin({ t });
+
+  },[])
+  if (t) {
     return <></>;
   }
   const { isLoading, data, isError, error } = useGetMyInfo();
@@ -103,7 +124,7 @@ export default function JoinClass() {
               className=""
               size="middle"
               type="primary"
-              href="javascript:void(0)"
+              href="javascript::void(0)"
               onClick={() => HandleJoin({ c })}
             >
               Join class

@@ -17,14 +17,14 @@ export default function ClassRoom() {
   if (isError) return <div>Error + {error.message}</div>;
   const items: MenuProps['items'] = [
     {
-      label: <a onClick={() => {navigator.clipboard.writeText(`${baseUrl}/classes/join?c=${data.code}`)}} href='javascript:void(0)'>Copy Link Join Public</a>,
+      label: <a onClick={() => {navigator.clipboard.writeText(`${baseUrl}/classes/join?c=${data.code}`)}} href='javascript::void(0)'>Copy Link Join Public</a>,
       key: 'linkjoin',
     },
     {
       type: 'divider',
     },
     {
-      label: <a onClick={() => {navigator.clipboard.writeText(data.code)}} href='javascript:void(0)'>Copy Code</a>,
+      label: <a onClick={() => {navigator.clipboard.writeText(data.code)}} href='javascript::void(0)'>Copy Code</a>,
       key: 'copycode',
     },
   ];

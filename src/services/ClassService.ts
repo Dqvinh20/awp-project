@@ -129,8 +129,8 @@ const ClassRoomService = {
     }
     // return response.data;
   },
-  async joinClass(params: object): Promise<{class_id:string}> {
-    const response = await axiosClient.get<{class_id:string}>(`/classes/join`,{
+  async joinClass(params: object): Promise<ClassRoom> {
+    const response = await axiosClient.get<ClassRoom>(`/classes/join`,{
       params: params
     })
     return response.data;
