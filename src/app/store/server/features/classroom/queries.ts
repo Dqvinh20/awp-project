@@ -1,19 +1,33 @@
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+
+import { ClassDTO } from './interfaces';
+
 import ClassRoomService from '@/services/ClassService';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { ClassRoom, PaginationResult } from './interfaces';
+import {
+  PaginationParams,
+  PaginationResult,
+} from '@/interfaces/common.interface';
 
 /**
- * Get user by id.
- * @param userId - User id.
+ * Get all class that user belong to.
+ * @param params Pagination params.
  * @returns
  */
-export const useClassRoomByUserId = (userId?: string) =>
-  useQuery<PaginationResult<ClassRoom>>({
-    queryKey: ['classes'],
-    queryFn: () => ClassRoomService.getAllClassRoomByUserId(userId || ''),
+export const useClassesQuery = (params?: PaginationParams) =>
+  useQuery<PaginationResult<ClassDTO>>({
+    queryKey: ['classes', params],
+    queryFn: () => ClassRoomService.getAllClasses(params),
     retry: false,
+    placeholderData: keepPreviousData,
   });
 
-
-  
-
+/**
+ * @param classId Class ID.
+ * @returns Class detail info.
+ */
+export const useClassDetailQuery = (classId: string) =>
+  useQuery<ClassDTO>({
+    queryKey: ['class', classId],
+    queryFn: () => ClassRoomService.getClassDetail(classId),
+    retry: false,
+  });
