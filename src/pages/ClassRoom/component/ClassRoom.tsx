@@ -6,11 +6,28 @@ import useGetDetailClass from '@/hooks/useGetDetailClass';
 import { Dropdown, MenuProps, Space } from 'antd';
 import { DownOutlined, MoreOutlined } from '@ant-design/icons';
 
+const baseUrl = import.meta.env.DEV
+? 'http://localhost:4200'
+: 'https://awp_project.hausuper-s.me'
+
 export default function ClassRoom() {
   const { isLoading, data, isError, error } = useGetDetailClass();
 
   if (isLoading) return <h1>Loading...</h1>;
   if (isError) return <div>Error + {error.message}</div>;
+  const items: MenuProps['items'] = [
+    {
+      label: <a onClick={() => {navigator.clipboard.writeText(`${baseUrl}/classes/join?c=${data.code}`)}} href='javascript:void(0)'>Copy Link Join Public</a>,
+      key: 'linkjoin',
+    },
+    {
+      type: 'divider',
+    },
+    {
+      label: <a onClick={() => {navigator.clipboard.writeText(data.code)}} href='javascript:void(0)'>Copy Code</a>,
+      key: 'copycode',
+    },
+  ];
   return (
     <div className="h-full text-center flex flex-col justify-start bg-slate-50 pt-5">
       <div className="flex flex-col justify-center items-center w-full h-fit mt-2">
@@ -41,16 +58,3 @@ export default function ClassRoom() {
     </div>
   );
 }
-const items: MenuProps['items'] = [
-  {
-    label: <a href='javascript:void(0)'>Copy Code</a>,
-    key: '0',
-  },
-  {
-    type: 'divider',
-  },
-  {
-    label: <a href='javascript:void(0)'>Edit Code</a>,
-    key: '1',
-  },
-];

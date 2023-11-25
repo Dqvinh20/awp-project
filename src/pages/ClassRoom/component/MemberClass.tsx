@@ -28,20 +28,27 @@ export default function MemberClass() {
             style={{ borderTop: '1px solid blue' }}
             className="m-2 text-blue-600 bg-inherit"
           />
+          {data.owner && (
+            <>
+              <MemberCard
+                key={'member-card-owner'}
+                email={data.owner.email}
+                avatar={data.owner.avatar || ''}
+              />
+            </>
+          )}
           {data.teachers &&
             data.teachers.map((teacher: User, index: number) => (
               <>
+                <Divider
+                  style={{ borderTop: '1px solid black' }}
+                  className="m-2"
+                />
                 <MemberCard
-                  key={'member-card-teacher-'+index}
+                  key={'member-card-teacher-' + index}
                   email={teacher.email}
                   avatar={teacher.avatar || ''}
                 />
-                {index >= 1 && (
-                  <Divider
-                    style={{ borderTop: '1px solid black' }}
-                    className="m-2"
-                  />
-                )}
               </>
             ))}
         </div>
@@ -50,7 +57,9 @@ export default function MemberClass() {
             <div className="title grow text-3xl text-left text-blue-600">
               Student
             </div>
-            <div className="text-blue-600">{data.students.length} students</div>
+            <div className="text-blue-600">
+              {data.students ? data.students.length : 0} students
+            </div>
             <a href="javascript:void(0)">
               <UserAddOutlined className="text-3xl" />{' '}
             </a>
@@ -63,7 +72,7 @@ export default function MemberClass() {
             data.students.map((student: User, index: number) => (
               <>
                 <MemberCard
-                  key={'member-card-student-'+index}
+                  key={'member-card-student-' + index}
                   email={student.email}
                   avatar={student.avatar || ''}
                 />

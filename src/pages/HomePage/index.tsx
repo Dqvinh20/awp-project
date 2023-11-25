@@ -32,7 +32,7 @@ function HomePage() {
   if(isError) return <div>Error + {error.message}</div>;
   return (
     <div className="w-full flex flex-wrap gap-x-6 gap-y-6 p-6">
-      {data && data.docs.map((myclass, index) => (
+      {data && data.docs && data.docs.map((myclass, index) => (
         <ClassCard
           classId={myclass.id}
           key={`class-component-${myclass.id}-${index}`}

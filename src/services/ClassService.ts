@@ -86,7 +86,6 @@ const ClassRoomService = {
       params: {
       },
     })
-    console.log(response.data)
     return response.data;
 
     // console.log("getAllClassRoomByUserId")
@@ -98,7 +97,6 @@ const ClassRoomService = {
 
   async getClassDetail(classID:string): Promise<ClassRoom> {
     const response = await axiosClient.get<ClassRoom>(`/classes/${classID}`)
-    console.log(response.data)
     return response.data;
   },
 
@@ -130,6 +128,12 @@ const ClassRoomService = {
         classes: this.classListDemo
     }
     // return response.data;
+  },
+  async joinClass(params: object): Promise<{class_id:string}> {
+    const response = await axiosClient.get<{class_id:string}>(`/classes/join`,{
+      params: params
+    })
+    return response.data;
   },
 };
 

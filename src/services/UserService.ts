@@ -29,7 +29,7 @@ const userService = {
   },
 
   async getMyInfo(): Promise<User> {
-    const response = await axiosClient.get<User>(`/me`);
+    const response = await axiosClient.get<User>(`/users/me`);
     return response.data;
   },
 };

@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Avatar, Button, Card } from 'antd';
 import {
   CaretDownOutlined,
   CaretLeftOutlined,
   DownOutlined,
 } from '@ant-design/icons';
+import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
+import ClassRoomService from '@/services/ClassService';
+import { useGetMyInfo } from '@/app/store/server/features/users/queries';
 
 const { Meta } = Card;
 
@@ -13,9 +16,29 @@ const user = {
   name: 'Thong Vo',
 };
 export default function JoinClass() {
-  const [profile, setProfile] = useState(user);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const t = searchParams.get('t');
+  const c = searchParams.get('c');
+  const navigate = useNavigate();
+  const HandleJoin = async (params: { t: string } | { c: string }) => {
+    try {
+      const data = await ClassRoomService.joinClass(params);
+      const urlClass = `/classes/${data.class_id}/news`;
+      // navigate(urlClass);
+    } catch {
+      // navigate('/');
+    }
+  };
+  if (t) {
+    HandleJoin({ t });
+    return <></>;
+  }
+  const { isLoading, data, isError, error } = useGetMyInfo();
+  if (isLoading) return <h1>Loading...</h1>;
+  if (isError) return <div>Error + {error.message}</div>;
+  if (!c) return <>Not Found Invite Code</>;
   return (
-    <div className="flex justify-center align-middle h-full w-full">
+    <div className="flex justify-center align-middle h-full w-full p-8">
       <div className="rounded w-2/5 h-fit border-solid border-2 border-gray-300 overflow-hidden">
         <div className="bg-slate-100 p-8 flex flex-col justify-center align-middle">
           <div className="flex justify-center align-middle">
@@ -58,11 +81,14 @@ export default function JoinClass() {
                 avatar={
                   <Avatar
                     className=""
-                    src="https://xsgames.co/randomusers/avatar.php?g=pixel"
+                    src={
+                      data?.avatar ||
+                      'https://xsgames.co/randomusers/avatar.php?g=pixel'
+                    }
                   />
                 }
-                title={profile.name}
-                description={profile.email}
+                title={data?.full_name}
+                description={data?.email}
               />
               {/* <DownOutlined style={{position: "absolute",top:"25px", right: "10px"}}/> */}
             </Card>
@@ -75,9 +101,10 @@ export default function JoinClass() {
           <div className="flex justify-center align-middle text-center text-xs">
             <Button
               className=""
-              size='middle'
+              size="middle"
               type="primary"
-              href="https://ant.design/index-cn"
+              href="javascript:void(0)"
+              onClick={() => HandleJoin({ c })}
             >
               Join class
             </Button>

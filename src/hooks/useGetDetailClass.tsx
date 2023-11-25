@@ -11,7 +11,7 @@ export default function useGetDetailClass(): any {
     }
     // const { isLoading, data, isError, error} = useClassRoomByUserId(user_id)
     const queryData = useQuery({
-      queryKey: ['classes'],
+      queryKey: ['classes',id],
       queryFn: () => ClassRoomService.getClassDetail(id),
       retry: false,
     });
