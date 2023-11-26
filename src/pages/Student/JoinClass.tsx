@@ -1,63 +1,94 @@
-import React, { useEffect, useState } from 'react';
-import { Avatar, Button, Card } from 'antd';
-import {
-  CaretDownOutlined,
-  CaretLeftOutlined,
-  DownOutlined,
-} from '@ant-design/icons';
+/* eslint-disable max-lines-per-function */
+import { useEffect } from 'react';
+import { App, Avatar, Button, Card, Spin } from 'antd';
 import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
-import ClassRoomService from '@/services/ClassService';
+import { AxiosError } from 'axios';
+import { useQueryClient } from '@tanstack/react-query';
+
 import { useGetMyInfo } from '@/app/store/server/features/users/queries';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { ClassRoom } from '@/app/store/server/features/classroom/interfaces';
+import { useJoinClass } from '@/app/store/server/features/classroom/mutations';
 
 const { Meta } = Card;
 
-const user = {
-  email: 'thong89xx@gmail.com',
-  name: 'Thong Vo',
-};
-export default function JoinClass() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const queryClient = useQueryClient()
+function JoinClass() {
+  const { notification, message } = App.useApp();
+  const [searchParams] = useSearchParams();
+  const queryClient = useQueryClient();
 
   const t = searchParams.get('t');
   const c = searchParams.get('c');
-  const navigate = useNavigate();
-  const joinClassRoomMutation = useMutation<ClassRoom>({
-    mutationFn: (params: any) => ClassRoomService.joinClass(params),
-    
-    onSuccess: (data:any) =>{
-      const urlClass = `/class/${data.id}/news`;
-      queryClient.invalidateQueries({ queryKey: ['classes'] })
-      navigate(urlClass);
-    },
-    onError:(error)=>{
-      console.log("Error :",error)
-      // navigate('/');
-    }
-  });
-  const HandleJoin = async (params: { t: string } | { c: string } | any) => {
-    joinClassRoomMutation.mutate(params)
-    // try {
-    //   const data = await ClassRoomService.joinClass(params);
-    //   const urlClass = `/class/${data.id}/news`;
-    //   navigate(urlClass);
-    // } catch {
-    //   // navigate('/');
-    // }
-  };
-  useEffect(()=>{
-    HandleJoin({ t });
 
-  },[])
+  const navigate = useNavigate();
+
+  const joinClassMutation = useJoinClass();
+
+  const handleJoin = (params: { t: string } | { c: string } | any) => {
+    joinClassMutation.mutate(params, {
+      async onSuccess(data) {
+        await queryClient.invalidateQueries({ queryKey: ['classes'] });
+        await message.success('Join Class Success');
+        navigate(`/class/${data.id}/news`);
+      },
+      onError(error) {
+        if (error instanceof AxiosError) {
+          notification.error({
+            message: 'Error Occurred',
+            description: error?.response?.data.message ?? error.message,
+          });
+          return;
+        }
+        notification.error({
+          message: 'Error Occured',
+          description: error.message,
+        });
+      },
+    });
+  };
+
+  useEffect(() => {
+    const joinClassByToken = async () => {
+      try {
+        const data = await joinClassMutation.mutateAsync({ t });
+        await queryClient.invalidateQueries({ queryKey: ['classes'] });
+        navigate(`/class/${data.id}/news`);
+      } catch (error: any) {
+        if (error instanceof AxiosError) {
+          await notification.error({
+            message: 'Error Occurred',
+            description: error?.response?.data.message ?? error.message,
+          });
+          navigate('/home');
+          return;
+        }
+        notification.error({
+          message: 'Error Occured',
+          description: error.message,
+        });
+      }
+    };
+
+    if (t) {
+      joinClassByToken();
+    }
+  }, []);
+
+  const { isLoading: profileLoading, data, isError, error } = useGetMyInfo();
+
+  if (!c && !t) return <Navigate to="/page-not-found" />;
+
   if (t) {
-    return <></>;
+    return <Spin fullscreen />;
   }
-  const { isLoading, data, isError, error } = useGetMyInfo();
-  if (isLoading) return <h1>Loading...</h1>;
+
+  if (profileLoading) return <Spin fullscreen />;
   if (isError) return <div>Error + {error.message}</div>;
-  if (!c) return <>Not Found Invite Code</>;
+  // if (!c)
+  //   return (
+  //     <div className="flex justify-center align-middle h-full w-full p-8 text-lg font-medium text-red-500">
+  //       No class code
+  //     </div>
+  //   );
+
   return (
     <div className="flex justify-center align-middle h-full w-full p-8">
       <div className="rounded w-2/5 h-fit border-solid border-2 border-gray-300 overflow-hidden">
@@ -82,6 +113,7 @@ export default function JoinClass() {
                 className=""
                 target="_blank"
                 href="https://support.google.com/edu/classroom/answer/6020279?hl=en&amp;authuser=0"
+                rel="noreferrer"
               >
                 Learn more
               </a>
@@ -103,7 +135,7 @@ export default function JoinClass() {
                   <Avatar
                     className=""
                     src={
-                      data?.avatar ||
+                      data?.avatar ??
                       'https://xsgames.co/randomusers/avatar.php?g=pixel'
                     }
                   />
@@ -125,7 +157,7 @@ export default function JoinClass() {
               size="middle"
               type="primary"
               href="javascript::void(0)"
-              onClick={() => HandleJoin({ c })}
+              onClick={() => handleJoin({ c })}
             >
               Join class
             </Button>
@@ -138,6 +170,7 @@ export default function JoinClass() {
                 className=""
                 target="_blank"
                 href="https://support.google.com/edu/classroom/answer/6386395?hl=en&amp;authuser=0"
+                rel="noreferrer"
               >
                 Learn more
               </a>
@@ -148,3 +181,5 @@ export default function JoinClass() {
     </div>
   );
 }
+
+export default JoinClass;

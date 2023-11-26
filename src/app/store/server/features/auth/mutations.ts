@@ -16,7 +16,6 @@ export const useSignIn = () =>
     retry: false,
     onSuccess(data) {
       jwtService.saveToken(data.access_token);
-      window.location.href = '/home';
     },
   });
 

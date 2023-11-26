@@ -1,4 +1,6 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { Navigate, createBrowserRouter } from 'react-router-dom';
+
+import { QueryClient } from '@tanstack/react-query';
 
 import App from '@/app';
 import ErrorPage from '@/pages/ErrorPage';
@@ -11,20 +13,20 @@ import ProtectedPage from '@/pages/ProtectedPage';
 import SignUpPage from '@/pages/Auth/SignUpPage';
 import EditUser from '@/pages/User/EditUser';
 import JoinClass from '@/pages/Student/JoinClass';
-import ClassRouter from '@/pages/ClassRoom/ClassRouter';
 import ClassLayOut from '@/pages/ClassRoom/ClassLayOut';
 import ClassRoom from '@/pages/ClassRoom/component/ClassRoom';
-import AboutClass from '@/pages/ClassRoom/component/AboutClass';
 import MemberClass from '@/pages/ClassRoom/component/MemberClass';
 import ClassGrade from '@/pages/ClassRoom/component/ClassGrade';
+import NotFoundPage from '@/pages/404';
 
 const router = createBrowserRouter([
   {
+    path: '/',
     element: <App />,
     errorElement: <ErrorPage />,
     children: [
       {
-        path: '/',
+        index: true,
         element: <LandingPage />,
       },
       {
@@ -35,32 +37,31 @@ const router = createBrowserRouter([
             children: [
               {
                 path: '/home',
-                element: <Home />
+                element: <Home />,
               },
               {
-                path: '/class/*',
+                path: '/class/:id/*',
                 children: [
+                  { path: '*', element: <Navigate to="/page-not-found" /> },
                   {
-                      path: ':id',
-                      element: <ClassLayOut />,
-                      children: [
-                        {
-                          index: true,
-                          path: 'news',
-                          element: <ClassRoom />
-                        },
-                        {
-                          path: 'members',
-                          element: <MemberClass />
-                        },
-                        {
-                          path: 'grade',
-                          element: <ClassGrade />
-                        }
-                      ]
-                    
-                  }
-                ]
+                    element: <ClassLayOut />,
+                    children: [
+                      {
+                        index: true,
+                        path: 'news',
+                        element: <ClassRoom />,
+                      },
+                      {
+                        path: 'members',
+                        element: <MemberClass />,
+                      },
+                      {
+                        path: 'grade',
+                        element: <ClassGrade />,
+                      },
+                    ],
+                  },
+                ],
               },
               {
                 path: '/classes/join',
@@ -86,6 +87,14 @@ const router = createBrowserRouter([
             element: <SignUpPage />,
           },
         ],
+      },
+      {
+        path: '/page-not-found',
+        element: <NotFoundPage />,
+      },
+      {
+        path: '*',
+        element: <Navigate to="/page-not-found" />,
       },
     ],
   },

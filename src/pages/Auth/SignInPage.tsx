@@ -5,11 +5,15 @@ import { useState } from 'react';
 
 import { AxiosError } from 'axios';
 
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+
 import { useSignIn } from '@/app/store/server/features/auth/mutations';
 import { SigninData } from '@/app/store/server/features/auth/interfaces';
 
 function SignInPage() {
   const { notification } = App.useApp();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [form] = Form.useForm();
   const [passwordVisible, setPasswordVisible] = useState(false);
 
@@ -27,6 +31,7 @@ function SignInPage() {
           notification.success({
             message: 'Sign In Successfully',
           });
+          navigate(searchParams.get('return_url') ?? '/home');
         },
         onError(error) {
           if (error instanceof AxiosError) {

@@ -1,16 +1,31 @@
-import { User } from '@/app/store/server/features/users/interfaces';
-import MemberCard from '@/components/Card/MemberCard';
-import useGetDetailClass from '@/hooks/useGetDetailClass';
 import { UserAddOutlined } from '@ant-design/icons';
-import { Avatar, Card, Divider } from 'antd';
-import Meta from 'antd/es/card/Meta';
-import React from 'react';
+import { Divider } from 'antd';
+
+import ClassMemberSkeleton from './skeletons/ClassMemberSkeleton';
+
+import useClassDetail from '@/hooks/useClassDetail';
+import MemberCard from '@/components/Card/MemberCard';
+import { User } from '@/app/store/server/features/users/interfaces';
+import ErrorPage from '@/pages/ErrorPage';
 
 export default function MemberClass() {
-  const { isLoading, data, isError, error } = useGetDetailClass();
+  const { isLoading, data, isError, error, isSuccess } = useClassDetail();
+  if (isError) return <ErrorPage error={error} />;
 
-  if (isLoading) return <h1>Loading...</h1>;
-  if (isError) return <div>Error + {error.message}</div>;
+  const renderOwner = () => {
+    if (isLoading) {
+      return <ClassMemberSkeleton />;
+    }
+    return (
+      data?.owner && (
+        <MemberCard
+          key={'member-card-owner'}
+          email={data.owner.email}
+          avatar={data.owner.avatar ?? ''}
+        />
+      )
+    );
+  };
 
   return (
     <div className="h-full text-center flex flex-col justify-start bg-slate-50">
@@ -20,7 +35,7 @@ export default function MemberClass() {
             <div className="title grow text-3xl text-left text-blue-600">
               Teacher
             </div>
-            <a href="javascript::void(0)">
+            <a href="javascript:;">
               <UserAddOutlined className="text-3xl" />
             </a>
           </div>
@@ -29,31 +44,16 @@ export default function MemberClass() {
             key={'divider-teacher'}
             className="m-2 text-blue-600 bg-inherit"
           />
-          {data.owner && (
-            <>
-              <MemberCard
-                key={'member-card-owner'}
-                email={data.owner.email}
-                avatar={data.owner.avatar || ''}
+          {renderOwner()}
+          {data?.teachers?.map((teacher: User) => (
+            <div className="w-full" key={`teacher-${teacher.id}`}>
+              <Divider
+                style={{ borderTop: '1px solid black' }}
+                className="m-2"
               />
-            </>
-          )}
-          {data.teachers &&
-            data.teachers.map((teacher: User, index: number) => (
-              <div className='w-full' key={Math.random()}>
-
-                <Divider
-                  style={{ borderTop: '1px solid black' }}
-                  key={'divider-teacher-' + index}
-                  className="m-2"
-                />
-                <MemberCard
-                  key={'member-card-teacher-' + index}
-                  email={teacher.email}
-                  avatar={teacher.avatar || ''}
-                />
-              </div>
-            ))}
+              <MemberCard email={teacher.email} avatar={teacher.avatar ?? ''} />
+            </div>
+          ))}
         </div>
         <div className="flex flex-col w-3/5 mt-5 gap-x-5 bg-white p-5 rounded-md">
           <div className="flex flex-row gap-x-5">
@@ -61,9 +61,9 @@ export default function MemberClass() {
               Student
             </div>
             <div className="text-blue-600">
-              {data.students ? data.students.length : 0} students
+              {data?.students ? data.students.length : 0} students
             </div>
-            <a href="javascript::void(0)">
+            <a href="javascript:;">
               <UserAddOutlined className="text-3xl" />{' '}
             </a>
           </div>
@@ -72,16 +72,15 @@ export default function MemberClass() {
             style={{ borderTop: '1px solid blue' }}
             className="m-2 text-blue-600 bg-inherit"
           />
-          {data.students &&
+          {data?.students &&
             data.students.map((student: User, index: number) => (
-              <div className='w-full' key={Math.random()}>
+              <div className="w-full" key={`student-${student.id}`}>
                 <MemberCard
                   email={student.email}
-                  avatar={student.avatar || ''}
+                  avatar={student.avatar ?? ''}
                 />
                 {index >= 1 && (
                   <Divider
-                    key={'divider-student-' + index}
                     style={{ borderTop: '1px solid black' }}
                     className="m-2"
                   />

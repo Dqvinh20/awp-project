@@ -1,69 +1,116 @@
-import { Link, NavLink, Outlet, useSearchParams } from 'react-router-dom';
-import React from 'react';
-import {
-  LaptopOutlined,
-  NotificationOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
-import type { MenuProps } from 'antd';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { NavLink, Outlet } from 'react-router-dom';
+import { ConfigProvider, Layout, Menu, MenuProps, Spin, App } from 'antd';
+import { AxiosError } from 'axios';
 
-const { Header, Content, Footer, Sider } = Layout;
+import { useEffect } from 'react';
+
+import ErrorPage from '../ErrorPage';
+
+import useClassDetail from '@/hooks/useClassDetail';
+import UnauthImg from '@/assets/error_401.jpg';
+
+const { Header, Content } = Layout;
 
 const LinkMenuClassRoom = [
   {
-    lable: 'News',
+    label: 'News',
     path: 'news',
   },
   {
-    lable: 'Members',
+    label: 'Members',
     path: 'members',
   },
   {
-    lable: 'Grade',
+    label: 'Grade',
     path: 'grade',
   },
 ];
 
-export default function ClassLayOut() {
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
-
-  return (
-    <Layout className="bg-white m-0 h-full w-full">
-      <Header className="twp px-7 bg-white border-b border-b-gray-300">
-        <Menu
-          theme="light"
-          mode="horizontal"
-          defaultSelectedKeys={[
-            window.location.pathname.substring(
-              window.location.pathname.lastIndexOf('/') + 1
-            ),
-          ]}
-          items={items}
-        >
-          {/* {LinkMenuClassRoom.map((item) => (
-            <Menu.Item className="" key={item.path} style={{ float: 'right' }}>
-              <NavLink className="p-4" to={item.path}>
-                {item.lable}
-              </NavLink>
-            </Menu.Item>
-          ))} */}
-        </Menu>
-      </Header>
-      <Content className="bg-white m-0 h-full w-full d-flex justify-center items-center">
-        <Outlet />
-      </Content>
-    </Layout>
-  );
-}
-const items: MenuProps['items'] = 
-LinkMenuClassRoom.map((item,index)=>({
+const items: MenuProps['items'] = LinkMenuClassRoom.map((item) => ({
   label: (
     <NavLink className="p-4" to={item.path}>
-      {item.lable}
+      {item.label}
     </NavLink>
   ),
   key: item.path,
-}))
+}));
+
+export default function ClassLayOut() {
+  const { notification } = App.useApp();
+
+  const { isLoading, isError, error, isSuccess } = useClassDetail();
+
+  useEffect(() => {
+    if (isError && error instanceof AxiosError) {
+      notification.error({
+        message: 'Error Occurred',
+        description: error.response?.data.message,
+      });
+    }
+  }, [error, isError, notification]);
+
+  if (isError) {
+    if (
+      error instanceof AxiosError &&
+      error.response?.data.message ===
+        "You don't have permission to access. You are not in this class"
+    ) {
+      return (
+        <div className="w-full h-full flex items-center justify-center">
+          <img src={UnauthImg} alt="Not access error" />
+        </div>
+      );
+    }
+
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <ErrorPage error={error} />
+      </div>
+    );
+  }
+
+  if (isLoading)
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <Spin />
+      </div>
+    );
+
+  return (
+    isSuccess && (
+      <ConfigProvider
+        theme={{
+          components: {
+            Layout: {
+              headerHeight: 52,
+            },
+            Menu: {
+              activeBarHeight: 4,
+              horizontalItemBorderRadius: 0,
+              horizontalItemHoverBg: '#f5f5f5',
+            },
+          },
+        }}
+      >
+        <Layout className=" bg-white m-0 h-full w-full">
+          <Header className="twp p-0">
+            <Menu
+              theme="light"
+              mode="horizontal"
+              className="px-4"
+              defaultSelectedKeys={[
+                window.location.pathname.substring(
+                  window.location.pathname.lastIndexOf('/') + 1
+                ),
+              ]}
+              items={items}
+            ></Menu>
+          </Header>
+          <Content className="bg-white m-0 h-full w-full d-flex justify-center items-center">
+            <Outlet />
+          </Content>
+        </Layout>
+      </ConfigProvider>
+    )
+  );
+}

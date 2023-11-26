@@ -1,4 +1,4 @@
-import { User } from "../users/interfaces";
+import { User } from '../users/interfaces';
 
 /**
  * ClassRoom DTO.
@@ -8,28 +8,40 @@ import { User } from "../users/interfaces";
  * @property deleted_at - Address deleted time.
  * @interface Address
  */
-export interface ClassRoom {
+export interface ClassDTO {
   /** ClassRoom ID. */
   id: string;
   /** ClassRoom name. */
   name: string;
+  /** ClassRoom description. */
+  description: string;
   /** ClassRoom code. */
   code: string;
+  /** ClassRoom students. */
+  students: User[];
+  /** ClassRoom teachers. */
+  teachers: User[];
   /** ClassRoom code. */
   owner: User;
+  /** Class can join or not. */
+  isJoinable: boolean;
+  /** ClassRoom public join link. */
+  public_invitation_link?: string;
+  /** ClassRoom created time. */
+  created_at?: Date;
+  /** ClassRoom updated time. */
+  updated_at?: Date;
   /** ClassRoom deleted time. */
   deleted_at?: Date;
 }
 
-export interface PaginationResult<T> {
-  docs: T[];
-  totalDocs: number,
-  limit: number,
-  totalPages: number,
-  page: number,
-  pagingCounter: number,
-  hasPrevPage: boolean,
-  hasNextPage: boolean,
-  prevPage: string,
-  nextPage: string
+/**
+ * Create new class room.
+ * @interface AddClassDTO
+ */
+export interface AddClassDTO {
+  /** ClassRoom name. */
+  name: string;
+  /** ClassRoom description. */
+  description?: string;
 }
