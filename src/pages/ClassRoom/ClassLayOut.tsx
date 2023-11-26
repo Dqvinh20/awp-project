@@ -48,7 +48,9 @@ export default function ClassLayOut() {
           >
             {LinkMenuClassRoom.map((item) => (
               <Menu.Item key={item.path} style={{ float: 'right' }}>
-                <NavLink to={item.path}>{item.label}</NavLink>
+                <NavLink className="p-4" to={item.path}>
+                  {item.label}
+                </NavLink>
               </Menu.Item>
             ))}
           </Menu>
@@ -60,3 +62,11 @@ export default function ClassLayOut() {
     </ConfigProvider>
   );
 }
+const items: MenuProps['items'] = LinkMenuClassRoom.map((item, index) => ({
+  label: (
+    <NavLink className="p-4" to={item.path}>
+      {item.lable}
+    </NavLink>
+  ),
+  key: item.path,
+}));

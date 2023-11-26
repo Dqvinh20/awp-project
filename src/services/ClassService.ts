@@ -133,6 +133,15 @@ const ClassRoomService = {
     const response = await axiosClient.get<ClassDTO>(`/classes/${classID}`);
     return response.data;
   },
+  async joinClass(params: object): Promise<{ class_id: string }> {
+    const response = await axiosClient.get<{ class_id: string }>(
+      `/classes/join`,
+      {
+        params,
+      }
+    );
+    return response.data;
+  },
 };
 
 export default ClassRoomService;

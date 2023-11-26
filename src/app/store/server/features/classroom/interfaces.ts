@@ -17,6 +17,10 @@ export interface ClassDTO {
   description: string;
   /** ClassRoom code. */
   code: string;
+  /** ClassRoom students. */
+  students: User[];
+  /** ClassRoom teachers. */
+  teachers: User[];
   /** ClassRoom code. */
   owner: User;
   /** ClassRoom deleted time. */

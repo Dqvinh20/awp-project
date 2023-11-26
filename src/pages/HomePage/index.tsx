@@ -26,6 +26,7 @@ function HomePage() {
         </>
       )}
       {isSuccess &&
+        data.docs &&
         data?.docs?.map((classDetail, index) => (
           <ClassCard
             key={`class-component-${classDetail.id}-${index}`}

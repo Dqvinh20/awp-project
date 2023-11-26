@@ -64,7 +64,7 @@ const router = createBrowserRouter([
                 ],
               },
               {
-                path: '/joinclass/:id',
+                path: '/classes/join',
                 element: <JoinClass />,
               },
             ],
