@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 
-import { Dropdown, MenuProps, Space } from 'antd';
+import { Dropdown, MenuProps, Space, App } from 'antd';
 
 import { DownOutlined, MoreOutlined } from '@ant-design/icons';
 
@@ -13,24 +13,29 @@ const baseUrl = import.meta.env.DEV
   : 'https://awp_project.hausuper-s.me';
 
 export default function ClassRoom() {
+  const { message } = App.useApp();
   const { id } = useParams();
 
   const { isLoading, data, isError, error, isSuccess } = useClassDetailQuery(
     id as string
   );
   if (isError) return <ErrorPage error={error} />;
+  if (isLoading) return <></>;
+  if (!data) return <></>;
 
   const items: MenuProps['items'] = [
     {
       label: (
         <div
           onClick={() => {
-            navigator.clipboard.writeText(
-              `${baseUrl}/classes/join?c=${data.code}`
-            );
+            // navigator.clipboard.writeText(
+            //   `${baseUrl}/classes/join?c=${data.code}`
+            // );
+            navigator.clipboard.writeText(data.public_invitation_link ?? '');
+            message.success('Copy Link Success');
           }}
         >
-          Copy Link Join Public
+          Copy public invitation link
         </div>
       ),
       key: 'linkjoin',
@@ -43,9 +48,10 @@ export default function ClassRoom() {
         <div
           onClick={() => {
             navigator.clipboard.writeText(data.code);
+            message.success('Copy Code Success');
           }}
         >
-          Copy Code
+          Copy class code
         </div>
       ),
       key: 'copycode',
@@ -61,11 +67,14 @@ export default function ClassRoom() {
               <div className="flex flex-row ">
                 <div className="text-left grow text-base">Class Code</div>
                 <div className="text-center items-center text-base ">
-                  <Dropdown menu={{ items }} trigger={['click']}>
+                  <Dropdown
+                    menu={{ items }}
+                    arrow
+                    placement="bottomLeft"
+                    trigger={['click']}
+                  >
                     <a onClick={(e) => e.preventDefault()}>
-                      <Space>
-                        <MoreOutlined />
-                      </Space>
+                      <MoreOutlined />
                     </a>
                   </Dropdown>
                 </div>

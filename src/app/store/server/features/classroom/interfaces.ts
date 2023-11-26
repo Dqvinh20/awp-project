@@ -23,6 +23,14 @@ export interface ClassDTO {
   teachers: User[];
   /** ClassRoom code. */
   owner: User;
+  /** Class can join or not. */
+  isJoinable: boolean;
+  /** ClassRoom public join link. */
+  public_invitation_link?: string;
+  /** ClassRoom created time. */
+  created_at?: Date;
+  /** ClassRoom updated time. */
+  updated_at?: Date;
   /** ClassRoom deleted time. */
   deleted_at?: Date;
 }

@@ -29,7 +29,11 @@ function getItem(
 }
 
 export function useSideMenuItems(): MenuProps['items'] {
-  const { isLoading: profileLoading, data: profile } = useGetMyInfo();
+  const {
+    isLoading: profileLoading,
+    isSuccess: profileSuccess,
+    data: profile,
+  } = useGetMyInfo();
   const { isLoading, isError, data: classes } = useClassesQuery();
 
   const loadInnerMenu = (): MenuItem[] => {
@@ -45,34 +49,18 @@ export function useSideMenuItems(): MenuProps['items'] {
         ),
       ];
     if (isError) return [];
+    if (!profileSuccess) return [];
 
-    // Role teacher
-    if (profile?.role === USER_ROLE.Teacher) {
-      return [
-        getItem(
-          'Teaching',
-          'classes',
-          null,
-          classes?.docs.map((c) =>
-            getItem(
-              <NavLink to={`class/${c.id}/news`}>{c.name}</NavLink>,
-              `class/${c.id}`
-            )
-          )
-        ),
-      ];
-    }
-
-    // Role student
+    // Role based
     return [
       getItem(
-        'Enrolled',
+        profile.role === USER_ROLE.Teacher ? 'Teaching' : 'Enrolled',
         'classes',
         null,
         classes?.docs.map((c) =>
           getItem(
             <NavLink to={`class/${c.id}/news`}>{c.name}</NavLink>,
-            `class/${c.id}/news`
+            `class/${c.id}`
           )
         )
       ),

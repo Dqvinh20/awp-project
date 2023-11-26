@@ -8,3 +8,10 @@ export const useAddClass = () =>
     mutationFn: ClassRoomService.addClassRoom,
     retry: false,
   });
+
+/** User join the class. */
+export const useJoinClass = () =>
+  useMutation({
+    mutationFn: ClassRoomService.joinClass,
+    retry: false,
+  });
