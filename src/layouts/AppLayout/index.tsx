@@ -32,6 +32,7 @@ function AppLayout() {
           style={{
             marginLeft: margin_left_sider(),
             marginTop: 64,
+            transition: 'margin-left 0.2s',
           }}
           className=" bg-white m-0 h-full w-full"
         >
