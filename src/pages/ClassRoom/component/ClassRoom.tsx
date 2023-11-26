@@ -1,14 +1,8 @@
-import { useParams } from 'react-router-dom';
+import { Dropdown, MenuProps, App } from 'antd';
 
-import { Dropdown, MenuProps, Space, App, Spin } from 'antd';
+import { MoreOutlined } from '@ant-design/icons';
 
-import { DownOutlined, MoreOutlined } from '@ant-design/icons';
-
-import { AxiosError } from 'axios';
 import BannerClass from './BannerClass';
-
-import { useClassDetailQuery } from '@/app/store/server/features/classroom/queries';
-import ErrorPage from '@/pages/ErrorPage';
 
 import useClassDetail from '@/hooks/useClassDetail';
 const baseUrl = import.meta.env.DEV

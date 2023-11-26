@@ -2,11 +2,12 @@ import { NavLink, Outlet } from 'react-router-dom';
 import { ConfigProvider, Layout, Menu, MenuProps, Spin, App } from 'antd';
 import { AxiosError } from 'axios';
 
+import { useEffect } from 'react';
+
 import ErrorPage from '../ErrorPage';
 
 import useClassDetail from '@/hooks/useClassDetail';
 import UnauthImg from '@/assets/error_401.jpg';
-import { useEffect } from 'react';
 
 const { Header, Content } = Layout;
 
@@ -49,7 +50,11 @@ export default function ClassLayOut() {
   }, [error, isError, notification]);
 
   if (isError) {
-    if (error instanceof AxiosError) {
+    if (
+      error instanceof AxiosError &&
+      error.response?.data.message ===
+        "You don't have permission to access. You are not in this class"
+    ) {
       return (
         <div className="w-full h-full flex items-center justify-center">
           <img src={UnauthImg} alt="Not access error" />
