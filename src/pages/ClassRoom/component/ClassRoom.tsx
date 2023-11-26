@@ -1,27 +1,26 @@
 import { useParams } from 'react-router-dom';
 
-import { Dropdown, MenuProps, Space, App } from 'antd';
+import { Dropdown, MenuProps, Space, App, Spin } from 'antd';
 
 import { DownOutlined, MoreOutlined } from '@ant-design/icons';
 
+import { AxiosError } from 'axios';
 import BannerClass from './BannerClass';
 
 import { useClassDetailQuery } from '@/app/store/server/features/classroom/queries';
 import ErrorPage from '@/pages/ErrorPage';
+
+import useClassDetail from '@/hooks/useClassDetail';
 const baseUrl = import.meta.env.DEV
   ? 'http://localhost:4200'
   : 'https://awp_project.hausuper-s.me';
 
 export default function ClassRoom() {
   const { message } = App.useApp();
-  const { id } = useParams();
 
-  const { isLoading, data, isError, error, isSuccess } = useClassDetailQuery(
-    id as string
-  );
-  if (isError) return <ErrorPage error={error} />;
-  if (isLoading) return <></>;
-  if (!data) return <></>;
+  const { data, isSuccess } = useClassDetail();
+
+  if (!data) return null;
 
   const items: MenuProps['items'] = [
     {
