@@ -4,6 +4,8 @@ import Sider from 'antd/es/layout/Sider';
 import { NavLink } from 'react-router-dom';
 
 import { useSideMenu } from '@/hooks/useSideMenu';
+import { useQuery } from '@tanstack/react-query';
+import ClassRoomService from '@/services/ClassService';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -41,13 +43,43 @@ interface AppSiderProps {
   setIsMobile(value: boolean): void;
 }
 
-function AppSider({
-  collapsed,
-  setCollapsed,
-  isMobile,
-  setIsMobile,
-}: AppSiderProps) {
+function AppSider({ collapsed, setCollapsed isMobile,
+  setIsMobile, }: AppSiderProps) {
+  const [isMobile, setIsMobile] = useState<boolean>(false);
   const menuItems = useSideMenu();
+  const { isLoading, data, isError, error, isRefetching } = useQuery({
+    queryKey: ['classes'],
+    queryFn: () => ClassRoomService.getAllClassRoomByUserId(),
+    retry: false,
+  });
+  const items: MenuProps['items'] = data
+    ? [
+        {
+          label: <NavLink to={'home'}>Home</NavLink>,
+          key: 'home',
+        },
+        {
+          type: 'divider',
+        },
+        {
+          label: 'Classes',
+          key: 'class',
+          children : data && data.docs &&
+          data.docs.map((myclass, index) => {
+            return {
+              label: <NavLink to={'class/' + myclass.id + '/news'}>{myclass.name}</NavLink>,
+              key: 'class/' + myclass.id + '/news',
+            }
+          })
+        },
+      ]
+    : [
+        {
+          label: <NavLink to={'home'}>Home</NavLink>,
+          key: 'home',
+        },
+      ];
+      console.log(window.location.pathname)
   return (
     <Sider
       style={{
@@ -72,22 +104,18 @@ function AppSider({
     >
       <Menu
         mode="inline"
-        defaultSelectedKeys={['home']}
+        selectedKeys={[
+          window.location.pathname,
+        ]}
         style={{ height: '100%', borderRight: 0 }}
         items={menuItems}
       >
         {/* <Menu.Item className="" key={'home'} style={{ float: 'right' }}>
+        {/* <Menu.Item className="" key={'home'} style={{ float: 'right' }}>
           <NavLink to={'home'}>Home</NavLink>
         </Menu.Item>
         <Divider className="m-0"></Divider>
-        <SubMenu key="sub1" title={'Class'}>
-          <Menu.Item className="" key={'home2'} style={{ float: 'right' }}>
-            <NavLink to={'home2'}>Home</NavLink>
-          </Menu.Item>
-          <Menu.Item className="" key={'home1'} style={{ float: 'right' }}>
-            <NavLink to={'home1'}>Home1</NavLink>
-          </Menu.Item>
-        </SubMenu> */}
+        <ClassSubMenu /> */}
       </Menu>
     </Sider>
   );

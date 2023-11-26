@@ -45,15 +45,8 @@ export default function ClassLayOut() {
                 window.location.pathname.lastIndexOf('/') + 1
               ),
             ]}
-          >
-            {LinkMenuClassRoom.map((item) => (
-              <Menu.Item key={item.path} style={{ float: 'right' }}>
-                <NavLink className="p-4" to={item.path}>
-                  {item.label}
-                </NavLink>
-              </Menu.Item>
-            ))}
-          </Menu>
+            items={items}
+          ></Menu>
         </Header>
         <Content className="bg-white m-0 h-full w-full d-flex justify-center items-center">
           <Outlet />

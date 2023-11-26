@@ -18,7 +18,8 @@ function SignUpPage() {
   const signUp = useSignUp();
 
   const onFinish = (values: SignupData) => {
-    signUp.mutate(values, {
+    console.log({...values,role:'Student'})
+    signUp.mutate({...values,role:'Student'}, {
       onSuccess() {
         notification.success({
           message: 'Sign Up Successfully',
