@@ -7,6 +7,7 @@ import { DownOutlined, MoreOutlined } from '@ant-design/icons';
 import BannerClass from './BannerClass';
 
 import { useClassDetailQuery } from '@/app/store/server/features/classroom/queries';
+import ErrorPage from '@/pages/ErrorPage';
 const baseUrl = import.meta.env.DEV
   ? 'http://localhost:4200'
   : 'https://awp_project.hausuper-s.me';
@@ -17,22 +18,20 @@ export default function ClassRoom() {
   const { isLoading, data, isError, error, isSuccess } = useClassDetailQuery(
     id as string
   );
+  if (isError) return <ErrorPage error={error} />;
 
-  if (isLoading) return <h1>Loading...</h1>;
-  if (isError) return <div>Error + {error.message}</div>;
   const items: MenuProps['items'] = [
     {
       label: (
-        <a
+        <div
           onClick={() => {
             navigator.clipboard.writeText(
               `${baseUrl}/classes/join?c=${data.code}`
             );
           }}
-          href="javascript:void(0)"
         >
           Copy Link Join Public
-        </a>
+        </div>
       ),
       key: 'linkjoin',
     },
@@ -45,7 +44,6 @@ export default function ClassRoom() {
           onClick={() => {
             navigator.clipboard.writeText(data.code);
           }}
-          href="javascript:void(0)"
         >
           Copy Code
         </div>

@@ -1,3 +1,9 @@
+/** User role. */
+export enum USER_ROLE {
+  Admin = 'Admin',
+  Teacher = 'Teacher',
+  Student = 'Student',
+}
 /**
  * User DTO.
  * @interface User
@@ -25,8 +31,10 @@ export interface User {
   updated_at?: Date;
   /** Deleted time. */
   deleted_at?: Date;
-
-  gender?: String;
+  /** User role. */
+  role: USER_ROLE;
+  /** User gender. */
+  gender?: string;
 }
 
 /**

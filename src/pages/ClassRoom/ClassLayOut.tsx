@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom';
-import { ConfigProvider, Layout, Menu } from 'antd';
+import { ConfigProvider, Layout, Menu, MenuProps } from 'antd';
 
 const { Header, Content } = Layout;
 
@@ -17,6 +17,15 @@ const LinkMenuClassRoom = [
     path: 'grade',
   },
 ];
+
+const items: MenuProps['items'] = LinkMenuClassRoom.map((item) => ({
+  label: (
+    <NavLink className="p-4" to={item.path}>
+      {item.label}
+    </NavLink>
+  ),
+  key: item.path,
+}));
 
 export default function ClassLayOut() {
   return (
@@ -55,11 +64,3 @@ export default function ClassLayOut() {
     </ConfigProvider>
   );
 }
-const items: MenuProps['items'] = LinkMenuClassRoom.map((item, index) => ({
-  label: (
-    <NavLink className="p-4" to={item.path}>
-      {item.lable}
-    </NavLink>
-  ),
-  key: item.path,
-}));

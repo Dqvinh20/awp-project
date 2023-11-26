@@ -9,7 +9,13 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ConfigProvider>
+      <ConfigProvider
+        theme={{
+          token: {
+            fontFamily: '"Open Sans", "Inter", Roboto, sans-serif',
+          },
+        }}
+      >
         <AntApp notification={{ placement: 'topRight' }}>
           <Outlet />
         </AntApp>

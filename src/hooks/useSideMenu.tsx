@@ -8,6 +8,7 @@ import { NavLink } from 'react-router-dom';
 
 import { useGetMyInfo } from '@/app/store/server/features/users/queries';
 import { useClassesQuery } from '@/app/store/server/features/classroom/queries';
+import { USER_ROLE } from '@/app/store/server/features/users/interfaces';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -27,12 +28,12 @@ function getItem(
   } as MenuItem;
 }
 
-export function useSideMenu(): MenuProps['items'] {
-  const { data: myInfo } = useGetMyInfo();
-  const { isLoading, isError } = useClassesQuery();
+export function useSideMenuItems(): MenuProps['items'] {
+  const { isLoading: profileLoading, data: profile } = useGetMyInfo();
+  const { isLoading, isError, data: classes } = useClassesQuery();
 
   const loadInnerMenu = (): MenuItem[] => {
-    if (isLoading)
+    if (isLoading && profileLoading)
       return [
         getItem(
           <div className="flex justify-center">
@@ -45,7 +46,37 @@ export function useSideMenu(): MenuProps['items'] {
       ];
     if (isError) return [];
 
-    return [getItem('Enrolled', 'enrolled')];
+    // Role teacher
+    if (profile?.role === USER_ROLE.Teacher) {
+      return [
+        getItem(
+          'Teaching',
+          'classes',
+          null,
+          classes?.docs.map((c) =>
+            getItem(
+              <NavLink to={`class/${c.id}/news`}>{c.name}</NavLink>,
+              `class/${c.id}`
+            )
+          )
+        ),
+      ];
+    }
+
+    // Role student
+    return [
+      getItem(
+        'Enrolled',
+        'classes',
+        null,
+        classes?.docs.map((c) =>
+          getItem(
+            <NavLink to={`class/${c.id}/news`}>{c.name}</NavLink>,
+            `class/${c.id}/news`
+          )
+        )
+      ),
+    ];
   };
 
   return [
