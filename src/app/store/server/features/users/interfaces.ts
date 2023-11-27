@@ -35,6 +35,11 @@ export interface User {
   role: USER_ROLE;
   /** User gender. */
   gender?: string;
+
+  /** User is active. */
+  isActive?: boolean;
+  /** User email is confirmed. */
+  isEmailConfirmed?: boolean;
 }
 
 /**

@@ -29,7 +29,6 @@ export const useSignUp = () =>
     retry: false,
     onSuccess(data) {
       jwtService.saveToken(data.access_token);
-      window.location.href = '/home';
     },
   });
 
@@ -50,5 +49,19 @@ export const useForgotPassword = () =>
 export const useResetPassword = () =>
   useMutation({
     mutationFn: authService.resetPassword,
+    retry: false,
+  });
+
+/** User can resend verification email. */
+export const useResendEmailConfirmation = () =>
+  useMutation({
+    mutationFn: () => authService.resendEmailConfirmation(),
+    retry: false,
+  });
+
+/** User can confirm their email. */
+export const useConfirmEmail = () =>
+  useMutation({
+    mutationFn: (token: string) => authService.confirmEmail(token),
     retry: false,
   });
