@@ -56,6 +56,10 @@ const authService = {
     return response;
   },
 
+  logout() {
+    return axiosClient.post('/auth/log-out');
+  },
+
   async forgotPassword(email: string): Promise<any> {
     const response = await axiosClient.get(`/users/forgot-password/${email}`);
     return response.data;

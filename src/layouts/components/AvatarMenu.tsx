@@ -6,6 +6,7 @@ import React, { useMemo } from 'react';
 import jwtService from '@/services/JwtService';
 import { useGetMyInfo } from '@/app/store/server/features/users/queries';
 import { User } from '@/app/store/server/features/users/interfaces';
+import authService from '@/services/AuthService';
 
 const menuItemBuilder = (userInfo: User): MenuProps['items'] => {
   if (!userInfo) return [];
@@ -36,8 +37,9 @@ const menuItemBuilder = (userInfo: User): MenuProps['items'] => {
   ];
 };
 
-const menuItemClick: MenuProps['onClick'] = ({ key }) => {
+const menuItemClick: MenuProps['onClick'] = async ({ key }) => {
   if (key === 'logout') {
+    await authService.logout();
     jwtService.removeToken();
     window.location.href = '/';
   }
