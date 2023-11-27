@@ -1,20 +1,57 @@
-import { RiseOutlined } from '@ant-design/icons';
-import { Avatar, Card } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
+import { Avatar, Card, CardProps } from 'antd';
 import Meta from 'antd/es/card/Meta';
 import { useNavigate } from 'react-router-dom';
 
-export default function ClassCard(props: {
+import { ClassDTO } from '@/app/store/server/features/classroom/interfaces';
+
+interface ClassCardProps extends CardProps, Omit<ClassDTO, 'id'> {
   classId: string;
-  title: string;
-  description: string;
-  avatarSrc: string;
-  coverImageSrc: string;
-  index: number;
-}) {
+  customCoverImg?: string;
+  isTeacher?: boolean;
+  isOwner?: boolean;
+}
+
+const teacherCoverImgs = [
+  'https://www.gstatic.com/classroom/themes/img_reachout.jpg',
+  'https://www.gstatic.com/classroom/themes/img_billiard.jpg',
+];
+
+const studentCoverImgs = [
+  'https://www.gstatic.com/classroom/themes/img_learnlanguage.jpg',
+  'https://www.gstatic.com/classroom/themes/img_graduation.jpg',
+];
+
+function ClassCard({
+  classId,
+  name,
+  description,
+  owner,
+  customCoverImg = undefined,
+  isOwner = false,
+  isTeacher = false,
+}: ClassCardProps) {
   const navigate = useNavigate();
 
   const onCardClick = () => {
-    navigate(`/class/${props.classId}/news`);
+    navigate(`/class/${classId}/news`);
+  };
+
+  const coverImg = () => {
+    if (customCoverImg) return customCoverImg;
+
+    if (isTeacher) {
+      if (isOwner) {
+        return teacherCoverImgs[1];
+      }
+      return teacherCoverImgs[0];
+    }
+
+    if (isOwner) {
+      return studentCoverImgs[1];
+    }
+
+    return studentCoverImgs[0];
   };
 
   return (
@@ -24,14 +61,20 @@ export default function ClassCard(props: {
       }}
       bordered
       hoverable
-      style={{ width: 300 }}
-      cover={<img alt="Class cover" src={props.coverImageSrc} />}
+      className="w-full"
+      cover={<img alt="Class cover" src={coverImg()} />}
     >
-      <Meta
-        avatar={<Avatar src={props.avatarSrc} />}
-        title={props.title}
-        description={props.description}
-      />
+      {isOwner ? (
+        <Meta title={name} description={description} />
+      ) : (
+        <Meta
+          avatar={<Avatar src={owner.avatar} icon={<UserOutlined />} />}
+          title={name}
+          description={description}
+        />
+      )}
     </Card>
   );
 }
+
+export default ClassCard;
