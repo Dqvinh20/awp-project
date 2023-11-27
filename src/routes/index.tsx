@@ -18,6 +18,10 @@ import ClassRoom from '@/pages/ClassRoom/component/ClassRoom';
 import MemberClass from '@/pages/ClassRoom/component/MemberClass';
 import ClassGrade from '@/pages/ClassRoom/component/ClassGrade';
 import NotFoundPage from '@/pages/404';
+import GoogleOAuthSuccessRedirect from '@/pages/Auth/GoogleOAuthSuccessRedirect';
+import FacebookOAuthSuccessRedirect from '@/pages/Auth/FacebookOAuthSuccessRedirect';
+import ForgotPassword from '@/pages/Auth/ForgotPassword';
+import ResetPassword from '@/pages/Auth/ResetPassword';
 
 const router = createBrowserRouter([
   {
@@ -85,6 +89,22 @@ const router = createBrowserRouter([
           {
             path: '/sign-up',
             element: <SignUpPage />,
+          },
+          {
+            path: '/forgot-password',
+            element: <ForgotPassword />,
+          },
+          {
+            path: '/reset-password',
+            element: <ResetPassword />,
+          },
+          {
+            path: '/google-oauth-success-redirect/:accessToken/:from',
+            element: <GoogleOAuthSuccessRedirect />,
+          },
+          {
+            path: '/facebook-oauth-success-redirect/:accessToken/:from',
+            element: <FacebookOAuthSuccessRedirect />,
           },
         ],
       },

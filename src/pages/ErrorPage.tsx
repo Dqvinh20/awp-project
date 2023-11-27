@@ -3,7 +3,7 @@ import { useRouteError, isRouteErrorResponse } from 'react-router-dom';
 import NotFoundPage from './404';
 
 interface ErrorPageProps {
-  error: Error;
+  error?: Error;
 }
 
 export default function ErrorPage(props: ErrorPageProps) {
@@ -39,7 +39,8 @@ export default function ErrorPage(props: ErrorPageProps) {
   const { error } = props;
   return (
     <div className="flex justify-center items-center font-semibold text-lg">
-      Sorry, an unexpected error has occurred. Message: {error.message}
+      Sorry, an unexpected error has occurred.{' '}
+      {error && `Message: ${error.message}`}
     </div>
   );
 }
