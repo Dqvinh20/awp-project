@@ -67,6 +67,19 @@ const authService = {
     });
     return response.data;
   },
+
+  async resendEmailConfirmation(): Promise<any> {
+    const response = await axiosClient.post(`/email-confirmation/resend`);
+    return response.data;
+  },
+
+  async confirmEmail(token: string): Promise<any> {
+    const response = await axiosClient.post(
+      `/email-confirmation/confirm`,
+      token
+    );
+    return response.data;
+  },
 };
 
 export default authService;
