@@ -35,8 +35,10 @@ function AppHeader({ toggleCollapsed }: AppHeaderProps) {
               <path d="M 3 5 A 1.0001 1.0001 0 1 0 3 7 L 21 7 A 1.0001 1.0001 0 1 0 21 5 L 3 5 z M 3 11 A 1.0001 1.0001 0 1 0 3 13 L 21 13 A 1.0001 1.0001 0 1 0 21 11 L 3 11 z M 3 17 A 1.0001 1.0001 0 1 0 3 19 L 21 19 A 1.0001 1.0001 0 1 0 21 17 L 3 17 z"></path>
             </svg>
           </div>
-          <h2 className="antialiased font-semibold text-lg text-gray-600">
-            AWP Classroom
+          <h2 className="antialiased font-semibold hidden sm:block sm:text-lg text-gray-600">
+            <a className="twp hover:text-gray-900" href="/home">
+              AWP Classroom
+            </a>
           </h2>
         </Flex>
         <div className="flex flex-column items-center gap-x-2">
