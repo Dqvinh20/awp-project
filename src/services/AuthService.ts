@@ -1,3 +1,5 @@
+import { ResetPasswordDto } from './../app/store/server/features/auth/interfaces';
+
 import axiosClient from '@/app/AxiosClient';
 import { SignupData } from '@/app/store/server/features/auth/interfaces';
 import {
@@ -52,6 +54,18 @@ const authService = {
       }
     );
     return response;
+  },
+
+  async forgotPassword(email: string): Promise<any> {
+    const response = await axiosClient.get(`/users/forgot-password/${email}`);
+    return response.data;
+  },
+
+  async resetPassword({ token, new_password }: ResetPasswordDto): Promise<any> {
+    const response = await axiosClient.patch(`/users/reset-password/${token}`, {
+      new_password,
+    });
+    return response.data;
   },
 };
 
