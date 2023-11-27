@@ -19,7 +19,10 @@ export const useSignIn = () =>
     },
   });
 
-// eslint-disable-next-line jsdoc/require-jsdoc
+/**
+ * Sign up.
+ * @returns
+ */
 export const useSignUp = () =>
   useMutation({
     mutationFn: (signupData: SignupData) => authService.signup(signupData),
@@ -28,4 +31,24 @@ export const useSignUp = () =>
       jwtService.saveToken(data.access_token);
       window.location.href = '/home';
     },
+  });
+
+/**
+ * User can forgot password.
+ * @returns
+ */
+export const useForgotPassword = () =>
+  useMutation({
+    mutationFn: authService.forgotPassword,
+    retry: false,
+  });
+
+/**
+ * User can forgot password.
+ * @returns
+ */
+export const useResetPassword = () =>
+  useMutation({
+    mutationFn: authService.resetPassword,
+    retry: false,
   });
