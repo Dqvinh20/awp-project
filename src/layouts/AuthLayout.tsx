@@ -8,7 +8,7 @@ function AuthLayout() {
   const { user_id } = useAuth();
 
   if (user_id) {
-    return <Navigate to="/home" />;
+    return <Navigate to="/home" replace={true} />;
   }
 
   return (
