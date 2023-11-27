@@ -3,7 +3,6 @@ import { Card, Skeleton } from 'antd';
 function ClassCardSkeleton() {
   return (
     <Card
-      style={{ width: 300 }}
       bordered
       hoverable
       cover={
@@ -15,6 +14,7 @@ function ClassCardSkeleton() {
           active={true}
         />
       }
+      className="w-full"
     >
       <Skeleton active avatar paragraph={{ rows: 1 }} />
     </Card>
