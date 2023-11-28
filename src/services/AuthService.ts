@@ -1,7 +1,11 @@
-import { ResetPasswordDto } from './../app/store/server/features/auth/interfaces';
+import {
+  FinishSignupData,
+  ResetPasswordDto,
+} from './../app/store/server/features/auth/interfaces';
 
 import axiosClient from '@/app/AxiosClient';
 import { SignupData } from '@/app/store/server/features/auth/interfaces';
+import { User } from '@/app/store/server/features/users/interfaces';
 import {
   LoginResponse,
   RefreshTokenResponse,
@@ -35,6 +39,11 @@ const authService = {
    */
   async signup(signupData: SignupData): Promise<SignupResponse> {
     const response = await axiosClient.post('/auth/sign-up', signupData);
+    return response.data;
+  },
+
+  async finishSignUp(body: FinishSignupData): Promise<User> {
+    const response = await axiosClient.post(`/auth/finish-sign-up`, body);
     return response.data;
   },
 
