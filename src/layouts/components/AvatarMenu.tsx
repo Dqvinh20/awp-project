@@ -10,7 +10,7 @@ import authService from '@/services/AuthService';
 
 const menuItemBuilder = (userInfo: User): MenuProps['items'] => {
   if (!userInfo) return [];
-  if (!userInfo.isEmailConfirmed) {
+  if (!userInfo.isEmailConfirmed || !userInfo.role) {
     return [
       {
         key: 'logout',
