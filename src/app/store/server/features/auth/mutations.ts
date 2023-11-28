@@ -32,6 +32,13 @@ export const useSignUp = () =>
     },
   });
 
+/** User finish sign up. */
+export const useFinishSignUp = () =>
+  useMutation({
+    mutationFn: authService.finishSignUp,
+    retry: false,
+  });
+
 /**
  * User can forgot password.
  * @returns
