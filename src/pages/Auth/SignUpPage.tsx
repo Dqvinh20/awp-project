@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Form, Input, Button, Card, App, Spin } from 'antd';
+import { Form, Input, Button, Card, App, Spin, Checkbox } from 'antd';
 import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 
@@ -258,7 +258,28 @@ function SignUpPage() {
               }}
             />
           </Form.Item>
-
+          <Form.Item
+            name="agreement"
+            valuePropName="checked"
+            rules={[
+              {
+                validator: (_, value) =>
+                  value
+                    ? Promise.resolve()
+                    : Promise.reject(new Error('Should accept privacy policy')),
+              },
+            ]}
+          >
+            <Checkbox>
+              I accept the{' '}
+              <a
+                href="/privacy-policy"
+                className="font-medium hover:underline hover:text-indigo-500"
+              >
+                Privacy Policy
+              </a>
+            </Checkbox>
+          </Form.Item>
           <Form.Item>
             <Button
               block

@@ -20,6 +20,7 @@ import ForgotPassword from '@/pages/Auth/ForgotPassword';
 import ResetPassword from '@/pages/Auth/ResetPassword';
 import EmailConfirmSuccess from '@/pages/Auth/EmailConfirmSuccess';
 import OAuthSuccessRedirect from '@/pages/Auth/OAuthSuccessRedirect';
+import PrivacyPolicy from '@/pages/PrivacyPolicy';
 
 const router = createBrowserRouter([
   {
@@ -109,6 +110,10 @@ const router = createBrowserRouter([
             element: <ResetPassword />,
           },
         ],
+      },
+      {
+        path: '/privacy-policy',
+        element: <PrivacyPolicy />,
       },
       {
         path: '/page-not-found',
