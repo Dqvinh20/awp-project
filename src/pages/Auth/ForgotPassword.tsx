@@ -94,7 +94,7 @@ function ForgotPassword() {
                 Not registered yet?{' '}
                 <a
                   href="/sign-in"
-                  className="text-indigo-600 font-medium inline-flex space-x-1 items-center"
+                  className="text-[#0AAE67] hover:text-indigo-600 font-medium inline-flex space-x-1 items-center"
                 >
                   <span>Sign up now </span>
                   <span>
