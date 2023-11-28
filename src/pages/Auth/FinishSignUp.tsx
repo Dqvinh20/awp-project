@@ -1,9 +1,8 @@
-import { Button, Flex, Layout, Typography } from 'antd';
+import { Flex, Layout, Typography } from 'antd';
 
 import ChooseRoleForm from './ChooseRole';
 
 import AvatarMenu from '@/layouts/components/AvatarMenu';
-const { Text, Link } = Typography;
 
 function FinishSignUp() {
   return (

@@ -86,7 +86,7 @@ function SignInPage() {
         <p className="text-xs sm:text-sm">
           Don't have an account yet?{' '}
           <a
-            href="/sign-up"
+            href={`/sign-up${window.location.search}`}
             className="text-[#0AAE67] hover:text-indigo-600 font-medium inline-flex space-x-1 items-center"
           >
             Register now!
@@ -165,7 +165,7 @@ function SignInPage() {
                   `${API_URL}/auth/google/${window.location.pathname.replace(
                     /\//g,
                     '@'
-                  )}`,
+                  )}?return_url=${searchParams.get('return_url') ?? ''}`,
                   '_self'
                 );
                 setLoading(true);
@@ -182,7 +182,7 @@ function SignInPage() {
                   `${API_URL}/auth/facebook/${window.location.pathname.replace(
                     /\//g,
                     '@'
-                  )}`,
+                  )}?return_url=${searchParams.get('return_url') ?? ''}`,
                   '_self'
                 );
                 setLoading(true);

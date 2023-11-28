@@ -1,9 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { Form, Input, Button, Card, App, Spin, Checkbox } from 'antd';
 import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { AxiosError } from 'axios';
+
+import { useSearchParams } from 'react-router-dom';
 
 import SentEmailVerification from './SentEmailVerification';
 
@@ -15,6 +17,7 @@ import { API_URL } from '@/config/index';
 
 function SignUpPage() {
   const { notification } = App.useApp();
+  const [searchParams] = useSearchParams();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const [form] = Form.useForm();
@@ -110,7 +113,10 @@ function SignUpPage() {
         <h1 className="text-center text-3xl font-bold ">Sign Up</h1>
         <p className="mb-5 text-center text-sm">
           Already have an account?{' '}
-          <a href="/sign-in" className="text-[#0AAE67]">
+          <a
+            href={`/sign-in${window.location.search}`}
+            className="text-[#0AAE67]"
+          >
             Sign in
           </a>
         </p>
@@ -127,7 +133,7 @@ function SignUpPage() {
                 `${API_URL}/auth/google/${window.location.pathname.replace(
                   /\//g,
                   '@'
-                )}`,
+                )}?return_url=${searchParams.get('return_url') ?? ''}`,
                 '_self'
               );
               setLoading(true);
@@ -144,7 +150,7 @@ function SignUpPage() {
                 `${API_URL}/auth/facebook/${window.location.pathname.replace(
                   /\//g,
                   '@'
-                )}`,
+                )}?return_url=${searchParams.get('return_url') ?? ''}`,
                 '_self'
               );
               setLoading(true);

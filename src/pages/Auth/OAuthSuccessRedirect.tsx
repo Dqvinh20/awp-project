@@ -1,4 +1,4 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, useSearchParams } from 'react-router-dom';
 
 import { Spin } from 'antd';
 
@@ -7,6 +7,8 @@ import FinishSignUp from './FinishSignUp';
 import useOAuth from '@/hooks/useOAuth';
 
 const OAuthSuccessRedirect = () => {
+  const [searchParams] = useSearchParams();
+  const returnUrl = searchParams.get('return_url');
   const { data, isLoading } = useOAuth();
 
   if (isLoading) {
@@ -14,6 +16,9 @@ const OAuthSuccessRedirect = () => {
   }
 
   if (data?.role) {
+    if (returnUrl && returnUrl !== 'undefined' && returnUrl !== 'null') {
+      return <Navigate to={returnUrl} />;
+    }
     return <Navigate to="/home" />;
   }
 

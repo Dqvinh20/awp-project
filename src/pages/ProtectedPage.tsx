@@ -5,14 +5,14 @@ import NeedEmailVerification from './Auth/NeedEmailVerification';
 import { useGetMyInfo } from '@/app/store/server/features/users/queries';
 
 function ProtectedPage() {
-  const location = window.location.pathname;
+  const location = window.location.pathname + window.location.search;
   const searchParams = new URLSearchParams();
   searchParams.append('return_url', location);
   const { data, isLoading } = useGetMyInfo();
 
   if (isLoading) return null;
 
-  if (!data?.isEmailConfirmed) {
+  if (data && !data?.isEmailConfirmed) {
     return <NeedEmailVerification />;
   }
 
