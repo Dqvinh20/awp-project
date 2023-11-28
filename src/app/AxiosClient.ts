@@ -62,6 +62,10 @@ function createAxiosResponseInterceptor(): void {
       if (!jwtService.getToken()) {
         return Promise.reject(error);
       }
+      // Reject if the error message is not 'Unauthorized'
+      if (error.response.data.message !== 'Unauthorized') {
+        throw error;
+      }
 
       /*
        * When response code is 401 or 403, try to refresh the token.
