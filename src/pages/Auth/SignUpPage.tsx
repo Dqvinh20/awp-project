@@ -24,20 +24,19 @@ function SignUpPage() {
   // React Query
   const signUp = useSignUp();
 
-  useEffect(() => {
-    form.setFields([
-      { name: 'first_name', value: 'John' },
-      { name: 'last_name', value: 'Vinh' },
-      { name: 'email', value: 'duongquangvinh2210@gmail.com' },
-      { name: 'password', value: 'Admin@123!' },
-      { name: 'confirm-password', value: 'Admin@123!' },
-    ]);
-  }, []);
+  // useEffect(() => {
+  //   form.setFields([
+  //     { name: 'first_name', value: 'John' },
+  //     { name: 'last_name', value: 'Vinh' },
+  //     { name: 'email', value: 'duongquangvinh2210@gmail.com' },
+  //     { name: 'password', value: 'Admin@123!' },
+  //     { name: 'confirm-password', value: 'Admin@123!' },
+  //   ]);
+  // }, []);
 
   const onFinish = (values: SignupData) => {
-    console.log({ ...values, role: 'Teacher' });
     signUp.mutate(
-      { ...values, role: 'Teacher' },
+      { ...values },
       {
         onSuccess() {
           notification.success({

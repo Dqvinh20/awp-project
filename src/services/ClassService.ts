@@ -1,4 +1,3 @@
-import { ClassRoom } from '@/pages/ClassRoom/component/ClassRoom';
 import { AddClassDTO } from './../app/store/server/features/classroom/interfaces';
 import {
   PaginationParams,
@@ -9,74 +8,74 @@ import axiosClient from '@/app/AxiosClient';
 import { ClassDTO } from '@/app/store/server/features/classroom/interfaces';
 import { PaginationResult } from '@/interfaces/common.interface';
 
-const classListDemo: ClassDTO[] = [
-  {
-    id: 'class1',
-    code: 'Lớp Vinh là giáo viên',
-    name: 'Lớp Vinh là giáo viên',
-    owner: {
-      id: 'user1',
-      full_name: 'Dương Quang Vinh',
-      email: 'Dương Quang Vinh',
-      avatar: 'https://xsgames.co/randomusers/avatar.php?g=pixel',
-    },
-  },
-  {
-    id: 'class2',
-    code: 'Lớp Qui Bu',
-    name: 'Lớp Qui Bu',
-    owner: {
-      id: 'user2',
-      email: 'Dương Quang Vinh',
-      full_name: 'Vo Minh Thong',
-      avatar: 'https://xsgames.co/randomusers/avatar.php?g=pixel',
-    },
-  },
-  {
-    id: 'class3',
-    code: 'Lớp Nghien Ngap',
-    name: 'Lớp Nghien Ngap',
-    owner: {
-      id: 'user3',
-      email: 'Dương Quang Vinh',
-      full_name: 'Quan',
-      avatar: 'https://xsgames.co/randomusers/avatar.php?g=pixel',
-    },
-  },
-  {
-    id: 'class4',
-    code: 'Lớp Vinh là giáo viên',
-    name: 'Lớp Vinh là giáo viên',
-    owner: {
-      id: 'user1',
-      full_name: 'Dương Quang Vinh',
-      email: 'Dương Quang Vinh',
-      avatar: 'https://xsgames.co/randomusers/avatar.php?g=pixel',
-    },
-  },
-  {
-    id: 'class5',
-    code: 'Lớp Qui Bu',
-    name: 'Lớp Qui Bu',
-    owner: {
-      id: 'user2',
-      email: 'Dương Quang Vinh',
-      full_name: 'Vo Minh Thong',
-      avatar: 'https://xsgames.co/randomusers/avatar.php?g=pixel',
-    },
-  },
-  {
-    id: 'class6',
-    code: 'Lớp Nghien Ngap',
-    name: 'Lớp Nghien Ngap',
-    owner: {
-      id: 'user3',
-      email: 'Dương Quang Vinh',
-      full_name: 'Quan',
-      avatar: 'https://xsgames.co/randomusers/avatar.php?g=pixel',
-    },
-  },
-];
+// const classListDemo: ClassDTO[] = [
+//   {
+//     id: 'class1',
+//     code: 'Lớp Vinh là giáo viên',
+//     name: 'Lớp Vinh là giáo viên',
+//     owner: {
+//       id: 'user1',
+//       full_name: 'Dương Quang Vinh',
+//       email: 'Dương Quang Vinh',
+//       avatar: 'https://xsgames.co/randomusers/avatar.php?g=pixel',
+//     },
+//   },
+//   {
+//     id: 'class2',
+//     code: 'Lớp Qui Bu',
+//     name: 'Lớp Qui Bu',
+//     owner: {
+//       id: 'user2',
+//       email: 'Dương Quang Vinh',
+//       full_name: 'Vo Minh Thong',
+//       avatar: 'https://xsgames.co/randomusers/avatar.php?g=pixel',
+//     },
+//   },
+//   {
+//     id: 'class3',
+//     code: 'Lớp Nghien Ngap',
+//     name: 'Lớp Nghien Ngap',
+//     owner: {
+//       id: 'user3',
+//       email: 'Dương Quang Vinh',
+//       full_name: 'Quan',
+//       avatar: 'https://xsgames.co/randomusers/avatar.php?g=pixel',
+//     },
+//   },
+//   {
+//     id: 'class4',
+//     code: 'Lớp Vinh là giáo viên',
+//     name: 'Lớp Vinh là giáo viên',
+//     owner: {
+//       id: 'user1',
+//       full_name: 'Dương Quang Vinh',
+//       email: 'Dương Quang Vinh',
+//       avatar: 'https://xsgames.co/randomusers/avatar.php?g=pixel',
+//     },
+//   },
+//   {
+//     id: 'class5',
+//     code: 'Lớp Qui Bu',
+//     name: 'Lớp Qui Bu',
+//     owner: {
+//       id: 'user2',
+//       email: 'Dương Quang Vinh',
+//       full_name: 'Vo Minh Thong',
+//       avatar: 'https://xsgames.co/randomusers/avatar.php?g=pixel',
+//     },
+//   },
+//   {
+//     id: 'class6',
+//     code: 'Lớp Nghien Ngap',
+//     name: 'Lớp Nghien Ngap',
+//     owner: {
+//       id: 'user3',
+//       email: 'Dương Quang Vinh',
+//       full_name: 'Quan',
+//       avatar: 'https://xsgames.co/randomusers/avatar.php?g=pixel',
+//     },
+//   },
+// ];
 
 /**
  * ClassRoomService.ts.
@@ -84,7 +83,7 @@ const classListDemo: ClassDTO[] = [
  * @author Vo Minh Thong <vmthong20@clc.fitus.edu.vn>
  */
 const ClassRoomService = {
-  classListDemo,
+  // classListDemo,
 
   async addClassRoom(body?: AddClassDTO): Promise<ClassDTO> {
     const response = await axiosClient.post(`/classes`, body);
@@ -134,8 +133,8 @@ const ClassRoomService = {
     const response = await axiosClient.get<ClassDTO>(`/classes/${classID}`);
     return response.data;
   },
-  async joinClass(params: object): Promise<ClassRoom> {
-    const response = await axiosClient.get<ClassRoom>(`/classes/join`, {
+  async joinClass(params: object): Promise<ClassDTO> {
+    const response = await axiosClient.get<ClassDTO>(`/classes/join`, {
       params,
     });
     return response.data;
