@@ -1,14 +1,28 @@
-import React from 'react'
-import 'react-banner/dist/style.css'
+import { Tooltip } from 'antd';
+import React from 'react';
+import 'react-banner/dist/style.css';
 
-export default function BannerClass(props : {title :string}) {
+interface BannerClassProps {
+  bgImg?: string;
+  title: string;
+}
+
+export default function BannerClass({
+  bgImg = 'https://gstatic.com/classroom/themes/img_graduation.jpg',
+  title,
+}: BannerClassProps) {
   return (
-    <div className="w-3/5 flex items-end rounded-md bg-cover bg-center h-60 text-white px-10 object-fill border-slate-300" style={{backgroundImage: 'url(https://gstatic.com/classroom/themes/img_graduation.jpg)'}}>
-       <div className="md:w-1/2">
-        {/* <p className="font-bold text-sm uppercase">Services</p> */}
-        <p className="text-3xl font-bold text-left">{props.title}</p>
-        {/* <p className="text-2xl mb-10 leading-none">Atractive designs for your brand</p> */}
-        </div>  
+    <div
+      className="w-full h-32 sm:h-60 rounded-lg bg-cover bg-center bg-no-repeat text-white object-cover flex flex-col-reverse px-4"
+      style={{
+        backgroundImage: `url(${bgImg})`,
+      }}
+    >
+      <Tooltip title={title} placement="bottom">
+        <p className="line-clamp-1 sm:line-clamp-1 text-base md:text-xl lg:text-4xl font-medium">
+          {title}
+        </p>
+      </Tooltip>
     </div>
   );
 }
