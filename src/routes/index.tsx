@@ -1,7 +1,5 @@
 import { Navigate, createBrowserRouter } from 'react-router-dom';
 
-import { QueryClient } from '@tanstack/react-query';
-
 import App from '@/app';
 import ErrorPage from '@/pages/ErrorPage';
 import AppLayout from '@/layouts/AppLayout/index';
@@ -18,10 +16,10 @@ import ClassRoom from '@/pages/ClassRoom/component/ClassRoom';
 import MemberClass from '@/pages/ClassRoom/component/MemberClass';
 import ClassGrade from '@/pages/ClassRoom/component/ClassGrade';
 import NotFoundPage from '@/pages/404';
-import GoogleOAuthSuccessRedirect from '@/pages/Auth/GoogleOAuthSuccessRedirect';
-import FacebookOAuthSuccessRedirect from '@/pages/Auth/FacebookOAuthSuccessRedirect';
 import ForgotPassword from '@/pages/Auth/ForgotPassword';
 import ResetPassword from '@/pages/Auth/ResetPassword';
+import EmailConfirmSuccess from '@/pages/Auth/EmailConfirmSuccess';
+import OAuthSuccessRedirect from '@/pages/Auth/OAuthSuccessRedirect';
 
 const router = createBrowserRouter([
   {
@@ -80,6 +78,14 @@ const router = createBrowserRouter([
         ],
       },
       {
+        path: '/google-oauth-success-redirect/:accessToken/:from',
+        element: <OAuthSuccessRedirect />,
+      },
+      {
+        path: '/facebook-oauth-success-redirect/:accessToken/:from',
+        element: <OAuthSuccessRedirect />,
+      },
+      {
         element: <AuthLayout />,
         children: [
           {
@@ -91,20 +97,16 @@ const router = createBrowserRouter([
             element: <SignUpPage />,
           },
           {
+            path: '/email-confirmation',
+            element: <EmailConfirmSuccess />,
+          },
+          {
             path: '/forgot-password',
             element: <ForgotPassword />,
           },
           {
             path: '/reset-password',
             element: <ResetPassword />,
-          },
-          {
-            path: '/google-oauth-success-redirect/:accessToken/:from',
-            element: <GoogleOAuthSuccessRedirect />,
-          },
-          {
-            path: '/facebook-oauth-success-redirect/:accessToken/:from',
-            element: <FacebookOAuthSuccessRedirect />,
           },
         ],
       },
