@@ -34,7 +34,7 @@ export default function EditUser() {
         last_name: data.last_name,
         gender: data?.gender,
         street: data.address ? data.address[0]?.street : '',
-        postal_code: data.address ? data.address[0]?.postal_code: '',
+        postal_code: data.address ? data.address[0]?.postal_code : '',
         'address-more': '..',
         Address: data.address
           ? [
@@ -64,7 +64,7 @@ export default function EditUser() {
     ];
 
     try {
-      await userService.saveUser(id, formData);
+      await userService.updateUser({ id, ...formData });
       await queryClient.invalidateQueries({
         queryKey: ['user', 'me'],
       });

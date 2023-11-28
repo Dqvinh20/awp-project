@@ -28,4 +28,5 @@ export const useGetMyInfo = () =>
     queryFn: () => userService.getMyInfo(),
     retry: false,
     enabled: !!jwtService.getToken(),
+    staleTime: 120000,
   });

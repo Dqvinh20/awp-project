@@ -5,26 +5,41 @@ import React, { useMemo } from 'react';
 
 import jwtService from '@/services/JwtService';
 import { useGetMyInfo } from '@/app/store/server/features/users/queries';
-import useAuth from '@/hooks/useAuth';
+import { User } from '@/app/store/server/features/users/interfaces';
+import authService from '@/services/AuthService';
 
-const menuItemBuilder = (user_id: string | null): MenuProps['items'] => [
-  {
-    key: 'editProfile',
-    icon: <EditOutlined />,
-    label: <a href={`/users/edit/${user_id}`}>Edit Profile</a>,
-  },
-  {
-    type: 'divider',
-  },
-  {
-    key: 'logout',
-    label: 'Logout',
-    icon: <LogoutOutlined />,
-  },
-];
+const menuItemBuilder = (userInfo: User): MenuProps['items'] => {
+  if (!userInfo) return [];
+  if (!userInfo.isEmailConfirmed || !userInfo.role) {
+    return [
+      {
+        key: 'logout',
+        label: 'Logout',
+        icon: <LogoutOutlined />,
+      },
+    ];
+  }
 
-const menuItemClick: MenuProps['onClick'] = ({ key }) => {
+  return [
+    {
+      key: 'editProfile',
+      icon: <EditOutlined />,
+      label: <a href={`/users/edit/${userInfo.id}`}>Edit Profile</a>,
+    },
+    {
+      type: 'divider',
+    },
+    {
+      key: 'logout',
+      label: 'Logout',
+      icon: <LogoutOutlined />,
+    },
+  ];
+};
+
+const menuItemClick: MenuProps['onClick'] = async ({ key }) => {
   if (key === 'logout') {
+    await authService.logout();
     jwtService.removeToken();
     window.location.href = '/';
   }
@@ -32,7 +47,7 @@ const menuItemClick: MenuProps['onClick'] = ({ key }) => {
 
 function AvatarMenu() {
   const contentStyle: React.CSSProperties = {
-    borderRadius: '32px',
+    borderRadius: '28px',
   };
 
   const menuStyle: React.CSSProperties = {
@@ -40,9 +55,12 @@ function AvatarMenu() {
   };
 
   const { isLoading, data, isError } = useGetMyInfo();
-  const { user_id } = useAuth();
 
-  const items = useMemo(() => menuItemBuilder(user_id), [user_id]);
+  if (isError || !data) {
+    return null;
+  }
+
+  const items = useMemo(() => menuItemBuilder(data), [data]);
 
   return (
     <Dropdown
@@ -56,11 +74,15 @@ function AvatarMenu() {
       placement="bottomLeft"
       dropdownRender={(menu) => (
         <div
-          style={contentStyle}
-          className="p-4 w-52 sm:w-72 z-30 bg-emerald-100 shadow-[-1px_1px_3px_3px_rgba(0,0,0,0.2)]"
+          style={{
+            ...contentStyle,
+            boxShadow:
+              '0 4px 8px 3px rgba(0,0,0,.15), 0 1px 3px rgba(0,0,0,.3)',
+          }}
+          className="antialiased w-full px-3 py-4 sm:p-5 sm:w-72 z-30 bg-[#e9eef6]"
         >
           <Flex vertical gap={12}>
-            <span className="text-center font-semibold text-base">
+            <span className="text-center font-semibold text-xm sm:text-base text-[#1f1f1f]">
               {data?.email}
             </span>
             <Flex vertical gap={4}>

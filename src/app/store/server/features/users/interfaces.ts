@@ -11,6 +11,8 @@ export enum USER_ROLE {
 export interface User {
   /** User ID. */
   id: string;
+  /** Student Id. */
+  student_id?: string;
   /** User first name. */
   first_name?: string;
   /** User last name. */
@@ -35,6 +37,10 @@ export interface User {
   role: USER_ROLE;
   /** User gender. */
   gender?: string;
+  /** User is active. */
+  isActive?: boolean;
+  /** User email is confirmed. */
+  isEmailConfirmed?: boolean;
 }
 
 /**

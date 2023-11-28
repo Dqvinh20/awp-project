@@ -18,12 +18,12 @@ const userService = {
   },
 
   /**
-   * SaveUser.
+   * Update user info.
    * @param id - User id.
    * @param data - User data.
    * @returns
    */
-  async saveUser(id?: string, data?: object): Promise<any> {
+  async updateUser({ id, ...data }: User): Promise<any> {
     const response = await axiosClient.patch(`/users/${id}`, data);
     return response.data;
   },

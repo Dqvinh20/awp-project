@@ -5,9 +5,10 @@ import { MoreOutlined } from '@ant-design/icons';
 import BannerClass from './BannerClass';
 
 import useClassDetail from '@/hooks/useClassDetail';
-const baseUrl = import.meta.env.DEV
-  ? 'http://localhost:4200'
-  : 'https://awp_project.hausuper-s.me';
+
+// const baseUrl = import.meta.env.DEV
+//   ? 'http://localhost:4200'
+//   : 'https://awp_project.hausuper-s.me';
 
 export default function ClassRoom() {
   const { message } = App.useApp();

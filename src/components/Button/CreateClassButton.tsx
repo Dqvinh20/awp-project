@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { PlusOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
+import { Button, Tooltip } from 'antd';
 
 import CreateClassModal from '../Modal/CreateClassModal';
 
@@ -12,11 +12,13 @@ function CreateClassButton() {
   return (
     <>
       {location.pathname === '/home' && (
-        <Button
-          shape="circle"
-          icon={<PlusOutlined twoToneColor="#52c41a" />}
-          onClick={() => setOpenCreateClassModal(true)}
-        />
+        <Tooltip title="Create new class" placement="bottom">
+          <Button
+            shape="circle"
+            icon={<PlusOutlined twoToneColor="#52c41a" />}
+            onClick={() => setOpenCreateClassModal(true)}
+          />
+        </Tooltip>
       )}
       <CreateClassModal
         open={openCreateClassModal}

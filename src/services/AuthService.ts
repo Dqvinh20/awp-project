@@ -1,7 +1,11 @@
-import { ResetPasswordDto } from './../app/store/server/features/auth/interfaces';
+import {
+  FinishSignupData,
+  ResetPasswordDto,
+} from './../app/store/server/features/auth/interfaces';
 
 import axiosClient from '@/app/AxiosClient';
 import { SignupData } from '@/app/store/server/features/auth/interfaces';
+import { User } from '@/app/store/server/features/users/interfaces';
 import {
   LoginResponse,
   RefreshTokenResponse,
@@ -38,6 +42,11 @@ const authService = {
     return response.data;
   },
 
+  async finishSignUp(body: FinishSignupData): Promise<User> {
+    const response = await axiosClient.post(`/auth/finish-sign-up`, body);
+    return response.data;
+  },
+
   /**
    * Refresh token from the server.
    */
@@ -56,6 +65,10 @@ const authService = {
     return response;
   },
 
+  logout() {
+    return axiosClient.post('/auth/log-out');
+  },
+
   async forgotPassword(email: string): Promise<any> {
     const response = await axiosClient.get(`/users/forgot-password/${email}`);
     return response.data;
@@ -65,6 +78,19 @@ const authService = {
     const response = await axiosClient.patch(`/users/reset-password/${token}`, {
       new_password,
     });
+    return response.data;
+  },
+
+  async resendEmailConfirmation(): Promise<any> {
+    const response = await axiosClient.post(`/email-confirmation/resend`);
+    return response.data;
+  },
+
+  async confirmEmail(token: string): Promise<any> {
+    const response = await axiosClient.post(
+      `/email-confirmation/confirm`,
+      token
+    );
     return response.data;
   },
 };

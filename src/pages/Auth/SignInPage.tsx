@@ -148,15 +148,15 @@ function SignInPage() {
             </a>
           </div>
           <div className="flex flex-row w-full mb-4 items-center justify-evenly">
-            <div className="bg-gray-400 w-full h-0.5" />
-            <span className="mx-2 text-base text-gray-400">or</span>
-            <div className="bg-gray-400 w-full h-0.5" />
+            <div className="bg-gray-800 w-full h-0.5" />
+            <span className="text-base text-gray-800 mx-2">or</span>
+            <div className="bg-gray-800 w-full h-0.5" />
           </div>
-          <div className="flex flex-col justify-evenly sm:flex-row w-full gap-2">
+          <div className="flex flex-col justify-between sm:flex-row w-full gap-4">
             <GoogleLoginButton
               type="button"
-              className="flex items-center bg-white border border-gray-300
-          rounded-lg shadow-md max-w-full px-4 py-2 text-sm font-medium
+              className="flex items-center w-full bg-white border border-gray-300
+          rounded-lg shadow-md max-w-full px-3 py-2 text-sm font-medium
           text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2
           focus:ring-offset-2 focus:ring-gray-500"
               onClick={(e) => {
@@ -175,7 +175,7 @@ function SignInPage() {
             </GoogleLoginButton>
             <FacebookLoginButton
               type="button"
-              className="flex items-center bg-white border border-gray-300 rounded-lg shadow-md max-w-full px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+              className="flex items-center w-full bg-white border border-gray-300 rounded-lg shadow-md max-w-full px-3 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
               onClick={(e) => {
                 e.preventDefault();
                 window.open(

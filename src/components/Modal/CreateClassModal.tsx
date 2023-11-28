@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Modal } from 'antd';
+import { App, Form, Input, Modal } from 'antd';
 import { useQueryClient } from '@tanstack/react-query';
+
+import { AxiosError } from 'axios';
 
 import { useAddClass } from '@/app/store/server/features/classroom/mutations';
 
@@ -14,11 +16,30 @@ export default function CreateClassModal({ open, setOpen }: CreateClassProps) {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const queryClient = useQueryClient();
   const addClass = useAddClass();
+  const { notification } = App.useApp();
 
   const handleSubmit = (values: any) => {
     addClass.mutate(values, {
       onSuccess() {
         queryClient.invalidateQueries({ queryKey: ['classes'] });
+        setConfirmLoading(false);
+      },
+      onError(error) {
+        setConfirmLoading(false);
+        if (error instanceof AxiosError) {
+          const { response } = error;
+          if (response?.data.statusCode === 403) {
+            notification.error({
+              message: 'Create class failed',
+              description: "You don't have permission to create class",
+            });
+            return;
+          }
+        }
+        notification.error({
+          message: 'Create class failed',
+          description: error.message,
+        });
       },
     });
   };

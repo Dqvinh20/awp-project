@@ -156,7 +156,6 @@ function JoinClass() {
               className=""
               size="middle"
               type="primary"
-              href="javascript::void(0)"
               onClick={() => handleJoin({ c })}
             >
               Join class

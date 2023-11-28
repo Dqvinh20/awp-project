@@ -12,6 +12,11 @@ export interface SignupData {
   role: string;
 }
 
+export interface FinishSignupData {
+  role: string;
+  student_id?: string;
+}
+
 export interface ResetPasswordDto {
   token: string;
   new_password: string;
