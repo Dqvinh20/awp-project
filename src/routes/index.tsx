@@ -10,17 +10,11 @@ import LandingPage from '@/pages/LandingPage/index';
 import ProtectedPage from '@/pages/ProtectedPage';
 import SignUpPage from '@/pages/Auth/SignUpPage';
 import EditUser from '@/pages/User/EditUser';
-import JoinClass from '@/pages/Student/JoinClass';
 import ClassLayOut from '@/pages/ClassRoom/ClassLayOut';
 import ClassRoom from '@/pages/ClassRoom/component/ClassRoom';
 import MemberClass from '@/pages/ClassRoom/component/MemberClass';
 import ClassGrade from '@/pages/ClassRoom/component/ClassGrade';
-import NotFoundPage from '@/pages/404';
-import ForgotPassword from '@/pages/Auth/ForgotPassword';
-import ResetPassword from '@/pages/Auth/ResetPassword';
-import EmailConfirmSuccess from '@/pages/Auth/EmailConfirmSuccess';
-import OAuthSuccessRedirect from '@/pages/Auth/OAuthSuccessRedirect';
-import PrivacyPolicy from '@/pages/PrivacyPolicy';
+import SuspenseWrapper from '@/components/SuspenseWrapper';
 
 const router = createBrowserRouter([
   {
@@ -68,7 +62,7 @@ const router = createBrowserRouter([
               },
               {
                 path: '/classes/join',
-                element: <JoinClass />,
+                element: <SuspenseWrapper path="pages/Student/JoinClass" />,
               },
             ],
           },
@@ -80,11 +74,11 @@ const router = createBrowserRouter([
       },
       {
         path: '/google-oauth-success-redirect/:accessToken/:from',
-        element: <OAuthSuccessRedirect />,
+        element: <SuspenseWrapper path="pages/Auth/OAuthSuccessRedirect" />,
       },
       {
         path: '/facebook-oauth-success-redirect/:accessToken/:from',
-        element: <OAuthSuccessRedirect />,
+        element: <SuspenseWrapper path="pages/Auth/OAuthSuccessRedirect" />,
       },
       {
         element: <AuthLayout />,
@@ -99,25 +93,25 @@ const router = createBrowserRouter([
           },
           {
             path: '/email-confirmation',
-            element: <EmailConfirmSuccess />,
+            element: <SuspenseWrapper path="pages/Auth/EmailConfirmSuccess" />,
           },
           {
             path: '/forgot-password',
-            element: <ForgotPassword />,
+            element: <SuspenseWrapper path="pages/Auth/ForgotPassword" />,
           },
           {
             path: '/reset-password',
-            element: <ResetPassword />,
+            element: <SuspenseWrapper path="pages/Auth/ResetPassword" />,
           },
         ],
       },
       {
         path: '/privacy-policy',
-        element: <PrivacyPolicy />,
+        element: <SuspenseWrapper path="pages/PrivacyPolicy" />,
       },
       {
         path: '/page-not-found',
-        element: <NotFoundPage />,
+        element: <SuspenseWrapper path="pages/404" />,
       },
       {
         path: '*',
