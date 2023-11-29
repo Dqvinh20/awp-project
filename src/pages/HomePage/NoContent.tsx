@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { USER_ROLE } from '@/app/store/server/features/users/interfaces';
 import { useGetMyInfo } from '@/app/store/server/features/users/queries';
 import CreateClassModal from '@/components/Modal/CreateClassModal';
+import JoinClassModal from '@/components/Modal/JoinClassModal';
 
 function NoContent() {
   const { isLoading, data } = useGetMyInfo();
@@ -36,8 +37,10 @@ function NoContent() {
         >
           {data?.role === USER_ROLE.Teacher ? 'Create a class' : 'Join a class'}
         </button>
-        {data?.role === USER_ROLE.Teacher && (
+        {data?.role === USER_ROLE.Teacher ? (
           <CreateClassModal open={open} setOpen={setOpen} />
+        ) : (
+          <JoinClassModal open={open} setOpen={setOpen} />
         )}
       </h2>
     </div>

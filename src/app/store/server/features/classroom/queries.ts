@@ -6,6 +6,7 @@ import ClassRoomService from '@/services/ClassService';
 import {
   PaginationParams,
   PaginationResult,
+  defaultPaginationParams,
 } from '@/interfaces/common.interface';
 
 /**
@@ -13,7 +14,9 @@ import {
  * @param params Pagination params.
  * @returns
  */
-export const useClassesQuery = (params?: PaginationParams) =>
+export const useClassesQuery = (
+  params: PaginationParams = defaultPaginationParams
+) =>
   useQuery<PaginationResult<ClassDTO>>({
     queryKey: ['classes', params],
     queryFn: () => ClassRoomService.getAllClasses(params),

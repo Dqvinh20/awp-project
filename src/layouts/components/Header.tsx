@@ -3,12 +3,17 @@ import { Layout, Flex } from 'antd';
 import AvatarMenu from './AvatarMenu';
 
 import CreateClassButton from '@/components/Button/CreateClassButton';
+import { useGetMyInfo } from '@/app/store/server/features/users/queries';
+import { USER_ROLE } from '@/app/store/server/features/users/interfaces';
+import AddNewClass from '@/components/Button/AddNewClass';
 
 interface AppHeaderProps {
   toggleCollapsed: () => void;
 }
 
 function AppHeader({ toggleCollapsed }: AppHeaderProps) {
+  const { data: user } = useGetMyInfo();
+
   return (
     <Layout.Header
       style={{
@@ -42,7 +47,7 @@ function AppHeader({ toggleCollapsed }: AppHeaderProps) {
           </h2>
         </Flex>
         <div className="flex flex-column items-center gap-x-2">
-          <CreateClassButton />
+          <AddNewClass />
           <AvatarMenu />
         </div>
       </div>

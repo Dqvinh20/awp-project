@@ -7,11 +7,16 @@ import { AxiosError } from 'axios';
 import { useAddClass } from '@/app/store/server/features/classroom/mutations';
 
 interface CreateClassProps {
+  title?: string;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function CreateClassModal({ open, setOpen }: CreateClassProps) {
+export default function CreateClassModal({
+  title = 'Create new class',
+  open,
+  setOpen,
+}: CreateClassProps) {
   const [form] = Form.useForm();
   const [confirmLoading, setConfirmLoading] = useState(false);
   const queryClient = useQueryClient();
@@ -61,7 +66,7 @@ export default function CreateClassModal({ open, setOpen }: CreateClassProps) {
 
   return (
     <Modal
-      title="Create new class"
+      title={title}
       open={open}
       onOk={handleOk}
       onCancel={handleCancel}
