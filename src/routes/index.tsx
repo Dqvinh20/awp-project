@@ -15,6 +15,7 @@ import ClassRoom from '@/pages/ClassRoom/component/ClassRoom';
 import MemberClass from '@/pages/ClassRoom/component/MemberClass';
 import ClassGrade from '@/pages/ClassRoom/component/ClassGrade';
 import SuspenseWrapper from '@/components/SuspenseWrapper';
+import EditUserLayout from '@/layouts/EditLayout/index';
 
 const router = createBrowserRouter([
   {
@@ -67,8 +68,13 @@ const router = createBrowserRouter([
             ],
           },
           {
-            path: '/users/edit/:id',
-            element: <EditUser />,
+            element: <EditUserLayout />,
+            children: [
+              {
+                path: '/users/edit/:id',
+                element: <EditUser />,
+              },
+            ]
           },
         ],
       },
