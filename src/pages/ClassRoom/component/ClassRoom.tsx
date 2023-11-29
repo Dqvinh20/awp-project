@@ -22,9 +22,6 @@ export default function ClassRoom() {
       label: (
         <div
           onClick={() => {
-            // navigator.clipboard.writeText(
-            //   `${baseUrl}/classes/join?c=${data.code}`
-            // );
             navigator.clipboard.writeText(data.public_invitation_link ?? '');
             message.success('Copy Link Success');
           }}

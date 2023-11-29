@@ -1,6 +1,8 @@
 import { MoreOutlined } from '@ant-design/icons';
 import { Avatar, MenuProps, Dropdown, Flex, Space } from 'antd';
 
+import { User } from '@/app/store/server/features/users/interfaces';
+
 const items: MenuProps['items'] = [
   {
     label: <a href="javascript::void(0)">Copy Code</a>,
@@ -16,7 +18,19 @@ const items: MenuProps['items'] = [
   },
 ];
 
-export default function MemberCard(props: { email: string; avatar: string }) {
+interface MemberCardProps extends Partial<User> {
+  isOwner?: boolean;
+  isStudent?: boolean;
+  isTeacher?: boolean;
+}
+
+export default function MemberCard({
+  email,
+  avatar,
+  isOwner = false,
+  isStudent = false,
+  isTeacher = false,
+}: MemberCardProps) {
   // return (
   //   <div className="flex flex-row p-5 gap-x-5 text-base">
   //     <Avatar src={props.avatar} />
@@ -45,18 +59,20 @@ export default function MemberCard(props: { email: string; avatar: string }) {
     >
       <Flex flex={1} justify="start">
         <Space align="center" size="middle">
-          <Avatar className={'hidden sm:block'} src={props.avatar} />
-          <span className="font-medium leading-5">{props.email} </span>
+          <Avatar className={'hidden sm:block'} src={avatar} />
+          <span className="font-medium leading-5">{email} </span>
         </Space>
       </Flex>
-      <Dropdown
-        menu={{ items }}
-        arrow
-        trigger={['click']}
-        placement="bottomRight"
-      >
-        <MoreOutlined />
-      </Dropdown>
+      {!isOwner && (
+        <Dropdown
+          menu={{ items }}
+          arrow
+          trigger={['click']}
+          placement="bottomRight"
+        >
+          <MoreOutlined />
+        </Dropdown>
+      )}
     </Flex>
   );
 }

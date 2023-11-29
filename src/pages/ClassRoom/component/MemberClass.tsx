@@ -22,15 +22,16 @@ export default function MemberClass() {
           key={'member-card-owner'}
           email={data.owner.email}
           avatar={data.owner.avatar ?? ''}
+          isOwner
         />
       )
     );
   };
 
   return (
-    <div className="h-full text-center flex flex-col justify-start bg-slate-50">
-      <div className="flex flex-col justify-center items-center w-full h-fit mt-2">
-        <div className="flex flex-col w-3/5 mt-5 gap-x-3 bg-white p-5 rounded-md">
+    <div className="w-full bg-white h-full text-center flex flex-col justify-start pt-6">
+      <div className="flex flex-col justify-center items-center w-full h-fit">
+        <div className="flex flex-col w-3/5 gap-x-3 bg-white p-5 rounded-md">
           <div className="flex flex-row">
             <div className="title grow text-3xl text-left text-blue-600">
               Teacher
@@ -72,6 +73,13 @@ export default function MemberClass() {
             style={{ borderTop: '1px solid blue' }}
             className="m-2 text-blue-600 bg-inherit"
           />
+          {isLoading && (
+            <>
+              <ClassMemberSkeleton />
+              <ClassMemberSkeleton />
+              <ClassMemberSkeleton />
+            </>
+          )}
           {data?.students &&
             data.students.map((student: User, index: number) => (
               <div className="w-full" key={`student-${student.id}`}>
