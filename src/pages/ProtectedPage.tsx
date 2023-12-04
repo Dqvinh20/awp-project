@@ -2,6 +2,8 @@ import { Navigate, Outlet } from 'react-router-dom';
 
 import NeedEmailVerification from './Auth/NeedEmailVerification';
 
+import FinishSignUp from './Auth/FinishSignUp';
+
 import { useGetMyInfo } from '@/app/store/server/features/users/queries';
 
 function ProtectedPage() {
@@ -14,6 +16,10 @@ function ProtectedPage() {
 
   if (data && !data?.isEmailConfirmed) {
     return <NeedEmailVerification />;
+  }
+
+  if (!data?.role) {
+    return <FinishSignUp />;
   }
 
   return data ? (
