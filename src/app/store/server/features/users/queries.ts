@@ -23,7 +23,7 @@ export const useGetUser = (userId?: string) =>
  * @param select - Select data.
  * @returns
  */
-export const useGetMyInfo = (select: (data: User) => any) =>
+export const useGetMyInfo = (select?: (data: User) => any) =>
   useQuery<User>({
     queryKey: ['user', 'me'],
     queryFn: () => userService.getMyInfo(),
