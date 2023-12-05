@@ -75,6 +75,7 @@ function AvatarMenu() {
 
   const AvatarImage = ({ src }: { src?: string | undefined }) => (
     <Image
+      rootClassName="w-full h-full z-[2000]"
       preview={{
         mask: (
           <div className="bg-opacity-50">
