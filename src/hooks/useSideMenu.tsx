@@ -1,4 +1,4 @@
-import {
+import Icon, {
   HomeOutlined,
   LoadingOutlined,
   SettingOutlined,
@@ -9,6 +9,8 @@ import { NavLink } from 'react-router-dom';
 import { useGetMyInfo } from '@/app/store/server/features/users/queries';
 import { useClassesQuery } from '@/app/store/server/features/classroom/queries';
 import { USER_ROLE } from '@/app/store/server/features/users/interfaces';
+import GraduationCap from '@/assets/graduation-cap.png';
+import Lecture from '@/assets/lecture.png';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -51,12 +53,39 @@ export function useSideMenuItems(): MenuProps['items'] {
     if (isError) return [];
     if (!profileSuccess) return [];
 
+    const icon =
+      profile.role !== USER_ROLE.Teacher ? (
+        <Icon
+          component={() => (
+            <img
+              src={Lecture}
+              alt={'Teaching'}
+              style={{
+                width: '1em',
+              }}
+            />
+          )}
+        />
+      ) : (
+        <Icon
+          component={() => (
+            <img
+              src={GraduationCap}
+              alt={'GraduationCap'}
+              style={{
+                width: '1em',
+              }}
+            />
+          )}
+        />
+      );
+
     // Role based
     return [
       getItem(
-        profile.role === USER_ROLE.Teacher ? 'Teaching' : 'Enrolled',
+        profile.role === USER_ROLE.Teacher ? 'Lectures' : 'Enrolled',
         'classes',
-        null,
+        icon,
         classes?.docs.map((c) =>
           getItem(
             <NavLink to={`class/${c.id}/news`}>{c.name}</NavLink>,
