@@ -19,7 +19,7 @@ function AppHeader({ toggleCollapsed }: AppHeaderProps) {
       style={{
         position: 'fixed',
         top: 0,
-        zIndex: 1,
+        zIndex: 20,
         width: '100%',
         // display: 'flex',
         // alignItems: 'center',
