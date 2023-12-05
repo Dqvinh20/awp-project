@@ -1,15 +1,13 @@
 import { useState } from 'react';
 
 import { USER_ROLE } from '@/app/store/server/features/users/interfaces';
-import { useGetMyInfo } from '@/app/store/server/features/users/queries';
 import CreateClassModal from '@/components/Modal/CreateClassModal';
 import JoinClassModal from '@/components/Modal/JoinClassModal';
+import { useUserRole } from '@/hooks/useUserRole';
 
 function NoContent() {
-  const { isLoading, data } = useGetMyInfo();
+  const userRole = useUserRole();
   const [open, setOpen] = useState(false);
-
-  if (isLoading) return null;
 
   const handleOpenModal = () => {
     setOpen(true);
@@ -35,9 +33,9 @@ function NoContent() {
           className="twp w-full bg-[rgb(26,115,232)] text-white px-4 py-2 rounded text-base hover:bg-[rgb(95,155,233)]"
           onClick={handleOpenModal}
         >
-          {data?.role === USER_ROLE.Teacher ? 'Create a class' : 'Join a class'}
+          {userRole === USER_ROLE.Teacher ? 'Create a class' : 'Join a class'}
         </button>
-        {data?.role === USER_ROLE.Teacher ? (
+        {userRole === USER_ROLE.Teacher ? (
           <CreateClassModal open={open} setOpen={setOpen} />
         ) : (
           <JoinClassModal open={open} setOpen={setOpen} />
