@@ -1,4 +1,4 @@
-import { User } from '../users/interfaces';
+import { USER_ROLE, User } from '../users/interfaces';
 
 /**
  * ClassRoom DTO.
@@ -44,4 +44,17 @@ export interface AddClassDTO {
   name: string;
   /** ClassRoom description. */
   description?: string;
+}
+
+/**
+ * Kick member out class.
+ * @interface KickMembersDTO
+ */
+export interface KickMembersDTO {
+  /** ClassRoom ID. */
+  class_id: string;
+  /** List of user id will be kicked. */
+  users_id: string[];
+  /** Their role in class. */
+  role: USER_ROLE.Teacher | USER_ROLE.Student;
 }

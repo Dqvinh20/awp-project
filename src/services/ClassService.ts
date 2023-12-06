@@ -1,4 +1,7 @@
-import { AddClassDTO } from './../app/store/server/features/classroom/interfaces';
+import {
+  AddClassDTO,
+  KickMembersDTO,
+} from './../app/store/server/features/classroom/interfaces';
 import {
   PaginationParams,
   defaultPaginationParams,
@@ -137,6 +140,18 @@ const ClassRoomService = {
     const response = await axiosClient.get<ClassDTO>(`/classes/join`, {
       params,
     });
+    return response.data;
+  },
+
+  async kickMembers(data: KickMembersDTO) {
+    const response = await axiosClient.delete(`/classes/kick`, {
+      data,
+    });
+    return response.data;
+  },
+
+  async leaveClass(classId: string) {
+    const response = await axiosClient.delete(`/classes/${classId}/leave`);
     return response.data;
   },
 };
