@@ -10,10 +10,11 @@ import React, { useMemo, useState, useContext } from 'react';
 
 import jwtService from '@/services/JwtService';
 import { useGetMyInfo } from '@/app/store/server/features/users/queries';
-import { User } from '@/app/store/server/features/users/interfaces';
+import { USER_ROLE, User } from '@/app/store/server/features/users/interfaces';
 import authService from '@/services/AuthService';
 import EditProfileModal from '@/components/Modal/EditProfileModal';
 import { WebSocketContext } from '@/contexts/WebSocketContext.';
+import { useUserRole } from '@/hooks/useUserRole';
 
 const menuItemBuilder = (userInfo: User): MenuProps['items'] => {
   if (!userInfo) return [];
@@ -128,11 +129,14 @@ function AvatarMenu() {
                 <span className="text-center uppercase text-lg/relaxed font-sans">
                   Hi, {data?.first_name ?? data?.last_name ?? 'Welcome back'}!
                 </span>
-                <Tooltip title="Student ID" placement="bottom">
-                  <span className="text-center line-clamp-1 max-w-sm text-sm text-blue-400 underline hover:pointer-events-auto hover:cursor-help">
-                    20127665
-                  </span>
-                </Tooltip>
+                {data.role &&
+                  (data.role as unknown as USER_ROLE) === USER_ROLE.Student && (
+                    <Tooltip title="Student ID" placement="bottom">
+                      <span className="text-center line-clamp-1 max-w-sm text-sm text-blue-400 underline hover:pointer-events-auto hover:cursor-help">
+                        {data.student_id}
+                      </span>
+                    </Tooltip>
+                  )}
               </Flex>
             </Flex>
 
