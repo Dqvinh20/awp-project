@@ -6,13 +6,14 @@ import {
   EyeOutlined,
 } from '@ant-design/icons';
 
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useContext } from 'react';
 
 import jwtService from '@/services/JwtService';
 import { useGetMyInfo } from '@/app/store/server/features/users/queries';
 import { User } from '@/app/store/server/features/users/interfaces';
 import authService from '@/services/AuthService';
 import EditProfileModal from '@/components/Modal/EditProfileModal';
+import { WebSocketContext } from '@/contexts/WebSocketContext.';
 
 const menuItemBuilder = (userInfo: User): MenuProps['items'] => {
   if (!userInfo) return [];
@@ -43,8 +44,10 @@ const menuItemBuilder = (userInfo: User): MenuProps['items'] => {
   ];
 };
 
+// eslint-disable-next-line max-lines-per-function
 function AvatarMenu() {
   const [openEdit, setOpenEdit] = useState(false);
+  const socket = useContext(WebSocketContext);
   const contentStyle: React.CSSProperties = {
     borderRadius: '28px',
   };
@@ -53,6 +56,7 @@ function AvatarMenu() {
     if (key === 'logout') {
       await authService.logout();
       jwtService.removeToken();
+      socket.disconnect();
       window.location.href = '/';
     }
 

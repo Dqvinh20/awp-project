@@ -58,6 +58,7 @@ function EditProfileModal(props: EditProfileModalProps) {
 
   return (
     <Modal
+      forceRender
       {...props}
       onOk={() => {
         form.submit();
