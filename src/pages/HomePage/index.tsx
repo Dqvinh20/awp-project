@@ -21,7 +21,7 @@ function HomePage() {
   if (isSuccess && data?.docs?.length === 0) return <NoContent />;
 
   return (
-    <div className="w-full p-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="w-full p-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-x-4 lg:grid-cols-3">
       {isLoading && (
         <>
           <ClassCardSkeleton />

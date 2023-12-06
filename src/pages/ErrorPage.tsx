@@ -18,7 +18,9 @@ export default function ErrorPage(props: ErrorPageProps) {
         <div className="h-screen flex justify-center items-center">
           <div className="text-center flex-row items-center">
             <h1>Oops!</h1>
-            <p>Sorry, an unexpected error has occurred.</p>
+            <p>
+              Sorry, an unexpected error has occurred. Try to refresh the page.
+            </p>
             <h2 className="twp font-black text-gray-200 text-9xl m-4">
               {error.status}
             </h2>
@@ -40,7 +42,7 @@ export default function ErrorPage(props: ErrorPageProps) {
   return (
     <div className="flex justify-center items-center font-semibold text-lg">
       Sorry, an unexpected error has occurred.{' '}
-      {error && `Message: ${error.message}`}
+      {error && `Message: ${error.message}`}. Try to refresh the page.
     </div>
   );
 }
