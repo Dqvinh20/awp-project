@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Button, Space, Spin, Tooltip } from 'antd';
 
 import { useParams } from 'react-router';
@@ -5,6 +6,8 @@ import { useParams } from 'react-router';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { AxiosError } from 'axios';
+
+import { useEffect, useContext } from 'react';
 
 import GradeTable from './tables/GradeTable/GradeTable';
 
@@ -15,9 +18,9 @@ import {
   useFinishedGrade,
   useUnFinishedGrade,
 } from '@/app/store/server/features/class_grade/mutations';
+import { WebSocketContext } from '@/contexts/WebSocketContext.';
 
 export default function ClassGrade() {
-  const queryClient = useQueryClient();
   const { id } = useParams();
   const {
     data: classGrades,
@@ -29,6 +32,32 @@ export default function ClassGrade() {
   const userRole = useUserRole();
   const finishGrade = useFinishedGrade();
   const unfinishGrade = useUnFinishedGrade();
+  const socket = useContext(WebSocketContext);
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    socket.emit('join', id);
+
+    if (userRole === USER_ROLE.Student) {
+      socket.on('grade.unfinished', async () => {
+        await queryClient.invalidateQueries({
+          queryKey: ['class-grades', id],
+        });
+      });
+
+      socket.on('grade.finished', async () => {
+        await queryClient.invalidateQueries({
+          queryKey: ['class-grades', id],
+        });
+      });
+    }
+    return () => {
+      if (userRole === USER_ROLE.Student) {
+        socket.off('grade.unfinished');
+        socket.off('grade.finished');
+      }
+    };
+  }, [id, queryClient, socket, userRole]);
 
   const onToggleFinishGrade = async () => {
     if (classGrades?.isFinished) {
