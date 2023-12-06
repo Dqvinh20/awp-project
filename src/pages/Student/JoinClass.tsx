@@ -7,6 +7,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { useGetMyInfo } from '@/app/store/server/features/users/queries';
 import { useJoinClass } from '@/app/store/server/features/classroom/mutations';
+import { USER_ROLE } from '@/app/store/server/features/users/interfaces';
 
 const { Meta } = Card;
 
@@ -90,9 +91,9 @@ function JoinClass() {
   //   );
 
   return (
-    <div className="flex justify-center align-middle h-full w-full p-8">
-      <div className="rounded w-2/5 h-fit border-solid border-2 border-gray-300 overflow-hidden">
-        <div className="bg-slate-100 p-8 flex flex-col justify-center align-middle">
+    <div className="flex justify-center align-middle h-full w-full p-6">
+      <div className="rounded w-full md:w-4/5 h-fit border-solid border-2 border-gray-300 overflow-hidden">
+        <div className="bg-slate-100 p-4 flex flex-col justify-center align-middle">
           <div className="flex justify-center align-middle">
             <img
               src="https://www.gstatic.com/classroom/logo_square_rounded.svg"
@@ -106,7 +107,7 @@ function JoinClass() {
             <span className="text-end text-2xl">Classroom</span>
           </div>
           <div className="text-center text-sm flex justify-center align-middle w-full">
-            <p className="w-1/2">
+            <p className="w-full text-sm">
               Classroom helps classes communicate, save time, and stay
               organized.
               <a
@@ -120,61 +121,51 @@ function JoinClass() {
             </p>
           </div>
         </div>
-        <div className="p-8">
-          <div className="flex flex-column justify-center align-middle text-center">
-            <Card
-              // extra={<CaretLeftOutlined />}
-              size="small"
-              hoverable
-              className="text-xs flex flex-column justify-center border-slate-500"
-            >
-              <Meta
-                className="text-xs "
-                // style={{marginRight: "2rem"}}
-                avatar={
-                  <Avatar
-                    className=""
-                    src={
-                      data?.avatar ??
-                      'https://xsgames.co/randomusers/avatar.php?g=pixel'
-                    }
-                  />
-                }
-                title={data?.full_name}
-                description={data?.email}
-              />
-              {/* <DownOutlined style={{position: "absolute",top:"25px", right: "10px"}}/> */}
-            </Card>
-          </div>
-
-          <div className="flex justify-center align-middle text-center"></div>
-          <div className="flex justify-center align-middle text-center">
-            <p className="text-xs">You are joining the class as a student.</p>
-          </div>
-          <div className="flex justify-center align-middle text-center text-xs">
-            <Button
+        <div className="py-6 px-4 flex flex-col justify-center items-center">
+          <Card
+            size="small"
+            hoverable
+            className="text-xs border-slate-500 !w-full max-w-xs py-2"
+          >
+            <Meta
+              className="text-xs"
+              avatar={
+                <Avatar
+                  className=""
+                  src={
+                    data?.avatar ??
+                    'https://xsgames.co/randomusers/avatar.php?g=pixel'
+                  }
+                />
+              }
+              title={data?.full_name}
+              description={data?.email}
+            />
+          </Card>
+          <p className="text-xs sm:text-base">
+            You are joining the class as a{' '}
+            {(data?.role as unknown as USER_ROLE).toLowerCase()}.
+          </p>
+          <Button
+            className="w-full h-[48px] text-base xs:w-3/5 sm:h-fit md:w-[40%] lg:w-[20%]"
+            size="middle"
+            type="primary"
+            onClick={() => handleJoin({ c })}
+          >
+            JOIN CLASS
+          </Button>
+          <p className="text-center text-xs w-full">
+            By joining, you agree to share contact information with people in
+            your class.{' '}
+            <a
               className=""
-              size="middle"
-              type="primary"
-              onClick={() => handleJoin({ c })}
+              target="_blank"
+              href="https://support.google.com/edu/classroom/answer/6386395?hl=en&amp;authuser=0"
+              rel="noreferrer"
             >
-              Join class
-            </Button>
-          </div>
-          <div className="flex justify-center align-middle text-center">
-            <p className="text-xs w-3/5">
-              By joining, you agree to share contact information with people in
-              your class.{' '}
-              <a
-                className=""
-                target="_blank"
-                href="https://support.google.com/edu/classroom/answer/6386395?hl=en&amp;authuser=0"
-                rel="noreferrer"
-              >
-                Learn more
-              </a>
-            </p>
-          </div>
+              Learn more
+            </a>
+          </p>
         </div>
       </div>
     </div>
