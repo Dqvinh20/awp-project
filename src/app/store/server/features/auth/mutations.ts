@@ -36,7 +36,6 @@ export const useSignUp = () =>
 export const useFinishSignUp = () =>
   useMutation({
     mutationFn: authService.finishSignUp,
-    retry: false,
   });
 
 /**
@@ -46,7 +45,6 @@ export const useFinishSignUp = () =>
 export const useForgotPassword = () =>
   useMutation({
     mutationFn: authService.forgotPassword,
-    retry: false,
   });
 
 /**
@@ -56,19 +54,16 @@ export const useForgotPassword = () =>
 export const useResetPassword = () =>
   useMutation({
     mutationFn: authService.resetPassword,
-    retry: false,
   });
 
 /** User can resend verification email. */
 export const useResendEmailConfirmation = () =>
   useMutation({
     mutationFn: () => authService.resendEmailConfirmation(),
-    retry: false,
   });
 
 /** User can confirm their email. */
 export const useConfirmEmail = () =>
   useMutation({
     mutationFn: (token: string) => authService.confirmEmail(token),
-    retry: false,
   });

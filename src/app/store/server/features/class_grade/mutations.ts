@@ -6,12 +6,10 @@ export const useFinishedGrade = () =>
   useMutation({
     mutationKey: ['finished-grade'],
     mutationFn: ClassGradeService.finishClassGrade,
-    retry: false,
   });
 
 export const useUnFinishedGrade = () =>
   useMutation({
     mutationKey: ['unfinished-grade'],
     mutationFn: ClassGradeService.unfinishClassGrade,
-    retry: false,
   });
