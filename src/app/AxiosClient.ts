@@ -57,8 +57,12 @@ function createAxiosResponseInterceptor(): void {
       }
 
       // Reject if the error message is not 'Unauthorized'
-      if (error.response.data.message !== 'Unauthorized') {
-        throw error;
+      if (
+        error.response.data.message !== 'Unauthorized' ||
+        config.url === '/auth/refresh' ||
+        !jwtService.getToken()
+      ) {
+        return Promise.reject(error);
       }
 
       /*
@@ -83,7 +87,7 @@ function createAxiosResponseInterceptor(): void {
         .catch((refreshError) => {
           // Remove the access token and redirect to sign in page
           jwtService.removeToken();
-          window.location.href = '/sign-in';
+          window.location.replace('/sign-in?error=expired');
           return Promise.reject(refreshError);
         })
         .finally(createAxiosResponseInterceptor);
