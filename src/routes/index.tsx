@@ -16,6 +16,7 @@ import MemberClass from '@/pages/ClassRoom/component/MemberClass';
 import ClassGrade from '@/pages/ClassRoom/component/ClassGrade';
 import SuspenseWrapper from '@/components/SuspenseWrapper';
 import EditUserLayout from '@/layouts/EditLayout/index';
+import GradeStructure from '@/pages/ClassRoom/component/GradeStructure';
 
 const router = createBrowserRouter([
   {
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
                       {
                         path: 'grade',
                         element: <ClassGrade />,
+                      },
+                      {
+                        path: 'grade-structure',
+                        element: <GradeStructure />,
                       },
                     ],
                   },
