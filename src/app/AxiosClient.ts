@@ -43,9 +43,11 @@ function createAxiosResponseInterceptor(): void {
   const interceptor = axiosClient.interceptors.response.use(
     (response) => response,
     (error) => {
-      if (!error.response) {
-        return Promise.reject(error);
-      }
+      console.error('Refresserror');
+      console.error(error);
+      // if (!error.response) {
+      // return Promise.reject(error);
+      // }
 
       const {
         response: { config, status },
@@ -58,7 +60,7 @@ function createAxiosResponseInterceptor(): void {
 
       // Reject if the error message is not 'Unauthorized'
       if (error.response.data.message !== 'Unauthorized') {
-        throw error;
+        throw Promise.reject(error);
       }
 
       /*
@@ -75,12 +77,15 @@ function createAxiosResponseInterceptor(): void {
       return authService
         .refreshToken()
         .then((refreshResponse) => {
+          console.log('@AxiosClient', refreshResponse);
+
           // Save the new access token
-          jwtService.saveToken(refreshResponse.access_token);
-          config.headers.Authorization = `Bearer ${refreshResponse.access_token}`;
+          jwtService.saveToken(refreshResponse.data.access_token);
+          config.headers.Authorization = `Bearer ${refreshResponse.data.access_token}`;
           return axiosClient(config);
         })
         .catch((refreshError) => {
+          console.log('@AxiosClient1', refreshError.response);
           // Remove the access token and redirect to sign in page
           jwtService.removeToken();
           window.location.href = '/sign-in';

@@ -9,7 +9,7 @@ import NetworkStatus from './components/NetworkStatus';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 1,
+      retry: false,
       // 10s
       staleTime: 10 * 1000,
     },
