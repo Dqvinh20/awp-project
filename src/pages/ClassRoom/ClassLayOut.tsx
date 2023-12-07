@@ -24,6 +24,10 @@ const LinkMenuClassRoom = [
     label: 'Grade',
     path: 'grade',
   },
+  {
+    label: 'Grade Structure',
+    path: 'grade-structure',
+  },
 ];
 
 const items: MenuProps['items'] = LinkMenuClassRoom.map((item) => ({

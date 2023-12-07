@@ -186,7 +186,7 @@ function ClassCard({
   // );
 
   return (
-    <div className="max-w-lg lg:h-[12rem] w-full bg-white border border-gray-200 rounded-lg shadow hover:drop-shadow-lg flex flex-col">
+    <div className="max-w-lg lg:h-[14rem] w-full bg-white border border-gray-200 rounded-lg shadow hover:drop-shadow-lg flex flex-col">
       <div
         className={`relative rounded-t-lg w-full`}
         style={{
