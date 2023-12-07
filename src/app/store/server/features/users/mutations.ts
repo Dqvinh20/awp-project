@@ -6,5 +6,4 @@ import userService from '@/services/UserService';
 export const useUpdateUser = () =>
   useMutation({
     mutationFn: userService.updateUser,
-    retry: 0,
   });

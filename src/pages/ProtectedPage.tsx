@@ -2,7 +2,10 @@ import { Navigate, Outlet } from 'react-router-dom';
 
 import NeedEmailVerification from './Auth/NeedEmailVerification';
 
+import FinishSignUp from './Auth/FinishSignUp';
+
 import { useGetMyInfo } from '@/app/store/server/features/users/queries';
+import { WebSocketProvider, socket } from '@/contexts/WebSocketContext.';
 
 function ProtectedPage() {
   const location = window.location.pathname + window.location.search;
@@ -16,8 +19,14 @@ function ProtectedPage() {
     return <NeedEmailVerification />;
   }
 
+  if (data && !data?.role) {
+    return <FinishSignUp />;
+  }
+
   return data ? (
-    <Outlet />
+    <WebSocketProvider value={socket}>
+      <Outlet />
+    </WebSocketProvider>
   ) : (
     <Navigate to={`/sign-in?${searchParams}`} replace={true} />
   );

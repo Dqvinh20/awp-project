@@ -6,7 +6,15 @@ import { ConfigProvider, App as AntApp } from 'antd';
 import NetworkStatus from './components/NetworkStatus';
 
 // Create a client
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      // 10s
+      staleTime: 10 * 1000,
+    },
+  },
+});
 
 function App() {
   return (

@@ -20,7 +20,6 @@ export const useClassesQuery = (
   useQuery<PaginationResult<ClassDTO>>({
     queryKey: ['classes', params],
     queryFn: () => ClassRoomService.getAllClasses(params),
-    retry: false,
     placeholderData: keepPreviousData,
   });
 
@@ -32,5 +31,4 @@ export const useClassDetailQuery = (classId: string) =>
   useQuery<ClassDTO>({
     queryKey: ['class', classId],
     queryFn: () => ClassRoomService.getClassDetail(classId),
-    retry: false,
   });

@@ -51,7 +51,7 @@ const authService = {
    * Refresh token from the server.
    */
   async refreshToken(): Promise<RefreshTokenResponse> {
-    const response: RefreshTokenResponse = await axiosClient.post(
+    const response = await axiosClient.post<RefreshTokenResponse>(
       '/auth/refresh',
       null,
       {
@@ -62,7 +62,7 @@ const authService = {
         withCredentials: true,
       }
     );
-    return response;
+    return response.data;
   },
 
   logout() {

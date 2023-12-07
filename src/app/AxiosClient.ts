@@ -56,12 +56,6 @@ function createAxiosResponseInterceptor(): void {
         return Promise.reject(error);
       }
 
-      // If there is no access token
-      // Reject the request immediately
-      // Cause it means the user is not logged in
-      if (!jwtService.getToken()) {
-        return Promise.reject(error);
-      }
       // Reject if the error message is not 'Unauthorized'
       if (error.response.data.message !== 'Unauthorized') {
         throw error;
@@ -78,7 +72,7 @@ function createAxiosResponseInterceptor(): void {
 
       // Access token was expired
       // Refresh the access token
-      authService
+      return authService
         .refreshToken()
         .then((refreshResponse) => {
           // Save the new access token
@@ -89,12 +83,10 @@ function createAxiosResponseInterceptor(): void {
         .catch((refreshError) => {
           // Remove the access token and redirect to sign in page
           jwtService.removeToken();
-          window.location.href = '/';
+          window.location.href = '/sign-in';
           return Promise.reject(refreshError);
         })
         .finally(createAxiosResponseInterceptor);
-
-      return Promise.reject(error);
     }
   );
 }

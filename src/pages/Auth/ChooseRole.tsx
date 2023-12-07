@@ -20,11 +20,13 @@ function ChooseRoleForm() {
 
   const onFinish = (values: FinishSignupData) => {
     finishSignUpMutate(values, {
-      async onSuccess(data) {
-        await queryClient.setQueryData(['user', 'me'], data);
+      onSuccess() {
+        return queryClient.invalidateQueries({
+          queryKey: ['user', 'me'],
+        });
       },
-      async onError() {
-        await queryClient.invalidateQueries({
+      onError() {
+        return queryClient.invalidateQueries({
           queryKey: ['user', 'me'],
         });
       },
