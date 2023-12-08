@@ -25,11 +25,6 @@ function ChooseRoleForm() {
           queryKey: ['user', 'me'],
         });
       },
-      onError() {
-        return queryClient.invalidateQueries({
-          queryKey: ['user', 'me'],
-        });
-      },
     });
   };
 

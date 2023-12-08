@@ -1,4 +1,5 @@
-import axios, { AxiosRequestHeaders } from 'axios';
+import axios, { AxiosError, AxiosRequestHeaders } from 'axios';
+import Cookies from 'js-cookie';
 
 import { API_URL } from '@/config/index';
 import jwtService from '@/services/JwtService';
@@ -59,8 +60,11 @@ function createAxiosResponseInterceptor(): void {
       }
 
       // Reject if the error message is not 'Unauthorized'
-      if (error.response.data.message !== 'Unauthorized') {
-        throw Promise.reject(error);
+      if (
+        error.response.data.message !== 'Unauthorized' ||
+        config.url === '/auth/refresh'
+      ) {
+        return Promise.reject(error);
       }
 
       /*
@@ -77,18 +81,18 @@ function createAxiosResponseInterceptor(): void {
       return authService
         .refreshToken()
         .then((refreshResponse) => {
-          console.log('@AxiosClient', refreshResponse);
-
           // Save the new access token
           jwtService.saveToken(refreshResponse.data.access_token);
           config.headers.Authorization = `Bearer ${refreshResponse.data.access_token}`;
           return axiosClient(config);
         })
-        .catch((refreshError) => {
-          console.log('@AxiosClient1', refreshError.response);
-          // Remove the access token and redirect to sign in page
-          jwtService.removeToken();
-          window.location.href = '/sign-in';
+        .catch((refreshError: AxiosError) => {
+          if (refreshError?.response?.status === 401) {
+            // Remove the access token and redirect to sign in page
+            Cookies.remove('Refresh');
+            jwtService.removeToken();
+            window.location.replace('/sign-in?error=expired');
+          }
           return Promise.reject(refreshError);
         })
         .finally(createAxiosResponseInterceptor);

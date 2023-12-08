@@ -1,3 +1,5 @@
+import { UpdateGradeColumnDTO } from './../app/store/server/features/class_grade/interfaces';
+
 import axiosClient from '@/app/AxiosClient';
 
 const ClassGradeService = {
@@ -20,8 +22,14 @@ const ClassGradeService = {
     return res.data;
   },
 
-  upsertClassGradeColumns({ classId }: { classId: string }) {
-    return axiosClient.post(`/class-grades/${classId}/columns`);
+  async updateClassGradeColumns({
+    class_id,
+    grade_columns,
+  }: UpdateGradeColumnDTO) {
+    const res = await axiosClient.post(`/class-grades/${class_id}/columns`, {
+      grade_columns,
+    });
+    return res.data;
   },
 
   async finishClassGrade(classId?: string) {

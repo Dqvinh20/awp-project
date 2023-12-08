@@ -4,11 +4,15 @@ import { ClassGrade } from './interfaces';
 
 import ClassGradeService from '@/services/ClassGradeService';
 
-export const useGetClassGrades = (classId?: string) =>
-  useQuery<ClassGrade>({
+export const useGetClassGrades = (
+  classId?: string,
+  select?: (class_grade: ClassGrade) => any
+) =>
+  useQuery({
     queryKey: ['class-grades', classId],
     queryFn: () => ClassGradeService.getClassGradesByClassID(classId),
     enabled: !!classId,
+    select,
     // staleTime: 120000,
   });
 

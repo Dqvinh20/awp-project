@@ -25,10 +25,18 @@ function SignInPage() {
   useEffect(() => {
     if (serverError) {
       setLoading(false);
-      notification.error({
-        message: 'Sign In Failed',
-        description: serverError ?? 'Please try again later.',
-      });
+      if (serverError === 'expired') {
+        notification.error({
+          message: 'Unauthorized',
+          description: 'Your session has expired. Please sign in again.',
+        });
+      } else {
+        notification.error({
+          message: 'Sign In Failed',
+          description: serverError ?? 'Please try again later.',
+        });
+      }
+
       searchParams.delete('error');
       setSearchParams(searchParams);
     }
@@ -169,6 +177,9 @@ function SignInPage() {
                   '_self'
                 );
                 setLoading(true);
+                setTimeout(() => {
+                  setLoading(false);
+                }, 5000);
               }}
             >
               <span className="text-start text-xs">Sign in with google</span>
@@ -186,6 +197,9 @@ function SignInPage() {
                   '_self'
                 );
                 setLoading(true);
+                setTimeout(() => {
+                  setLoading(false);
+                }, 5000);
               }}
             >
               <span className="text-start text-xs">Sign in with facebook</span>

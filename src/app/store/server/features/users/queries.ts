@@ -26,8 +26,6 @@ export const useGetMyInfo = (select?: (data: User) => any) =>
   useQuery<User>({
     queryKey: ['user', 'me'],
     queryFn: () => userService.getMyInfo(),
-    retry: false,
-    enabled: !!jwtService.getToken(),
     staleTime: 120000,
     select,
   });
