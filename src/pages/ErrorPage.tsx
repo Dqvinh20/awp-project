@@ -41,8 +41,8 @@ export default function ErrorPage(props: ErrorPageProps) {
   const { error } = props;
   return (
     <div className="flex justify-center items-center font-semibold text-lg">
-      Sorry, an unexpected error has occurred.{' '}
-      {error && `Message: ${error.message}`}. Try to refresh the page.
+      Sorry, an unexpected error has occurred
+      {error && `. Message: ${error.message}`}. Try to refresh the page.
     </div>
   );
 }

@@ -53,9 +53,9 @@ function AppLayout() {
   };
 
   return (
-    <Layout className="h-screen">
+    <Layout>
       <AppHeader toggleCollapsed={() => setCollapsed(!collapsed)} />
-      <Layout hasSider>
+      <Layout hasSider className="min-h-screen">
         <AppSider
           collapsed={collapsed}
           setCollapsed={setCollapsed}
@@ -67,8 +67,9 @@ function AppLayout() {
             marginLeft: margin_left_sider(),
             marginTop: 64,
             transition: 'margin-left 0.2s',
+            marginBottom: 0,
           }}
-          className=" bg-white m-0 h-full w-full"
+          className=" bg-white m-0 !w-full"
         >
           <Outlet />
         </Content>

@@ -38,3 +38,8 @@ export interface ClassGrade {
 
   deleted_at?: string;
 }
+
+export interface UpdateGradeColumnDTO {
+  class_id: string;
+  grade_columns: GradeColumn[];
+}
