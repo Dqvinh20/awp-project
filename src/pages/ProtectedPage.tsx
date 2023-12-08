@@ -23,12 +23,12 @@ function ProtectedPage() {
     return <FinishSignUp />;
   }
 
-  return data ? (
-    <WebSocketProvider value={socket}>
-      <Outlet />
-    </WebSocketProvider>
-  ) : (
-    <Navigate to={`/sign-in?${searchParams}`} replace={true} />
+  return (
+    data && (
+      <WebSocketProvider value={socket}>
+        <Outlet />
+      </WebSocketProvider>
+    )
   );
 }
 
