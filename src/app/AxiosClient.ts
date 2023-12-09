@@ -44,11 +44,9 @@ function createAxiosResponseInterceptor(): void {
   const interceptor = axiosClient.interceptors.response.use(
     (response) => response,
     (error) => {
-      console.error('Refresserror');
-      console.error(error);
-      // if (!error.response) {
-      // return Promise.reject(error);
-      // }
+      if (!error.response) {
+        return Promise.reject(error);
+      }
 
       const {
         response: { config, status },

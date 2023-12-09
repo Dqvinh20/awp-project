@@ -13,13 +13,15 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import React, { useEffect, useState } from 'react';
-import { App, Button, Popconfirm, Table, Typography } from 'antd';
+import { App, Button, Popconfirm, Spin, Table, Typography } from 'antd';
 import { Rule } from 'antd/es/form';
 
 import { CloseOutlined } from '@ant-design/icons';
 import { useParams } from 'react-router-dom';
 
 import { useQueryClient } from '@tanstack/react-query';
+
+import { AxiosError } from 'axios';
 
 import EditableCell from './tables/GradeStructure/EditableCell';
 import EditableRow, {
@@ -31,6 +33,7 @@ import './tables/GradeStructure/index.css';
 import { useGetClassGrades } from '@/app/store/server/features/class_grade/queries';
 import { GradeColumn } from '@/app/store/server/features/class_grade/interfaces';
 import { useUpdateGradeColumns } from '@/app/store/server/features/class_grade/mutations';
+import ErrorPage from '@/pages/ErrorPage';
 
 const { Text } = Typography;
 
@@ -57,10 +60,13 @@ export default function GradeStructure() {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
   const { id } = useParams();
-  const { data: grade_columns, isLoading } = useGetClassGrades(
-    id,
-    (grade) => grade.grade_columns
-  );
+  const {
+    data: grade_columns,
+    isLoading,
+    isError,
+    isSuccess,
+    error: fetchDataError,
+  } = useGetClassGrades(id, (grade) => grade.grade_columns);
   const [editing, setEditing] = useState(false);
   const [currPercent, setCurrPercent] = useState(0);
   const updateGradeColumns = useUpdateGradeColumns();
@@ -330,61 +336,89 @@ export default function GradeStructure() {
     return dataSource.some((item) => item.name === '');
   };
 
+  const renderError = () => {
+    if (
+      fetchDataError instanceof AxiosError &&
+      fetchDataError?.response?.data.message ===
+        'You are not allowed to view this class grade'
+    ) {
+      return (
+        <div className="twp text-center flex items-center justify-center h-full">
+          <p className="text-xl font-medium">
+            Teacher is not finished with the grade
+          </p>
+        </div>
+      );
+    }
+
+    return isError && <ErrorPage error={fetchDataError} />;
+  };
+
   return (
     <div className="min-h-full h-full p-4 pb-12">
-      <div className="flex justify-end gap-x-4 mb-4">
-        <Button disabled={isLoading} onClick={handleAddRow} type="primary">
-          Add a row
-        </Button>
-        <Button
-          loading={updateGradeColumns.isPending}
-          disabled={isLoading || isSaveButtonDisabled()}
-          type="primary"
-          onClick={handleUpdateGradeColumns}
-        >
-          Save
-        </Button>
-      </div>
-      <DndContext
-        sensors={sensors}
-        modifiers={[restrictToVerticalAxis]}
-        onDragEnd={onDragEnd}
-      >
-        <SortableContext
-          items={dataSource.map((i) => i.key as number)}
-          strategy={verticalListSortingStrategy}
-        >
-          <Table
-            loading={isLoading}
-            className="w-full rounded-sm border border-solid border-gray-300"
-            rowKey="key"
-            showHeader
-            pagination={false}
-            components={components}
-            rowClassName={() => 'editable-row'}
-            dataSource={dataSource}
-            columns={columnGenerator() as ColumnTypes}
-            // bordered
-            onRow={(record) =>
-              ({
-                initialValues: record,
-              } as EditableRowProps)
-            }
-            summary={() => (
-              <Table.Summary.Row>
-                <Table.Summary.Cell index={0} colSpan={2}>
-                  Total percentage:
-                </Table.Summary.Cell>
-                <Table.Summary.Cell index={1}>
-                  <Text type={currPercent !== 100 ? 'danger' : 'success'}>
-                    {currPercent}%
-                  </Text>
-                </Table.Summary.Cell>
-              </Table.Summary.Row>
-            )}
-          />
-        </SortableContext>
-      </DndContext>
+      {isSuccess && (
+        <>
+          <div className="flex justify-end gap-x-4 mb-4">
+            <Button disabled={isLoading} onClick={handleAddRow} type="primary">
+              Add a row
+            </Button>
+            <Button
+              loading={updateGradeColumns.isPending}
+              disabled={isLoading || isSaveButtonDisabled()}
+              type="primary"
+              onClick={handleUpdateGradeColumns}
+            >
+              Save
+            </Button>
+          </div>
+          <DndContext
+            sensors={sensors}
+            modifiers={[restrictToVerticalAxis]}
+            onDragEnd={onDragEnd}
+          >
+            <SortableContext
+              items={dataSource.map((i) => i.key as number)}
+              strategy={verticalListSortingStrategy}
+            >
+              <Table
+                loading={isLoading}
+                className="w-full rounded-sm border border-solid border-gray-300"
+                rowKey="key"
+                showHeader
+                pagination={false}
+                components={components}
+                rowClassName={() => 'editable-row'}
+                dataSource={dataSource}
+                columns={columnGenerator() as ColumnTypes}
+                // bordered
+                onRow={(record) =>
+                  ({
+                    initialValues: record,
+                  } as EditableRowProps)
+                }
+                summary={() => (
+                  <Table.Summary.Row>
+                    <Table.Summary.Cell index={0} colSpan={2}>
+                      Total percentage:
+                    </Table.Summary.Cell>
+                    <Table.Summary.Cell index={1}>
+                      <Text type={currPercent !== 100 ? 'danger' : 'success'}>
+                        {currPercent}%
+                      </Text>
+                    </Table.Summary.Cell>
+                  </Table.Summary.Row>
+                )}
+              />
+            </SortableContext>
+          </DndContext>
+        </>
+      )}
+      {isLoading && (
+        <div className="h-full flex items-center justify-center">
+          <Spin />
+        </div>
+      )}
+      {isError && renderError()}
     </div>
   );
 }

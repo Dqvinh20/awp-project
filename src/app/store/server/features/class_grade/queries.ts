@@ -12,6 +12,7 @@ export const useGetClassGrades = (
     queryKey: ['class-grades', classId],
     queryFn: () => ClassGradeService.getClassGradesByClassID(classId),
     enabled: !!classId,
+    retry: 1,
     select,
     // staleTime: 120000,
   });
@@ -21,5 +22,6 @@ export const useGetGradeColumns = (classId?: string) =>
     queryKey: ['grade-columns', classId],
     queryFn: () => ClassGradeService.getClassGradeColumns(classId),
     enabled: !!classId,
+    retry: 1,
     // staleTime: 120000,
   });

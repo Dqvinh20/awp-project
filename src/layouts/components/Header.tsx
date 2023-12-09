@@ -3,7 +3,7 @@ import { Layout, Flex } from 'antd';
 import AvatarMenu from './AvatarMenu';
 
 import AddNewClass from '@/components/Button/AddNewClass';
-import NotificationButton from '@/components/Button/NotificationButton';
+import NotificationButton from '@/components/Button/NotificationButton/NotificationButton';
 
 interface AppHeaderProps {
   toggleCollapsed: () => void;
