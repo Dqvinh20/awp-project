@@ -21,14 +21,14 @@ import {
 import { WebSocketContext } from '@/contexts/WebSocketContext.';
 
 export default function ClassGrade() {
-  const { id } = useParams();
+  const { id: class_id } = useParams();
   const {
     data: classGrades,
     isLoading: classGradesLoading,
     isSuccess,
     isError,
     error,
-  } = useGetClassGrades(id);
+  } = useGetClassGrades(class_id);
   const userRole = useUserRole();
   const finishGrade = useFinishedGrade();
   const unfinishGrade = useUnFinishedGrade();
@@ -36,44 +36,28 @@ export default function ClassGrade() {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    socket.emit('join', id);
+    socket.emit('join', class_id);
 
-    if (userRole === USER_ROLE.Student) {
-      socket.on('grade.unfinished', async () => {
-        await queryClient.invalidateQueries({
-          queryKey: ['class-grades', id],
-        });
-      });
-
-      socket.on('grade.finished', async () => {
-        await queryClient.invalidateQueries({
-          queryKey: ['class-grades', id],
-        });
-      });
-    }
     return () => {
-      if (userRole === USER_ROLE.Student) {
-        socket.off('grade.unfinished');
-        socket.off('grade.finished');
-      }
+      socket.emit('leave', class_id);
     };
-  }, [id, queryClient, socket, userRole]);
+  }, [class_id, socket]);
 
   const onToggleFinishGrade = async () => {
     if (classGrades?.isFinished) {
-      await unfinishGrade.mutateAsync(id, {
+      await unfinishGrade.mutateAsync(class_id, {
         onSuccess() {
           return queryClient.invalidateQueries({
-            queryKey: ['class-grades', id],
+            queryKey: ['class-grades', class_id],
           });
         },
       });
       return;
     }
-    await finishGrade.mutateAsync(id, {
+    await finishGrade.mutateAsync(class_id, {
       onSuccess() {
         return queryClient.invalidateQueries({
-          queryKey: ['class-grades', id],
+          queryKey: ['class-grades', class_id],
         });
       },
     });

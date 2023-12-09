@@ -11,6 +11,7 @@ import {
   RefreshTokenResponse,
   SignupResponse,
 } from '@/types/authService';
+import { AxiosError, AxiosResponse } from 'axios';
 
 /**
  * AuthService.ts.
@@ -50,19 +51,15 @@ const authService = {
   /**
    * Refresh token from the server.
    */
-  async refreshToken(): Promise<RefreshTokenResponse> {
-    const response = await axiosClient.post<RefreshTokenResponse>(
-      '/auth/refresh',
-      null,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-        },
-        withCredentials: true,
-      }
-    );
-    return response.data;
+  refreshToken(): Promise<AxiosResponse<RefreshTokenResponse>> {
+    // throw new AxiosError('Unauthorized', '401');
+    return axiosClient.post<RefreshTokenResponse>('/auth/refresh', null, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+      withCredentials: true,
+    });
   },
 
   logout() {

@@ -80,8 +80,8 @@ function createAxiosResponseInterceptor(): void {
         .refreshToken()
         .then((refreshResponse) => {
           // Save the new access token
-          jwtService.saveToken(refreshResponse.access_token);
-          config.headers.Authorization = `Bearer ${refreshResponse.access_token}`;
+          jwtService.saveToken(refreshResponse.data.access_token);
+          config.headers.Authorization = `Bearer ${refreshResponse.data.access_token}`;
           return axiosClient(config);
         })
         .catch((refreshError: AxiosError) => {
