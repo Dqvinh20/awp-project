@@ -12,12 +12,20 @@ import {
   arrayMove,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import React, { useEffect, useState } from 'react';
-import { App, Button, Popconfirm, Spin, Table, Typography } from 'antd';
+import React, { useCallback, useEffect, useState } from 'react';
+import {
+  App,
+  Button,
+  Popconfirm,
+  Spin,
+  Table,
+  Tooltip,
+  Typography,
+} from 'antd';
 import { Rule } from 'antd/es/form';
 
-import { CloseOutlined } from '@ant-design/icons';
-import { useParams } from 'react-router-dom';
+import { CloseOutlined, ReloadOutlined } from '@ant-design/icons';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -31,7 +39,10 @@ import EditableRow, {
 import './tables/GradeStructure/index.css';
 
 import { useGetClassGrades } from '@/app/store/server/features/class_grade/queries';
-import { GradeColumn } from '@/app/store/server/features/class_grade/interfaces';
+import {
+  ClassGrade,
+  GradeColumn,
+} from '@/app/store/server/features/class_grade/interfaces';
 import { useUpdateGradeColumns } from '@/app/store/server/features/class_grade/mutations';
 import ErrorPage from '@/pages/ErrorPage';
 
@@ -62,34 +73,48 @@ export default function GradeStructure() {
   const { id } = useParams();
   const {
     data: grade_columns,
-    isLoading,
+    isLoading: isGradeStructLoading,
     isError,
     isSuccess,
+    isFetching,
+    isRefetching,
+    refetch,
     error: fetchDataError,
   } = useGetClassGrades(id, (grade) => grade.grade_columns);
   const [editing, setEditing] = useState(false);
   const [currPercent, setCurrPercent] = useState(0);
   const updateGradeColumns = useUpdateGradeColumns();
 
-  useEffect(() => {
-    if (grade_columns && grade_columns.length !== 0) {
-      setCurrPercent(() =>
-        grade_columns?.reduce(
-          (acc: number, cur: GradeColumn) => acc + cur.scaleValue,
-          0
-        )
-      );
-      setDataSource(() =>
-        grade_columns?.map((item: GradeColumn) => ({
-          key: (item.ordinal as number) + 1,
-          id: item.id,
-          name: item.name,
-          ordinal: item.ordinal,
-          scaleValue: item.scaleValue,
-        }))
-      );
-    }
+  const initData = useCallback(() => {
+    setCurrPercent(() =>
+      grade_columns?.reduce(
+        (acc: number, cur: GradeColumn) => acc + cur.scaleValue,
+        0
+      )
+    );
+
+    setDataSource(() =>
+      grade_columns?.map((item: GradeColumn) => ({
+        key: (item.ordinal as number) + 1,
+        id: item.id,
+        name: item.name,
+        ordinal: item.ordinal,
+        scaleValue: item.scaleValue,
+      }))
+    );
   }, [grade_columns]);
+
+  useEffect(() => {
+    if (grade_columns) {
+      initData();
+    }
+  }, [grade_columns, initData]);
+
+  useEffect(() => {
+    if (isFetching) {
+      initData();
+    }
+  }, [isFetching, initData]);
 
   const [dataSource, setDataSource] = useState<DataType[]>([]);
 
@@ -148,6 +173,31 @@ export default function GradeStructure() {
         editable: true,
       },
       {
+        title: (
+          <Tooltip title="Reload">
+            <Popconfirm
+              title="Sure to reload?. All unsaved changes will be lost."
+              onConfirm={() => {
+                setEditing(false);
+                refetch();
+              }}
+              disabled={!editing}
+              placement="bottom"
+            >
+              <ReloadOutlined
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (editing) return;
+
+                  setEditing(false);
+                  refetch();
+                }}
+                className="hover:text-blue-500"
+                spin={isGradeStructLoading || isRefetching}
+              />
+            </Popconfirm>
+          </Tooltip>
+        ),
         dataIndex: 'operation',
         width: '5%',
         render(_, record) {
@@ -359,12 +409,16 @@ export default function GradeStructure() {
       {isSuccess && (
         <>
           <div className="flex justify-end gap-x-4 mb-4">
-            <Button disabled={isLoading} onClick={handleAddRow} type="primary">
+            <Button
+              disabled={isGradeStructLoading}
+              onClick={handleAddRow}
+              type="primary"
+            >
               Add a row
             </Button>
             <Button
               loading={updateGradeColumns.isPending}
-              disabled={isLoading || isSaveButtonDisabled()}
+              disabled={isGradeStructLoading || isSaveButtonDisabled()}
               type="primary"
               onClick={handleUpdateGradeColumns}
             >
@@ -381,7 +435,7 @@ export default function GradeStructure() {
               strategy={verticalListSortingStrategy}
             >
               <Table
-                loading={isLoading}
+                loading={isGradeStructLoading}
                 className="w-full rounded-sm border border-solid border-gray-300"
                 rowKey="key"
                 showHeader
@@ -412,7 +466,7 @@ export default function GradeStructure() {
           </DndContext>
         </>
       )}
-      {isLoading && (
+      {isGradeStructLoading && (
         <div className="h-full flex items-center justify-center">
           <Spin />
         </div>

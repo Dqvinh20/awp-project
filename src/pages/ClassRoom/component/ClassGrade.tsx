@@ -1,24 +1,16 @@
-/* eslint-disable max-lines-per-function */
-import { Button, Space, Spin, Tooltip } from 'antd';
+import { Space, Spin } from 'antd';
 
 import { useParams } from 'react-router';
 
-import { useQueryClient } from '@tanstack/react-query';
-
 import { AxiosError } from 'axios';
 
-import { useEffect, useContext } from 'react';
-
 import GradeTable from './tables/GradeTable/GradeTable';
+
+import ToggleFinishGradeButton from './button/ToggleFinishGradeButton';
 
 import { useGetClassGrades } from '@/app/store/server/features/class_grade/queries';
 import { useUserRole } from '@/hooks/useUserRole';
 import { USER_ROLE } from '@/app/store/server/features/users/interfaces';
-import {
-  useFinishedGrade,
-  useUnFinishedGrade,
-} from '@/app/store/server/features/class_grade/mutations';
-import { WebSocketContext } from '@/contexts/WebSocketContext.';
 
 export default function ClassGrade() {
   const { id: class_id } = useParams();
@@ -30,66 +22,6 @@ export default function ClassGrade() {
     error,
   } = useGetClassGrades(class_id);
   const userRole = useUserRole();
-  const finishGrade = useFinishedGrade();
-  const unfinishGrade = useUnFinishedGrade();
-  const socket = useContext(WebSocketContext);
-  const queryClient = useQueryClient();
-
-  useEffect(() => {
-    socket.emit('join', class_id);
-
-    return () => {
-      socket.emit('leave', class_id);
-    };
-  }, [class_id, socket]);
-
-  const onToggleFinishGrade = async () => {
-    if (classGrades?.isFinished) {
-      await unfinishGrade.mutateAsync(class_id, {
-        onSuccess() {
-          return queryClient.invalidateQueries({
-            queryKey: ['class-grades', class_id],
-          });
-        },
-      });
-      return;
-    }
-    await finishGrade.mutateAsync(class_id, {
-      onSuccess() {
-        return queryClient.invalidateQueries({
-          queryKey: ['class-grades', class_id],
-        });
-      },
-    });
-  };
-
-  const teacherActions = isSuccess && (
-    <div className="mt-4 mb-10 flex justify-end">
-      <Space>
-        {classGrades.isFinished ? (
-          <Tooltip title="Mark grade as finished for students not to view">
-            <Button
-              type="primary"
-              onClick={onToggleFinishGrade}
-              loading={unfinishGrade.isPending}
-            >
-              UnFinished
-            </Button>
-          </Tooltip>
-        ) : (
-          <Tooltip title="Mark grade as finished for students to view">
-            <Button
-              type="primary"
-              onClick={onToggleFinishGrade}
-              loading={finishGrade.isPending}
-            >
-              Finished
-            </Button>
-          </Tooltip>
-        )}
-      </Space>
-    </div>
-  );
 
   const renderError = () => {
     if (error instanceof AxiosError) {
@@ -121,7 +53,13 @@ export default function ClassGrade() {
             isLoading={classGradesLoading}
             isTeacher={userRole === USER_ROLE.Teacher}
           />
-          {userRole === USER_ROLE.Teacher && teacherActions}
+          {userRole === USER_ROLE.Teacher && (
+            <div className="mt-4 mb-10 flex justify-end">
+              <Space>
+                <ToggleFinishGradeButton />
+              </Space>
+            </div>
+          )}
         </>
       )}
       {isError && renderError()}
