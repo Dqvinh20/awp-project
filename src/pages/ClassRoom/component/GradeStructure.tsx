@@ -414,7 +414,7 @@ export default function GradeStructure() {
               onClick={handleAddRow}
               type="primary"
             >
-              Add a row
+              Add new columns
             </Button>
             <Button
               loading={updateGradeColumns.isPending}
