@@ -390,7 +390,6 @@ export default function GradeStructure() {
                 rowClassName={() => 'editable-row'}
                 dataSource={dataSource}
                 columns={columnGenerator() as ColumnTypes}
-                // bordered
                 onRow={(record) =>
                   ({
                     initialValues: record,

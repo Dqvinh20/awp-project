@@ -1,4 +1,7 @@
-import { UpdateGradeColumnDTO } from './../app/store/server/features/class_grade/interfaces';
+import {
+  UpdateGradeColumnsDTO,
+  UpdateGradeRowsDTO,
+} from './../app/store/server/features/class_grade/interfaces';
 
 import axiosClient from '@/app/AxiosClient';
 
@@ -13,8 +16,18 @@ const ClassGradeService = {
     return res.data;
   },
 
-  updateStudentGrade({ classId }: { classId: string }) {
-    return axiosClient.patch(`/class-grades/${classId}`);
+  async updateStudentGrades({ classId, grade_rows }: UpdateGradeRowsDTO) {
+    const res = await axiosClient.patch(`/class-grades/${classId}/rows`, {
+      grade_rows,
+    });
+    return res.data;
+  },
+
+  async removeGradeRow({ classId, rowId }: { classId: string; rowId: string }) {
+    const res = await axiosClient.delete(
+      `/class-grades/${classId}/rows/${rowId}`
+    );
+    return res.data;
   },
 
   async getClassGradeColumns(classId?: string) {
@@ -25,7 +38,7 @@ const ClassGradeService = {
   async updateClassGradeColumns({
     class_id,
     grade_columns,
-  }: UpdateGradeColumnDTO) {
+  }: UpdateGradeColumnsDTO) {
     const res = await axiosClient.post(`/class-grades/${class_id}/columns`, {
       grade_columns,
     });

@@ -33,6 +33,7 @@
     "react-banner": "^1.0.3",
     "react-beautiful-dnd": "^13.1.1",
     "react-dom": "18.2.0",
+    "react-highlight-words": "^0.20.0",
     "react-infinite-scroll-component": "^6.1.0",
     "react-lazy-load-image-component": "^1.6.0",
     "react-list-drag-and-drop": "^0.9.2",

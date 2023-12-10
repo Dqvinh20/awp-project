@@ -20,3 +20,15 @@ export const useUpdateGradeColumns = () =>
     mutationFn: ClassGradeService.updateClassGradeColumns,
     retry: 3,
   });
+
+export const useRemoveGradeRow = () =>
+  useMutation({
+    mutationKey: ['remove-grade-row'],
+    mutationFn: ClassGradeService.removeGradeRow,
+  });
+
+export const useUpdateGradeRows = () =>
+  useMutation({
+    mutationKey: ['update-grade-rows'],
+    mutationFn: ClassGradeService.updateStudentGrades,
+  });

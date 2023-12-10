@@ -6,7 +6,8 @@ export interface Item {
   [key: string]: any;
 }
 
-export interface DataType {
+export interface GradeTableDataType {
+  id?: string;
   key: React.Key;
   student_id: string;
   full_name: string;

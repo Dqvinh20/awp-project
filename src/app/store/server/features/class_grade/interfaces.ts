@@ -6,8 +6,7 @@ export interface Grade {
 }
 
 export interface GradeRow {
-  _id?: string;
-
+  id?: string;
   student: string;
   student_id: string;
   full_name: string;
@@ -20,8 +19,6 @@ export interface GradeColumn {
   ordinal: number;
   scaleValue: number;
 }
-
-// export interface GradeRow {}
 
 export interface ClassGrade {
   class: ClassDTO;
@@ -39,7 +36,12 @@ export interface ClassGrade {
   deleted_at?: string;
 }
 
-export interface UpdateGradeColumnDTO {
+export interface UpdateGradeColumnsDTO {
   class_id: string;
   grade_columns: GradeColumn[];
+}
+
+export interface UpdateGradeRowsDTO {
+  classId: string;
+  grade_rows: GradeRow[];
 }

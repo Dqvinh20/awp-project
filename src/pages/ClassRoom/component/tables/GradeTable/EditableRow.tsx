@@ -1,15 +1,21 @@
 import { Form } from 'antd';
 
 import { EditableContext } from './context';
+import { GradeTableDataType } from './interfaces';
 
-interface EditableRowProps {
+export interface EditableRowProps {
   index: number;
+  initialValues: GradeTableDataType;
 }
 
-const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
+const EditableRow: React.FC<EditableRowProps> = ({
+  index,
+  initialValues = {},
+  ...props
+}) => {
   const [form] = Form.useForm();
   return (
-    <Form form={form} component={false}>
+    <Form form={form} component={false} initialValues={initialValues}>
       <EditableContext.Provider value={form}>
         <tr {...props} />
       </EditableContext.Provider>

@@ -2,6 +2,8 @@
 import { Form, Input, InputNumber, InputRef } from 'antd';
 import { RefObject, useContext, useEffect, useRef, useState } from 'react';
 
+import { Rule } from 'antd/es/form';
+
 import { EditableContext } from './context';
 import { Item } from './interfaces';
 
@@ -12,6 +14,7 @@ interface EditableCellProps {
   dataIndex: keyof Item;
   record: Item;
   type: 'number' | 'string';
+  rules?: Rule[];
   handleSave: (record: Item) => void;
 }
 
@@ -23,6 +26,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
   record,
   handleSave,
   type = 'number',
+  rules = [],
   ...restProps
 }) => {
   const [editing, setEditing] = useState(false);
@@ -58,34 +62,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
           className="w-[110px]"
           style={{ margin: 0, padding: 0 }}
           name={dataIndex}
-          rules={[
-            {
-              required: true,
-              message: `${title} is required.`,
-            },
-            () => ({
-              validator(_, value) {
-                if (value === 0) {
-                  return Promise.resolve();
-                }
-
-                if (isNaN(value)) {
-                  return Promise.reject(new Error('Grade has to be a number.'));
-                }
-                if (value < 0) {
-                  return Promise.reject(
-                    new Error("Grade can't be less than 0")
-                  );
-                }
-                if (value > 10) {
-                  return Promise.reject(
-                    new Error("Grade can't be more than 10")
-                  );
-                }
-                return Promise.resolve();
-              },
-            }),
-          ]}
+          rules={[...rules]}
         >
           <InputNumber
             ref={inputRef as RefObject<HTMLInputElement>}
@@ -103,12 +80,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
         className="w-[100%]"
         style={{ margin: 0, padding: 0 }}
         name={dataIndex}
-        rules={[
-          {
-            required: true,
-            message: `${title} is required.`,
-          },
-        ]}
+        rules={[...rules]}
       >
         <Input
           ref={inputRef as RefObject<InputRef>}
