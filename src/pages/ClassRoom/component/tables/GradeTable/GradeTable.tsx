@@ -349,7 +349,7 @@ function GradeTable({
               pattern: /^[0-9]+$/,
               message: 'Student ID must be a number.',
             },
-            ({ getFieldsValue }) => ({
+            ({ getFieldsValue }: { getFieldsValue: any }) => ({
               validator(_: any, value: any) {
                 if (value === '') {
                   return Promise.resolve();
