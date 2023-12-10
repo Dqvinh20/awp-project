@@ -284,11 +284,11 @@ export default function GradeStructure() {
   const handleAddRow = () => {
     const key =
       dataSource.length === 0
-        ? 1
+        ? 0
         : Math.max(...dataSource.map((i) => i.key as number)) + 1;
     const ordinal =
       dataSource.length === 0
-        ? 1
+        ? 0
         : Math.max(...dataSource.map((i) => i.ordinal)) + 1;
     const newData: any = {
       key,
