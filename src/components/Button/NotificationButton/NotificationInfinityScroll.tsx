@@ -31,7 +31,7 @@ function NotificationInfinityScroll({
       data
         ?.filter(
           (notification: NotificationDTO) =>
-            !notification.read_by?.some((read) => read.user === myID)
+            !notification.read_by?.some((read) => read.user.toString() === myID)
         )
         .map((notification: NotificationDTO) => notification.id) ?? [],
     [data, myID]
@@ -90,6 +90,7 @@ function NotificationInfinityScroll({
                       className="hover:text-blue-400 line-clamp-1"
                       onClick={(e) => {
                         e.stopPropagation();
+                        handleOnClickNotification(item);
                         navigate(`/class/${item.class}/news`);
                       }}
                     >

@@ -2,47 +2,55 @@ import { NavLink, Outlet } from 'react-router-dom';
 import { ConfigProvider, Layout, Menu, MenuProps, Spin, App } from 'antd';
 import { AxiosError } from 'axios';
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import ErrorPage from '../ErrorPage';
 
 import useClassDetail from '@/hooks/useClassDetail';
 import UnauthImg from '@/assets/error_401.jpg';
+import { useUserRole } from '@/hooks/useUserRole';
+import { USER_ROLE } from '@/app/store/server/features/users/interfaces';
 
 const { Header, Content } = Layout;
-
-const LinkMenuClassRoom = [
-  {
-    label: 'News',
-    path: 'news',
-  },
-  {
-    label: 'Members',
-    path: 'members',
-  },
-  {
-    label: 'Grade',
-    path: 'grade',
-  },
-  {
-    label: 'Grade Structure',
-    path: 'grade-structure',
-  },
-];
-
-const items: MenuProps['items'] = LinkMenuClassRoom.map((item) => ({
-  label: (
-    <NavLink className="p-4" to={item.path}>
-      {item.label}
-    </NavLink>
-  ),
-  key: item.path,
-}));
 
 export default function ClassLayOut() {
   const { notification } = App.useApp();
 
   const { isLoading, isError, error, isSuccess } = useClassDetail();
+  const userRole = useUserRole();
+
+  const items = useMemo((): MenuProps['items'] => {
+    const LinkMenuClassRoom = [
+      {
+        label: 'News',
+        path: 'news',
+      },
+      {
+        label: 'Members',
+        path: 'members',
+      },
+      {
+        label: 'Grade',
+        path: 'grade',
+      },
+    ];
+
+    if (userRole === USER_ROLE.Teacher) {
+      LinkMenuClassRoom.push({
+        label: 'Grade Structure',
+        path: 'grade-structure',
+      });
+    }
+
+    return LinkMenuClassRoom.map((item) => ({
+      label: (
+        <NavLink className="p-4" to={item.path}>
+          {item.label}
+        </NavLink>
+      ),
+      key: item.path,
+    }));
+  }, [userRole]);
 
   useEffect(() => {
     if (isError && error instanceof AxiosError) {
