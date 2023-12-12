@@ -21,13 +21,16 @@ export default function CreateClassModal({
   const [confirmLoading, setConfirmLoading] = useState(false);
   const queryClient = useQueryClient();
   const addClass = useAddClass();
-  const { notification } = App.useApp();
+  const { notification, message } = App.useApp();
 
   const handleSubmit = (values: any) => {
     addClass.mutate(values, {
       onSuccess() {
         queryClient.invalidateQueries({ queryKey: ['classes'] });
         setConfirmLoading(false);
+        message.success('Create class successfully');
+        setOpen(false);
+        form.resetFields();
       },
       onError(error) {
         setConfirmLoading(false);

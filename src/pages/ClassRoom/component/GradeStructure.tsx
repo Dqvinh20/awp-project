@@ -39,12 +39,11 @@ import EditableRow, {
 import './tables/GradeStructure/index.css';
 
 import { useGetClassGrades } from '@/app/store/server/features/class_grade/queries';
-import {
-  ClassGrade,
-  GradeColumn,
-} from '@/app/store/server/features/class_grade/interfaces';
+import { GradeColumn } from '@/app/store/server/features/class_grade/interfaces';
 import { useUpdateGradeColumns } from '@/app/store/server/features/class_grade/mutations';
 import ErrorPage from '@/pages/ErrorPage';
+import { useUserRole } from '@/hooks/useUserRole';
+import { USER_ROLE } from '@/app/store/server/features/users/interfaces';
 
 const { Text } = Typography;
 
@@ -84,17 +83,20 @@ export default function GradeStructure() {
   const [editing, setEditing] = useState(false);
   const [currPercent, setCurrPercent] = useState(0);
   const updateGradeColumns = useUpdateGradeColumns();
+  const userRole = useUserRole();
 
   const initData = useCallback(() => {
+    if (!grade_columns || grade_columns.length === 0) return;
+
     setCurrPercent(() =>
-      grade_columns?.reduce(
+      grade_columns.reduce(
         (acc: number, cur: GradeColumn) => acc + cur.scaleValue,
         0
       )
     );
 
     setDataSource(() =>
-      grade_columns?.map((item: GradeColumn) => ({
+      grade_columns.map((item: GradeColumn) => ({
         key: (item.ordinal as number) + 1,
         id: item.id,
         name: item.name,
@@ -379,6 +381,8 @@ export default function GradeStructure() {
   );
 
   const isSaveButtonDisabled = () => {
+    if (!dataSource) return false;
+
     if (dataSource.length === 0 || currPercent !== 100 || !editing) {
       return true;
     }
@@ -408,23 +412,25 @@ export default function GradeStructure() {
     <div className="min-h-full h-full p-4 pb-12">
       {isSuccess && (
         <>
-          <div className="flex justify-end gap-x-4 mb-4">
-            <Button
-              disabled={isGradeStructLoading}
-              onClick={handleAddRow}
-              type="primary"
-            >
-              Add new columns
-            </Button>
-            <Button
-              loading={updateGradeColumns.isPending}
-              disabled={isGradeStructLoading || isSaveButtonDisabled()}
-              type="primary"
-              onClick={handleUpdateGradeColumns}
-            >
-              Save
-            </Button>
-          </div>
+          {userRole === USER_ROLE.Teacher && (
+            <div className="flex justify-end gap-x-4 mb-4">
+              <Button
+                disabled={isGradeStructLoading}
+                onClick={handleAddRow}
+                type="primary"
+              >
+                Add new columns
+              </Button>
+              <Button
+                loading={updateGradeColumns.isPending}
+                disabled={isGradeStructLoading || isSaveButtonDisabled()}
+                type="primary"
+                onClick={handleUpdateGradeColumns}
+              >
+                Save
+              </Button>
+            </div>
+          )}
           <DndContext
             sensors={sensors}
             modifiers={[restrictToVerticalAxis]}

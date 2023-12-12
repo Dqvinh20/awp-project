@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { useQueryClient } from '@tanstack/react-query';
 import { App, Form, Input, Modal } from 'antd';
 import { AxiosError } from 'axios';
@@ -37,6 +38,8 @@ function JoinClassModal({
           message: 'Join class successfully',
           description: `You have joined ${data.name}`,
         });
+        form.resetFields();
+        setOpen(false);
       },
       onError(error: any) {
         setConfirmLoading(false);
