@@ -32,6 +32,10 @@ function JoinClass() {
       },
       onError(error) {
         if (error instanceof AxiosError) {
+          if (error?.response?.data.message === 'User already in class') {
+            navigate(`/class/${error?.response?.data.class_id}/news`);
+            return;
+          }
           notification.error({
             message: 'Error Occurred',
             description: error?.response?.data.message ?? error.message,
@@ -39,7 +43,7 @@ function JoinClass() {
           return;
         }
         notification.error({
-          message: 'Error Occured',
+          message: 'Error Occurred',
           description: error.message,
         });
       },
@@ -83,12 +87,6 @@ function JoinClass() {
 
   if (profileLoading) return <Spin fullscreen />;
   if (isError) return <div>Error + {error.message}</div>;
-  // if (!c)
-  //   return (
-  //     <div className="flex justify-center align-middle h-full w-full p-8 text-lg font-medium text-red-500">
-  //       No class code
-  //     </div>
-  //   );
 
   return (
     <div className="flex justify-center align-middle h-full w-full p-6">

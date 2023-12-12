@@ -1,9 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
 
-import { User } from './interfaces';
+import { SearchUserEmailParams, USER_ROLE, User } from './interfaces';
 
 import userService from '@/services/UserService';
-import jwtService from '@/services/JwtService';
 
 /**
  * Get user by id.
@@ -18,12 +17,30 @@ export const useGetUser = (userId?: string) =>
   });
 
 /**
+ * Search for user emails.
+ * @param email - Email to search for.
+ * @param role - Role user to search for.
+ * @returns
+ */
+export const useSearchEmails = ({
+  email,
+  role = USER_ROLE.Student,
+}: SearchUserEmailParams) =>
+  useQuery({
+    queryKey: ['search', 'email', email],
+    queryFn: () => userService.searchEmails({ email, role }),
+    placeholderData: keepPreviousData,
+    staleTime: 30000,
+    gcTime: 30000,
+  });
+
+/**
  * Get current logged user's info.
  * @param select - Select data.
  * @returns
  */
-export const useGetMyInfo = (select?: (data: User) => any) =>
-  useQuery<User>({
+export const useGetMyInfo = <TData = User>(select?: (data: User) => TData) =>
+  useQuery({
     queryKey: ['user', 'me'],
     queryFn: () => userService.getMyInfo(),
     staleTime: 120000,

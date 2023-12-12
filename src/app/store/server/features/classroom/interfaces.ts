@@ -47,6 +47,17 @@ export interface AddClassDTO {
 }
 
 /**
+ * Invite members to class by email.
+ * @interface InviteMembersByEmailDTO
+ */
+export interface InviteMembersByEmailDTO {
+  /** ClassRoom Code. */
+  code: string;
+  /** List of user emails will be invited. */
+  invited_emails: string[];
+}
+
+/**
  * Kick member out class.
  * @interface KickMembersDTO
  */

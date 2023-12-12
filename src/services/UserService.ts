@@ -1,3 +1,5 @@
+import { SearchUserEmailParams } from './../app/store/server/features/users/interfaces';
+
 import axiosClient from '@/app/AxiosClient';
 import { User } from '@/app/store/server/features/users/interfaces';
 
@@ -14,6 +16,18 @@ const userService = {
    */
   async getUser(id?: string): Promise<User> {
     const response = await axiosClient.get<User>(`/users/${id}`);
+    return response.data;
+  },
+
+  async searchEmails(
+    params: SearchUserEmailParams
+  ): Promise<{ count: number; emails: string[] }> {
+    const response = await axiosClient.get<{ count: number; emails: string[] }>(
+      `/users/search`,
+      {
+        params,
+      }
+    );
     return response.data;
   },
 

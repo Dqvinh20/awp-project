@@ -43,6 +43,11 @@ export interface User {
   isEmailConfirmed?: boolean;
 }
 
+export interface SearchUserEmailParams {
+  email: string;
+  role: USER_ROLE.Student | USER_ROLE.Teacher;
+}
+
 /**
  * Address DTO.
  * @property id - Address ID.
