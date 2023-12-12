@@ -42,6 +42,8 @@ import {
   useRemoveGradeRow,
   useUpdateGradeRows,
 } from '@/app/store/server/features/class_grade/mutations';
+import { useUserRole } from '@/hooks/useUserRole';
+import { USER_ROLE } from '@/app/store/server/features/users/interfaces';
 
 const mapData = (
   data: GradeRow[],
@@ -84,6 +86,7 @@ function GradeTable({
   const { message } = App.useApp();
   const queryClient = useQueryClient();
   const { id: classId } = useParams<{ id: string }>();
+  const userRole = useUserRole();
   const {
     mutate: removeGradeRowMutate,
     isPending: isRemovingRow,
@@ -633,26 +636,28 @@ function GradeTable({
 
   return (
     <>
-      <div className="flex justify-end gap-x-4 mb-4">
-        <Button
-          disabled={
-            isLoading ||
-            (dataSource && dataSource[dataSource.length - 1]?.key === '')
-          }
-          onClick={handleAddRow}
-          type="primary"
-        >
-          Add a row
-        </Button>
-        <Button
-          loading={isUpdatingRows}
-          disabled={isLoading || isSaveButtonDisabled()}
-          type="primary"
-          onClick={handleUpdateGrades}
-        >
-          Save
-        </Button>
-      </div>
+      {userRole === USER_ROLE.Teacher && (
+        <div className="flex justify-end gap-x-4 mb-4">
+          <Button
+            disabled={
+              isLoading ||
+              (dataSource && dataSource[dataSource.length - 1]?.key === '')
+            }
+            onClick={handleAddRow}
+            type="primary"
+          >
+            Add a row
+          </Button>
+          <Button
+            loading={isUpdatingRows}
+            disabled={isLoading || isSaveButtonDisabled()}
+            type="primary"
+            onClick={handleUpdateGrades}
+          >
+            Save
+          </Button>
+        </div>
+      )}
       <Table
         size="middle"
         loading={isLoading}

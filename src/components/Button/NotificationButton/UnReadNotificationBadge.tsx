@@ -1,16 +1,20 @@
 import { Badge } from 'antd';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, memo } from 'react';
 
-import { useCountUnreadNotifications } from '@/app/store/server/features/notifications/queries';
-
-function UnReadNotificationBadge({ children, ...rest }: PropsWithChildren) {
-  const { data: unreadCount } = useCountUnreadNotifications();
-
+function UnReadNotificationBadge({
+  children,
+  className,
+  count,
+  ...rest
+}: PropsWithChildren & {
+  count?: number;
+  className?: string;
+}) {
   return (
     <Badge
       {...rest}
-      className={unreadCount && unreadCount > 99 ? 'mr-2' : ''}
-      count={unreadCount}
+      className={className}
+      count={count}
       overflowCount={99}
       color="#F84F31"
       offset={[0, 0]}
@@ -20,4 +24,4 @@ function UnReadNotificationBadge({ children, ...rest }: PropsWithChildren) {
   );
 }
 
-export default UnReadNotificationBadge;
+export default memo(UnReadNotificationBadge);

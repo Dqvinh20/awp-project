@@ -20,6 +20,7 @@ const EditableRow: React.FC<EditableRowProps> = ({
   index,
   initialValues = {},
   children,
+  className,
   ...props
 }) => {
   const [form] = Form.useForm();
@@ -39,7 +40,9 @@ const EditableRow: React.FC<EditableRowProps> = ({
     ...props.style,
     transform: CSS.Transform.toString(transform && { ...transform, scaleY: 1 }),
     transition,
-    ...(isDragging ? { position: 'relative', zIndex: 9999 } : {}),
+    ...(isDragging && className !== 'ant-table-placeholder'
+      ? { position: 'relative', zIndex: 9999 }
+      : {}),
   };
 
   return (

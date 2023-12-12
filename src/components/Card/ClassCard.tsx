@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { useQueryClient } from '@tanstack/react-query';
 
+import { memo, useCallback } from 'react';
+
 import { ClassDTO } from '@/app/store/server/features/classroom/interfaces';
 import { useLeaveClass } from '@/app/store/server/features/classroom/mutations';
 
@@ -110,6 +112,21 @@ function ClassCard({
     return studentCoverImgs[0];
   };
 
+  const onLeaveClass = useCallback(() => {
+    leaveClass.mutate(classId, {
+      onSuccess() {
+        return queryClient.invalidateQueries({
+          predicate(query) {
+            return (
+              query.queryKey[0] === 'classes' ||
+              query.queryKey[0] === 'notifications'
+            );
+          },
+        });
+      },
+    });
+  }, [classId, leaveClass, queryClient]);
+
   const items = (): MenuProps['items'] => {
     if (isOwner) {
       return [];
@@ -120,15 +137,7 @@ function ClassCard({
           key: '1',
           danger: true,
           label: 'Leave class',
-          onClick() {
-            leaveClass.mutate(classId, {
-              onSuccess() {
-                return queryClient.invalidateQueries({
-                  queryKey: ['classes'],
-                });
-              },
-            });
-          },
+          onClick: onLeaveClass,
         },
       ];
     }
@@ -137,15 +146,7 @@ function ClassCard({
         key: '1',
         danger: true,
         label: 'Unenroll',
-        onClick() {
-          leaveClass.mutate(classId, {
-            onSuccess() {
-              return queryClient.invalidateQueries({
-                queryKey: ['classes'],
-              });
-            },
-          });
-        },
+        onClick: onLeaveClass,
       },
     ];
   };
@@ -249,4 +250,4 @@ function ClassCard({
   );
 }
 
-export default ClassCard;
+export default memo(ClassCard);

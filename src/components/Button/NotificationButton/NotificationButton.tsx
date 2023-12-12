@@ -6,7 +6,10 @@ import UnReadNotificationBadge from './UnReadNotificationBadge';
 import NotificationInfinityScroll from './NotificationInfinityScroll';
 import BellButton from './BellButton';
 
-import { useGetNotificationsInfinity } from '@/app/store/server/features/notifications/queries';
+import {
+  useCountUnreadNotifications,
+  useGetNotificationsInfinity,
+} from '@/app/store/server/features/notifications/queries';
 import { NotificationDTO } from '@/app/store/server/features/notifications/interfaces';
 import { useMarkReadNotification } from '@/app/store/server/features/notifications/mutations';
 
@@ -20,8 +23,10 @@ function NotificationButton() {
     hasNextPage,
     isFetchingNextPage,
     status,
-    refetch,
+    refetch: notificationsRefetch,
   } = useGetNotificationsInfinity();
+  const { data: unreadCount, refetch: uncountRefetch } =
+    useCountUnreadNotifications();
 
   const loadMoreData = useCallback(() => {
     if (isFetchingNextPage) {
@@ -35,7 +40,8 @@ function NotificationButton() {
       try {
         markRead.mutateAsync(id!, {
           onSuccess() {
-            refetch();
+            uncountRefetch();
+            notificationsRefetch();
           },
         });
       } catch (error) {
@@ -46,7 +52,7 @@ function NotificationButton() {
         }
       }
     },
-    [markRead, navigate, refetch]
+    [markRead, navigate, notificationsRefetch, uncountRefetch]
   );
 
   const dataSource = useMemo(() => data?.pages ?? [], [data]);
@@ -91,7 +97,10 @@ function NotificationButton() {
       placement="bottomRight"
       dropdownRender={() => renderDropDown()}
     >
-      <UnReadNotificationBadge>
+      <UnReadNotificationBadge
+        className={unreadCount && unreadCount > 99 ? 'mr-2' : ''}
+        count={unreadCount}
+      >
         <BellButton />
       </UnReadNotificationBadge>
     </Dropdown>
