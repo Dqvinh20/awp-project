@@ -65,6 +65,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
           rules={[...rules]}
         >
           <InputNumber
+            placeholder='Please input number'
             ref={inputRef as RefObject<HTMLInputElement>}
             size="middle"
             onPressEnter={save}
@@ -83,6 +84,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
         rules={[...rules]}
       >
         <Input
+          placeholder='Please input text'
           ref={inputRef as RefObject<InputRef>}
           size="middle"
           onPressEnter={save}

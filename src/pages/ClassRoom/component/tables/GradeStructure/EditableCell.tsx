@@ -60,7 +60,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
   };
 
   let childNode = children;
-
   if (editable) {
     childNode = editing ? (
       <Form.Item
@@ -75,6 +74,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
         ]}
       >
         <Input
+          placeholder={`Please input ${title}`}
           ref={inputRef}
           suffix={suffix}
           onPressEnter={save}

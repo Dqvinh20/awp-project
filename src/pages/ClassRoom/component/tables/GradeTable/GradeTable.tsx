@@ -303,9 +303,7 @@ function GradeTable({
               textToHighlight={text ? text.toString() : ''}
             />
           </Tooltip>
-        ) : (
-          render(text.toString())
-        ),
+        ) : (text.toString()? ( <span className='text-slate-950 outline-none' >{text.toString()}</span>):(<span className='text-red-700 outline-none' >Click here to input</span>))
     };
 
     return isTeacher

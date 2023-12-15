@@ -16,6 +16,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import {
   App,
   Button,
+  Input,
   Popconfirm,
   Spin,
   Table,
@@ -168,6 +169,16 @@ export default function GradeStructure() {
         title: 'Name',
         dataIndex: 'name',
         editable: true,
+        render: (value) => {
+          if(!value){
+            return (
+              <span className='text-red-700' >Click here to input</span>
+            )
+          }else{
+              return <span className='text-slate-950' >{value}</span>
+          }
+          
+        },
       },
       {
         title: 'Percent %',
