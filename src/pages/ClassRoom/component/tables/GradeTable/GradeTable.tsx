@@ -30,6 +30,8 @@ import { differenceWith, isEqual } from 'lodash';
 
 import { useQueryClient } from '@tanstack/react-query';
 
+import MoreClassGradeOptions from '../../dropdown/MoreClassGradeOptions';
+
 import { ColumnTypes, GradeTableDataType, TableColumn } from './interfaces';
 import EditableRow from './EditableRow';
 import EditableCell from './EditableCell';
@@ -637,7 +639,7 @@ function GradeTable({
   return (
     <>
       {userRole === USER_ROLE.Teacher && (
-        <div className="flex justify-end gap-x-4 mb-4">
+        <div className="flex justify-end items-center gap-x-4 mb-4">
           <Button
             disabled={
               isLoading ||
@@ -656,6 +658,7 @@ function GradeTable({
           >
             Save
           </Button>
+          <MoreClassGradeOptions />
         </div>
       )}
       <Table
