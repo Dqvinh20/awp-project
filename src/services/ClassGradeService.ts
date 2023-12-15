@@ -16,6 +16,46 @@ const ClassGradeService = {
     return res.data;
   },
 
+  getGradeTemplate({
+    classId,
+    file_type = 'xlsx',
+  }: {
+    classId: string;
+    file_type?: string;
+  }) {
+    return axiosClient.get(`/class-grades/${classId}/template`, {
+      responseType: 'blob',
+      params: {
+        file_type,
+      },
+    });
+  },
+
+  importGradeBoard({ classId, file }: { classId: string; file: File }) {
+    const formData = new FormData();
+    formData.append('file', file);
+    return axiosClient.post(`/class-grades/${classId}/import`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  },
+
+  exportGradeBoard({
+    classId,
+    file_type = 'xlsx',
+  }: {
+    classId: string;
+    file_type?: string;
+  }) {
+    return axiosClient.get(`/class-grades/${classId}/export`, {
+      responseType: 'blob',
+      params: {
+        file_type,
+      },
+    });
+  },
+
   async updateStudentGrades({ classId, grade_rows }: UpdateGradeRowsDTO) {
     const res = await axiosClient.patch(`/class-grades/${classId}/rows`, {
       grade_rows,

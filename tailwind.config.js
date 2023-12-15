@@ -10,6 +10,9 @@ module.exports = {
         xs: '475px',
         ...defaultTheme.screens,
       },
+      spacing: {
+        'screen-dvh': '100dvh',
+      },
       backgroundImage: {
         'auth-bg': "url('./assets/mountain.jpg')",
       },
