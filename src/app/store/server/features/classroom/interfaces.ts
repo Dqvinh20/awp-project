@@ -1,3 +1,4 @@
+import { NotificationDTO } from '../notifications/interfaces';
 import { USER_ROLE, User } from '../users/interfaces';
 
 /**
@@ -33,6 +34,8 @@ export interface ClassDTO {
   updated_at?: Date;
   /** ClassRoom deleted time. */
   deleted_at?: Date;
+  /**News */
+  news?:NotificationDTO[];
 }
 
 /**

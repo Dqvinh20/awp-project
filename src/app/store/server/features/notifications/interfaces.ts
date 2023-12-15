@@ -15,7 +15,7 @@ export interface NotificationDTO {
   read_by?: ReadByDTO[];
   class?: ClassDTO;
   receivers?: User[];
-  sender: User;
+  sender?: User;
 
   created_at?: Date;
   updated_at?: Date;

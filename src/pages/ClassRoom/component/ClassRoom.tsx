@@ -10,6 +10,8 @@ import useClassDetail from '@/hooks/useClassDetail';
 import { useUserRole } from '@/hooks/useUserRole';
 
 import { USER_ROLE } from '@/app/store/server/features/users/interfaces';
+import { NotificationDTO } from '@/app/store/server/features/notifications/interfaces';
+import NotificationCard from './card/NotificationCard';
 
 export default function ClassRoom() {
   const { message } = App.useApp();
@@ -60,7 +62,7 @@ export default function ClassRoom() {
           <BannerClass title={data.name} />
           <div className="twp flex flex-col sm:flex-row gap-y-3 sm:gap-y-0 gap-x-3 pt-3 md:pt-6 w-full">
             {userRole === USER_ROLE.Teacher && (
-              <div className="sm:block bg-white rounded-lg border border-gray-300 p-4 w-full sm:w-1/3">
+              <div className="sm:block bg-white rounded-lg border border-gray-300 p-4 w-full sm:w-1/3 h-fit">
                 <div className="flex flex-row justify-between items-center">
                   <span className="text-base font-bold">Class Code</span>
                   <Dropdown
@@ -84,16 +86,24 @@ export default function ClassRoom() {
                 </div>
               </div>
             )}
-            <div className="w-full mb-6 sm:mb-0 bg-white rounded-lg border border-gray-300 flex items-center px-5 py-5">
-              {data.description && (
-                <span className="hidden md:inline-block">
-                  Class Description{' '}
-                </span>
-              )}
-              <div className="text-left text-base">
-                {data.description ?? 'No description'}
+            <div className="w-full grid gap-y-5">
+              <div className="w-full mb-6 sm:mb-0 bg-white rounded-lg border border-gray-300 flex items-center px-5 py-5 flex flex-col">
+                {data.description && (
+                  <span className="hidden md:inline-block text-base font-bold text-left w-full">
+                    Class Description{' '}
+                  </span>
+                )}
+                <div className="text-left text-base w-full p-2">
+                  {data.description ?? 'No description'}
+                </div>
               </div>
+              {
+                data?.news && data?.news.map((items: NotificationDTO) => (
+                  <NotificationCard title={items.title} message={items.message} />
+                ))
+              }
             </div>
+            
             {/* <div className="bg-white flex flex-col rounded-md border-solid border-2 border-slate-300">
               <div className="flex flex-row ">
                 <div className="text-left grow text-base">Class Code</div>
