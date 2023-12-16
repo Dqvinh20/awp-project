@@ -30,7 +30,7 @@ import { differenceWith, isEqual } from 'lodash';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import ImportGradeButton from '../../button/MoreClassGradeOptions';
+import ImportGradeButton from '../../button/ImportGradeButton';
 
 import ExportGradeBoard from '../../button/ExportGradeBoard';
 
