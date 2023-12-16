@@ -48,6 +48,7 @@ import {
 } from '@/app/store/server/features/class_grade/mutations';
 import { useUserRole } from '@/hooks/useUserRole';
 import { USER_ROLE } from '@/app/store/server/features/users/interfaces';
+import { calcFinalGrade } from '@/utils/index';
 
 const mapData = (
   data: GradeRow[],
@@ -770,23 +771,35 @@ function GradeTable({
           )
         }
       />
-      <div className="flex justify-end items-center gap-x-4 mt-4">
-        <Button
-          disabled={isLoading || (dataSource && dataSource[0]?.key === '')}
-          onClick={handleAddRow}
-          type="primary"
-        >
-          Add a row
-        </Button>
-        <Button
-          loading={isUpdatingRows}
-          disabled={isLoading || isSaveButtonDisabled()}
-          type="primary"
-          onClick={handleUpdateGrades}
-        >
-          Save
-        </Button>
-      </div>
+      {userRole === USER_ROLE.Teacher && (
+        <div className="flex justify-end items-center gap-x-4 mt-4">
+          <Button
+            disabled={isLoading || (dataSource && dataSource[0]?.key === '')}
+            onClick={handleAddRow}
+            type="primary"
+          >
+            Add a row
+          </Button>
+          <Button
+            loading={isUpdatingRows}
+            disabled={isLoading || isSaveButtonDisabled()}
+            type="primary"
+            onClick={handleUpdateGrades}
+          >
+            Save
+          </Button>
+        </div>
+      )}
+      {userRole === USER_ROLE.Student && (
+        <div className="my-4 flex flex-col flex-end">
+          <span className="text-base font-medium text-right">
+            Final Grade:{' '}
+            {parseFloat(
+              calcFinalGrade(dataSource, columns)[0].finalGrade.toFixed(2)
+            )}
+          </span>
+        </div>
+      )}
     </>
   );
 }
