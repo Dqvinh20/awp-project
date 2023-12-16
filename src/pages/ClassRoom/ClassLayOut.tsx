@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { NavLink, Outlet } from 'react-router-dom';
 import { ConfigProvider, Layout, Menu, MenuProps, Spin, App } from 'antd';
 import { AxiosError } from 'axios';
@@ -17,6 +18,7 @@ export default function ClassLayOut() {
   const { notification } = App.useApp();
 
   const { isLoading, isError, error, isSuccess } = useClassDetail();
+
   const userRole = useUserRole();
 
   const items = useMemo((): MenuProps['items'] => {
@@ -41,6 +43,11 @@ export default function ClassLayOut() {
         path: 'grade-structure',
       });
     }
+
+    LinkMenuClassRoom.push({
+      label: 'Grade review',
+      path: 'grade-review',
+    });
 
     return LinkMenuClassRoom.map((item) => ({
       label: (

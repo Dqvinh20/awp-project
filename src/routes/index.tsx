@@ -17,6 +17,7 @@ import ClassGrade from '@/pages/ClassRoom/component/ClassGrade';
 import SuspenseWrapper from '@/components/SuspenseWrapper';
 import EditUserLayout from '@/layouts/EditLayout/index';
 import GradeStructure from '@/pages/ClassRoom/component/GradeStructure';
+import GradeReview from '@/pages/ClassRoom/component/GradeReview';
 
 const router = createBrowserRouter([
   {
@@ -62,6 +63,10 @@ const router = createBrowserRouter([
                         path: 'grade-structure',
                         element: <GradeStructure />,
                       },
+                      {
+                        path: 'grade-review',
+                        element: <GradeReview />,
+                      },
                     ],
                   },
                 ],
@@ -79,7 +84,7 @@ const router = createBrowserRouter([
                 path: '/users/edit/:id',
                 element: <EditUser />,
               },
-            ]
+            ],
           },
         ],
       },
