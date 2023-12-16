@@ -20,6 +20,7 @@ export default function ClassGrade() {
     isSuccess,
     isError,
     error,
+    ...rests
   } = useGetClassGrades(class_id);
   const userRole = useUserRole();
 

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable max-lines-per-function */
-import React, { memo, useMemo, useRef, useState } from 'react';
+import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import {
   App,
   Button,
@@ -30,7 +30,9 @@ import { differenceWith, isEqual } from 'lodash';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import MoreClassGradeOptions from '../../dropdown/MoreClassGradeOptions';
+import ImportGradeButton from '../../button/MoreClassGradeOptions';
+
+import ExportGradeBoard from '../../button/ExportGradeBoard';
 
 import { ColumnTypes, GradeTableDataType, TableColumn } from './interfaces';
 import EditableRow from './EditableRow';
@@ -87,16 +89,22 @@ function GradeTable({
   const [dataSource, setDataSource] = useState<GradeTableDataType[]>(data);
   const { message } = App.useApp();
   const queryClient = useQueryClient();
+  const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const { id: classId } = useParams<{ id: string }>();
   const userRole = useUserRole();
   const {
     mutate: removeGradeRowMutate,
+    mutateAsync: removeGradeRowMutateAsync,
     isPending: isRemovingRow,
     variables,
   } = useRemoveGradeRow();
 
   const { mutate: updateGradeRowsMutate, isPending: isUpdatingRows } =
     useUpdateGradeRows();
+
+  useEffect(() => {
+    setDataSource(data);
+  }, [data]);
 
   // Row and cell editing
   // --------------------------------------------------
@@ -140,6 +148,39 @@ function GradeTable({
     }
     const newData = dataSource.filter((item) => item.key !== key);
     setDataSource(newData);
+  };
+
+  const handleDeleteSelectedRows = async () => {
+    if (selectedRows.length === 0) {
+      return;
+    }
+
+    if (classId) {
+      try {
+        await Promise.allSettled(
+          selectedRows.map(async ({ id }) => {
+            if (id) {
+              await removeGradeRowMutateAsync({ classId, rowId: id });
+            }
+          })
+        );
+
+        const selectedKeys = selectedRows.map((item) => item.key);
+        const newData = dataSource.filter(
+          (item) => !selectedKeys.includes(item.key)
+        );
+        setDataSource(newData);
+        setSelectedRows([]);
+
+        message.success('Delete rows successfully');
+        return queryClient.invalidateQueries({
+          queryKey: ['class-grades', classId],
+          exact: true,
+        });
+      } catch (error) {
+        return message.error('Failed to delete grade rows');
+      }
+    }
   };
 
   const handleCellSave = (row: GradeTableDataType) => {
@@ -293,17 +334,30 @@ function GradeTable({
           setTimeout(() => searchInput.current?.select(), 100);
         }
       },
-      render: (text) =>
-        searchedColumn === dataIndex && isTeacher ? (
-          <Tooltip title={text} placement="bottom">
-            <Highlighter
-              highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-              searchWords={[searchText]}
-              autoEscape
-              textToHighlight={text ? text.toString() : ''}
-            />
-          </Tooltip>
-        ) : (text.toString()? ( <span className='text-slate-950 outline-none' >{text.toString()}</span>):(<span className='text-red-700 outline-none' >Click here to input</span>))
+      render(text) {
+        if (searchedColumn === dataIndex && isTeacher) {
+          return (
+            <Tooltip title={text} placement="bottom">
+              <Highlighter
+                highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                searchWords={[searchText]}
+                autoEscape
+                textToHighlight={text ? text.toString() : ''}
+              />
+            </Tooltip>
+          );
+        }
+        if (text.toString()) {
+          return (
+            <span className="text-slate-950 outline-none">
+              {text.toString()}
+            </span>
+          );
+        }
+        return (
+          <span className="text-red-700 outline-none">Click here to input</span>
+        );
+      },
     };
 
     return isTeacher
@@ -375,13 +429,16 @@ function GradeTable({
                 }
 
                 // Get row data from form
-                const currValues = getFieldsValue(true);
+                const allFieldValues = getFieldsValue(true);
+                const rowKey = dataSource.find(
+                  (item) => item.key === allFieldValues.key
+                )?.key;
+
                 // Check unique student id
                 if (
-                  dataSource.findIndex(
-                    (item) =>
-                      item.id !== currValues.id && item.student_id === value
-                  ) !== -1
+                  dataSource.some(
+                    (item) => item.key !== rowKey && item.student_id === value
+                  )
                 ) {
                   return Promise.reject(
                     new Error('Student ID has to be unique.')
@@ -634,32 +691,42 @@ function GradeTable({
     }
   };
 
+  const onSelectChange = (newSelectedRowKeys: any, newSelectedRows: any) => {
+    setSelectedRows(newSelectedRows);
+  };
+
+  const rowSelection = {
+    selectedRowKeys: selectedRows.map((item) => item.key),
+    onChange: onSelectChange,
+  };
+
+  const hasSelected = selectedRows.length > 0;
+
   return (
     <>
       {userRole === USER_ROLE.Teacher && (
         <div className="flex justify-end items-center gap-x-4 mb-4">
-          <Button
-            disabled={
-              isLoading ||
-              (dataSource && dataSource[dataSource.length - 1]?.key === '')
-            }
-            onClick={handleAddRow}
-            type="primary"
-          >
-            Add a row
-          </Button>
-          <Button
-            loading={isUpdatingRows}
-            disabled={isLoading || isSaveButtonDisabled()}
-            type="primary"
-            onClick={handleUpdateGrades}
-          >
-            Save
-          </Button>
-          <MoreClassGradeOptions />
+          {hasSelected && (
+            <Popconfirm
+              title="Sure to delete?"
+              onConfirm={handleDeleteSelectedRows}
+              placement="bottomRight"
+            >
+              <Button
+                loading={isRemovingRow}
+                type="primary"
+                className="bg-red-500 hover:!bg-red-500/70"
+              >
+                Delete rows
+              </Button>
+            </Popconfirm>
+          )}
+          <ImportGradeButton />
+          <ExportGradeBoard />
         </div>
       )}
       <Table
+        rowSelection={rowSelection}
         size="middle"
         loading={isLoading}
         components={components}
@@ -670,11 +737,11 @@ function GradeTable({
         columns={tableColumns as ColumnTypes}
         {...tableProps}
         summary={() =>
-          data.length !== 0 &&
+          dataSource.length !== 0 &&
           columns.length !== 0 &&
           isTeacher && (
             <Table.Summary.Row>
-              <Table.Summary.Cell index={0} colSpan={2}>
+              <Table.Summary.Cell index={0} colSpan={3}>
                 <div className="flex justify-center items-center">
                   <div className="text-sm font-semibold">Average</div>
                 </div>
@@ -703,6 +770,23 @@ function GradeTable({
           )
         }
       />
+      <div className="flex justify-end items-center gap-x-4 mt-4">
+        <Button
+          disabled={isLoading || (dataSource && dataSource[0]?.key === '')}
+          onClick={handleAddRow}
+          type="primary"
+        >
+          Add a row
+        </Button>
+        <Button
+          loading={isUpdatingRows}
+          disabled={isLoading || isSaveButtonDisabled()}
+          type="primary"
+          onClick={handleUpdateGrades}
+        >
+          Save
+        </Button>
+      </div>
     </>
   );
 }
