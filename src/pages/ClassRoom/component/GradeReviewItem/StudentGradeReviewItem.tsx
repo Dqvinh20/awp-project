@@ -1,4 +1,4 @@
-import { CSSProperties, HTMLAttributes, memo, useState } from 'react';
+import { HTMLAttributes, memo, useState } from 'react';
 
 import {
   App,
@@ -10,7 +10,6 @@ import {
   Descriptions,
   DescriptionsProps,
   Divider,
-  Flex,
   Input,
   Space,
   theme,
@@ -27,62 +26,40 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 
 import { StudentGradeReviewDto } from '@/app/store/server/features/grade_review/interfaces';
-import {
-  GradeColumn,
-  GradeRow,
-} from '@/app/store/server/features/class_grade/interfaces';
-
 import 'dayjs/locale/vi';
 import { User } from '@/app/store/server/features/users/interfaces';
 import { useGetMyInfo } from '@/app/store/server/features/users/queries';
 import { useAddCommentMutation } from '@/app/store/server/features/grade_review/mutations';
 import { classGradeReviewKey } from '@/app/store/server/features/grade_review/queries';
+import { getUserFullNameOrEmail } from '@/utils/index';
 
 dayjs.locale('vi');
 dayjs.extend(LocalizedFormat);
 
 interface StudentGradeReviewItemProps
   extends Partial<StudentGradeReviewDto>,
-    HTMLAttributes<HTMLDivElement> {
-  gradeColumns?: GradeColumn[];
-  gradeRows?: GradeRow[];
-}
-
-const text = `
-  A dog is a type of domesticated animal.
-  Known for its loyalty and faithfulness,
-  it can be found as a welcome guest in many households across the world.
-`;
+    HTMLAttributes<HTMLDivElement> {}
 
 // eslint-disable-next-line max-lines-per-function
 function StudentGradeReviewItem({
   id,
-  gradeColumns = [],
-  gradeRows = [],
-  column: columnId,
   column_name,
   review_reason,
   expected_grade,
   current_grade,
   created_at,
-  updated_at,
   isFinished,
   comments = [],
-  ...rest
 }: StudentGradeReviewItemProps) {
   const { id: classId } = useParams<{ id: string }>();
   const { message } = App.useApp();
   const queryClient = useQueryClient();
   const { token } = theme.useToken();
-  const colName = gradeColumns.find((col) => col.id === columnId)?.name;
-  const {
-    data: myInfo,
-    isLoading: isMyInfoLoading,
-    isSuccess: isMyInfoSuccess,
-  } = useGetMyInfo();
+  const { data: myInfo, isSuccess: isMyInfoSuccess } = useGetMyInfo();
   const { mutate: addCommentMutate } = useAddCommentMutation();
   const [newComment, setNewComment] = useState('');
 
+  // Actions
   const handleAddNewComment = () => {
     addCommentMutate(
       {
@@ -90,7 +67,7 @@ function StudentGradeReviewItem({
         comment: newComment,
       },
       {
-        onSuccess(data) {
+        onSuccess() {
           setNewComment('');
           message.success('New comment posted');
           return queryClient.invalidateQueries({
@@ -104,16 +81,8 @@ function StudentGradeReviewItem({
     );
   };
 
-  const label = (
-    <div>
-      <span className="text-base font-bold">Review Column: {colName}</span> •{' '}
-      <span className="text-gray-500 font-thin">
-        {dayjs(created_at).format('llll')}
-      </span>
-    </div>
-  );
-
-  const items1: DescriptionsProps['items'] = [
+  // Items render
+  const descriptionItems: DescriptionsProps['items'] = [
     {
       key: '1',
       label: 'Current Grade',
@@ -133,8 +102,20 @@ function StudentGradeReviewItem({
       key: '4',
       label: 'Review Reason',
       children: <p className="twp text-base">{review_reason}</p>,
+      span: 3,
     },
   ];
+
+  const label = (
+    <div>
+      <span className="text-base font-bold">Review Column: {column_name}</span>{' '}
+      •{' '}
+      <span className="text-gray-500 font-thin">
+        {dayjs(created_at).format('llll')}
+      </span>
+    </div>
+  );
+
   const children = (
     <div>
       <div className="flex flex-col justify-between">
@@ -142,20 +123,20 @@ function StudentGradeReviewItem({
           title="Grade Review Info"
           layout="vertical"
           size="small"
-          items={items1}
+          items={descriptionItems}
         />
         <Divider className="bg-sky-500 m-0 my-2" />
         {/* Comments Section */}
         <div className="w-full">
           {comments.length !== 0 && (
-            <div className="mb-2 text-base font-thin">
+            <div className="mb-2 text-base font-medium">
               Has {comments.length}{' '}
               {comments.length > 1 ? 'comments' : 'comment'} about this review
             </div>
           )}
           {comments.map(
             ({ _id, sender, comment, created_at: commentCreatedAt }) => {
-              const { first_name, last_name, email, avatar } = sender as User;
+              const { avatar } = sender as User;
               return (
                 <Card.Meta
                   key={_id}
@@ -164,7 +145,7 @@ function StudentGradeReviewItem({
                   title={
                     <Space>
                       <span className="text-base font-semibold">
-                        {`${first_name} ${last_name}`}
+                        {getUserFullNameOrEmail(sender as User)}
                       </span>
                       <span className="">
                         {dayjs(commentCreatedAt).format('L LT')}
@@ -178,7 +159,7 @@ function StudentGradeReviewItem({
           )}
         </div>
         {/* New Comment Section */}
-        {isMyInfoSuccess && (
+        {!isFinished && isMyInfoSuccess && (
           <div className="w-full px-2 flex flex-row justify-center items-center gap-x-4">
             <Avatar src={myInfo?.avatar} />
             <Input
@@ -203,23 +184,18 @@ function StudentGradeReviewItem({
     </div>
   );
 
-  const getItems: (
-    panelStyle: React.CSSProperties
-  ) => CollapseProps['items'] = (panelStyle) => [
+  const collapseItem: CollapseProps['items'] = [
     {
-      key: colName,
+      key: id,
       label,
       children,
-      style: panelStyle,
+      style: {
+        borderRadius: token.borderRadiusLG,
+        border: 'none',
+      },
     },
   ];
-
-  const panelStyle: React.CSSProperties = {
-    // marginBottom: 24,
-    // background: token.colorFillAlter,
-    borderRadius: token.borderRadiusLG,
-    border: 'none',
-  };
+  // --------------------------------------------------------
 
   return (
     <Badge.Ribbon
@@ -232,7 +208,7 @@ function StudentGradeReviewItem({
         expandIcon={({ isActive }) => (
           <CaretRightOutlined rotate={isActive ? 90 : 0} />
         )}
-        items={getItems(panelStyle)}
+        items={collapseItem}
       />
     </Badge.Ribbon>
   );

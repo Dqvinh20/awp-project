@@ -1,4 +1,5 @@
 import { GradeColumn } from '@/app/store/server/features/class_grade/interfaces';
+import { User } from '@/app/store/server/features/users/interfaces';
 
 export function getFileNameFromContentDisposition(contentDisposition: string) {
   if (!contentDisposition) return null;
@@ -34,4 +35,24 @@ export const calcFinalGrade = (rows: any, cols: GradeColumn[]) => {
   });
 
   return finalGrades;
+};
+
+export const getUserFullNameOrEmail = (user: User) => {
+  if (!user) return '';
+
+  const { first_name, last_name, email } = user;
+
+  if (first_name && last_name) {
+    return `${first_name} ${last_name}`;
+  }
+
+  if (first_name && !last_name) {
+    return first_name;
+  }
+
+  if (!first_name && last_name) {
+    return last_name;
+  }
+
+  return email;
 };

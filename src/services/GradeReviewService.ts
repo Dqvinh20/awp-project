@@ -1,6 +1,7 @@
 import {
   AddCommentDto,
   CreateGradeReviewDto,
+  FinishGradeReviewDto,
 } from './../app/store/server/features/grade_review/interfaces';
 
 import axiosClient from '@/app/AxiosClient';
@@ -30,6 +31,13 @@ const GradeReviewService = {
     const res = await axiosClient.post(
       `/grade-review/${grade_review_id}/comment`,
       { comment }
+    );
+    return res.data;
+  },
+
+  async finishGradeReview({ grade_review_id }: FinishGradeReviewDto) {
+    const res = await axiosClient.patch(
+      `/grade-review/${grade_review_id}/finish`
     );
     return res.data;
   },

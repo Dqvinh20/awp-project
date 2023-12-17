@@ -13,3 +13,9 @@ export const useAddCommentMutation = () =>
     mutationKey: ['add_comment'],
     mutationFn: GradeReviewService.addComment,
   });
+
+export const useFinishGradeReviewMutation = () =>
+  useMutation({
+    mutationKey: ['finish_grade_review'],
+    mutationFn: GradeReviewService.finishGradeReview,
+  });

@@ -13,6 +13,10 @@ export interface AddCommentDto {
   comment: string;
 }
 
+export interface FinishGradeReviewDto {
+  grade_review_id: string;
+}
+
 export interface CommentDto {
   id?: string;
   _id?: string;

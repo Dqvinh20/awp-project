@@ -5,10 +5,15 @@ import { Space, Spin } from 'antd';
 import CreateRequestGradeReview from './button/CreateRequestGradeReview';
 import StudentGradeReviewItem from './GradeReviewItem/StudentGradeReviewItem';
 
+import TeacherGradeReviewItem from './GradeReviewItem/TeacherGradeReviewItem';
+
 import { useClassGradeReview } from '@/app/store/server/features/grade_review/queries';
 import { useUserRole } from '@/hooks/useUserRole';
 import { USER_ROLE } from '@/app/store/server/features/users/interfaces';
-import { useGetClassGrades } from '@/app/store/server/features/class_grade/queries';
+import {
+  StudentGradeReviewDto,
+  TeacherGradeReviewDto,
+} from '@/app/store/server/features/grade_review/interfaces';
 
 function GradeReview() {
   const { id: classId } = useParams<{ id: string }>();
@@ -17,7 +22,6 @@ function GradeReview() {
     isSuccess: gradeReviewSuccess,
     isLoading: isGradeReviewLoading,
   } = useClassGradeReview(classId);
-  const { data: classGrade } = useGetClassGrades(classId);
   const hasData = data?.length > 0;
 
   const userRole = useUserRole();
@@ -37,15 +41,13 @@ function GradeReview() {
       )}
       {gradeReviewSuccess && (
         <Space direction="vertical" className="w-full">
-          {userRole === USER_ROLE.Student &&
-            data.map((gradeReview: any) => (
-              <StudentGradeReviewItem
-                key={gradeReview.id}
-                {...gradeReview}
-                gradeColumns={classGrade?.grade_columns}
-                gradeRows={classGrade?.grade_rows}
-              />
-            ))}
+          {userRole === USER_ROLE.Student
+            ? data.map((gradeReview: StudentGradeReviewDto) => (
+                <StudentGradeReviewItem key={gradeReview.id} {...gradeReview} />
+              ))
+            : data.map((gradeReview: TeacherGradeReviewDto) => (
+                <TeacherGradeReviewItem key={gradeReview.id} {...gradeReview} />
+              ))}
         </Space>
       )}
     </div>
