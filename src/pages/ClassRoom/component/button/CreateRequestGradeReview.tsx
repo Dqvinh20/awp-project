@@ -102,7 +102,9 @@ function CreateRequestGradeReview() {
               >
                 <Select placeholder="Select grade column" allowClear>
                   {classGrade.grade_columns.map((column: GradeColumn) => (
-                    <Option value={column.id}>{column.name}</Option>
+                    <Option key={column.id} value={column.id}>
+                      {column.name}
+                    </Option>
                   ))}
                 </Select>
               </Form.Item>

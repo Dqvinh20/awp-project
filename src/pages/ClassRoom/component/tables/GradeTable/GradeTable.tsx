@@ -627,8 +627,18 @@ function GradeTable({
     },
   };
 
+  const onSelectChange = (newSelectedRowKeys: any, newSelectedRows: any) => {
+    setSelectedRows(newSelectedRows);
+  };
+
+  const rowSelection = {
+    selectedRowKeys: selectedRows.map((item) => item.key),
+    onChange: onSelectChange,
+  };
+
   const tableProps: TableProps<AnyObject> = isTeacher
     ? {
+        rowSelection: { rowSelection } as any,
         pagination: {
           position: ['bottomRight'],
           showQuickJumper: true,
@@ -692,15 +702,6 @@ function GradeTable({
     }
   };
 
-  const onSelectChange = (newSelectedRowKeys: any, newSelectedRows: any) => {
-    setSelectedRows(newSelectedRows);
-  };
-
-  const rowSelection = {
-    selectedRowKeys: selectedRows.map((item) => item.key),
-    onChange: onSelectChange,
-  };
-
   const hasSelected = selectedRows.length > 0;
 
   return (
@@ -727,7 +728,6 @@ function GradeTable({
         </div>
       )}
       <Table
-        rowSelection={rowSelection}
         size="middle"
         loading={isLoading}
         components={components}

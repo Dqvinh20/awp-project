@@ -7,3 +7,9 @@ export const useCreateGradeReviewMutation = () =>
     mutationKey: ['create_grade_review'],
     mutationFn: GradeReviewService.createNewGradeReview,
   });
+
+export const useAddCommentMutation = () =>
+  useMutation({
+    mutationKey: ['add_comment'],
+    mutationFn: GradeReviewService.addComment,
+  });

@@ -1,4 +1,7 @@
-import { CreateGradeReviewDto } from './../app/store/server/features/grade_review/interfaces';
+import {
+  AddCommentDto,
+  CreateGradeReviewDto,
+} from './../app/store/server/features/grade_review/interfaces';
 
 import axiosClient from '@/app/AxiosClient';
 
@@ -20,6 +23,14 @@ const GradeReviewService = {
 
   async getAllGradeReviewsByClass(classId?: string) {
     const res = await axiosClient.get(`/grade-review/class/${classId}`);
+    return res.data;
+  },
+
+  async addComment({ grade_review_id, comment }: AddCommentDto) {
+    const res = await axiosClient.post(
+      `/grade-review/${grade_review_id}/comment`,
+      { comment }
+    );
     return res.data;
   },
 };
