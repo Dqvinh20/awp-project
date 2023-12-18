@@ -1,7 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { PlusOutlined } from '@ant-design/icons';
 import {
-  Button,
   Divider,
   Modal,
   FloatButton,
@@ -16,14 +15,18 @@ import { useParams } from 'react-router-dom';
 
 import { AxiosError } from 'axios';
 
+import { useQueryClient } from '@tanstack/react-query';
+
 import { useGetClassGrades } from '@/app/store/server/features/class_grade/queries';
 import { CreateGradeReviewDto } from '@/app/store/server/features/grade_review/interfaces';
 import { GradeColumn } from '@/app/store/server/features/class_grade/interfaces';
 import { useCreateGradeReviewMutation } from '@/app/store/server/features/grade_review/mutations';
+import { classGradeReviewKey } from '@/app/store/server/features/grade_review/queries';
 
 const { Option } = Select;
 
 function CreateRequestGradeReview() {
+  const queryClient = useQueryClient();
   const { message } = App.useApp();
   const [form] = Form.useForm();
   const [open, setOpen] = useState(false);
@@ -47,6 +50,9 @@ function CreateRequestGradeReview() {
             onSuccess() {
               message.success('Create grade review successfully');
               handleCancel();
+              return queryClient.invalidateQueries({
+                queryKey: classGradeReviewKey(classId),
+              });
             },
             onError(error) {
               if (error instanceof AxiosError) {

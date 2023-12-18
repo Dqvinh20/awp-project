@@ -6,9 +6,17 @@ export const classGradeReviewKey = (classId?: string) => [
   'class_grade_review',
   classId,
 ];
-export const useClassGradeReview = (classId?: string) =>
+export const useClassGradeReviewQuery = (classId?: string) =>
   useQuery({
     queryKey: classGradeReviewKey(classId),
     queryFn: () => GradeReviewService.getAllGradeReviewsByClass(classId),
     enabled: !!classId,
+  });
+
+export const allGradeReviewsKey = ['all_grade_reviews'];
+
+export const useAllGradeReviewsQuery = () =>
+  useQuery({
+    queryKey: allGradeReviewsKey,
+    queryFn: GradeReviewService.getAllGradeReviews,
   });

@@ -15,6 +15,7 @@ export interface AddCommentDto {
 
 export interface FinishGradeReviewDto {
   grade_review_id: string;
+  updated_grade: number;
 }
 
 export interface CommentDto {
@@ -35,6 +36,7 @@ export interface BaseGradeReviewDto {
   review_reason: string;
   expected_grade: number;
   current_grade: number;
+  updated_grade: number;
   request_student: string | User;
   request_student_id: string;
   isFinished: boolean;

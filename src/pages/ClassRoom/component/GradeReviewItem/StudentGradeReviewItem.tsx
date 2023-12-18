@@ -47,6 +47,7 @@ function StudentGradeReviewItem({
   review_reason,
   expected_grade,
   current_grade,
+  updated_grade,
   created_at,
   isFinished,
   comments = [],
@@ -95,8 +96,10 @@ function StudentGradeReviewItem({
     },
     {
       key: '3',
-      label: '',
-      children: '',
+      label: isFinished && 'Updated Grade',
+      children: isFinished && (
+        <span className="text-base">{updated_grade}</span>
+      ),
     },
     {
       key: '4',
@@ -125,39 +128,44 @@ function StudentGradeReviewItem({
           size="small"
           items={descriptionItems}
         />
-        <Divider className="bg-sky-500 m-0 my-2" />
-        {/* Comments Section */}
-        <div className="w-full">
-          {comments.length !== 0 && (
-            <div className="mb-2 text-base font-medium">
-              Has {comments.length}{' '}
-              {comments.length > 1 ? 'comments' : 'comment'} about this review
+        {comments && comments.length !== 0 && (
+          <>
+            <Divider className="bg-sky-500 m-0 my-2" />
+            {/* Comments Section */}
+            <div className="w-full">
+              {comments.length !== 0 && (
+                <div className="mb-2 text-base font-medium">
+                  Has {comments.length}{' '}
+                  {comments.length > 1 ? 'comments' : 'comment'} about this
+                  review
+                </div>
+              )}
+              {comments.map(
+                ({ _id, sender, comment, created_at: commentCreatedAt }) => {
+                  const { avatar } = sender as User;
+                  return (
+                    <Card.Meta
+                      key={_id}
+                      className="w-full px-2 mb-2 flex flex-row gap-x-4"
+                      avatar={<Avatar src={avatar} />}
+                      title={
+                        <Space>
+                          <span className="text-base font-semibold">
+                            {getUserFullNameOrEmail(sender as User)}
+                          </span>
+                          <span className="">
+                            {dayjs(commentCreatedAt).format('L LT')}
+                          </span>
+                        </Space>
+                      }
+                      description={comment}
+                    />
+                  );
+                }
+              )}
             </div>
-          )}
-          {comments.map(
-            ({ _id, sender, comment, created_at: commentCreatedAt }) => {
-              const { avatar } = sender as User;
-              return (
-                <Card.Meta
-                  key={_id}
-                  className="w-full px-2 mb-2 flex flex-row gap-x-4"
-                  avatar={<Avatar src={avatar} />}
-                  title={
-                    <Space>
-                      <span className="text-base font-semibold">
-                        {getUserFullNameOrEmail(sender as User)}
-                      </span>
-                      <span className="">
-                        {dayjs(commentCreatedAt).format('L LT')}
-                      </span>
-                    </Space>
-                  }
-                  description={comment}
-                />
-              );
-            }
-          )}
-        </div>
+          </>
+        )}
         {/* New Comment Section */}
         {!isFinished && isMyInfoSuccess && (
           <div className="w-full px-2 flex flex-row justify-center items-center gap-x-4">

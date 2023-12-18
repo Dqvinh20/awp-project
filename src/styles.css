@@ -34,3 +34,10 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+.ant-menu-item-selected #pending-reviews-icon > img,
+.ant-menu-submenu-selected #lecture-icon > img,
+.ant-menu-submenu-selected #graduation-cap-icon > img {
+  filter: invert(36%) sepia(79%) saturate(4316%) hue-rotate(209deg)
+    brightness(106%) contrast(101%);
+}

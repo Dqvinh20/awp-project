@@ -18,6 +18,7 @@ import SuspenseWrapper from '@/components/SuspenseWrapper';
 import EditUserLayout from '@/layouts/EditLayout/index';
 import GradeStructure from '@/pages/ClassRoom/component/GradeStructure';
 import GradeReview from '@/pages/ClassRoom/component/GradeReview';
+import TeacherPages from '@/pages/TeacherPages';
 
 const router = createBrowserRouter([
   {
@@ -40,9 +41,24 @@ const router = createBrowserRouter([
                 element: <Home />,
               },
               {
+                element: <TeacherPages />,
+                children: [
+                  {
+                    path: '/pending-reviews',
+                    element: (
+                      <SuspenseWrapper path="pages/PendingReviews/index" />
+                    ),
+                  },
+                ],
+              },
+
+              {
                 path: '/class/:id/*',
                 children: [
-                  { path: '*', element: <Navigate to="/page-not-found" /> },
+                  {
+                    path: '*',
+                    element: <Navigate to="/page-not-found" replace />,
+                  },
                   {
                     element: <ClassLayOut />,
                     children: [
@@ -131,7 +147,7 @@ const router = createBrowserRouter([
       },
       {
         path: '*',
-        element: <Navigate to="/page-not-found" />,
+        element: <Navigate to="/page-not-found" replace />,
       },
     ],
   },

@@ -35,9 +35,15 @@ const GradeReviewService = {
     return res.data;
   },
 
-  async finishGradeReview({ grade_review_id }: FinishGradeReviewDto) {
+  async finishGradeReview({
+    grade_review_id,
+    updated_grade,
+  }: FinishGradeReviewDto) {
     const res = await axiosClient.patch(
-      `/grade-review/${grade_review_id}/finish`
+      `/grade-review/${grade_review_id}/finish`,
+      {
+        updated_grade,
+      }
     );
     return res.data;
   },

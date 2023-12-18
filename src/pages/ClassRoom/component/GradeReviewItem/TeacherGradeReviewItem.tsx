@@ -23,6 +23,8 @@ import {
   Collapse,
   Button,
   Tooltip,
+  InputNumber,
+  Popconfirm,
 } from 'antd';
 
 import dayjs from 'dayjs';
@@ -40,7 +42,10 @@ import {
   useAddCommentMutation,
   useFinishGradeReviewMutation,
 } from '@/app/store/server/features/grade_review/mutations';
-import { classGradeReviewKey } from '@/app/store/server/features/grade_review/queries';
+import {
+  allGradeReviewsKey,
+  classGradeReviewKey,
+} from '@/app/store/server/features/grade_review/queries';
 import { useGetMyInfo } from '@/app/store/server/features/users/queries';
 import { getUserFullNameOrEmail } from '@/utils/index';
 
@@ -58,6 +63,7 @@ function TeacherGradeReviewItem({
   request_student,
   expected_grade,
   current_grade,
+  updated_grade,
   created_at,
   isFinished,
   comments = [],
@@ -72,6 +78,7 @@ function TeacherGradeReviewItem({
     mutate: finishGradeReviewMutate,
     isPending: isFinishGradeReviewPending,
   } = useFinishGradeReviewMutation();
+  const [newGrade, setNewGrade] = useState<number | undefined>(current_grade);
   const [newComment, setNewComment] = useState('');
 
   // Actions
@@ -85,8 +92,11 @@ function TeacherGradeReviewItem({
         onSuccess() {
           setNewComment('');
           message.success('New comment posted');
-          return queryClient.invalidateQueries({
+          queryClient.invalidateQueries({
             queryKey: classGradeReviewKey(classId),
+          });
+          return queryClient.invalidateQueries({
+            queryKey: allGradeReviewsKey,
           });
         },
         onError() {
@@ -100,12 +110,16 @@ function TeacherGradeReviewItem({
     finishGradeReviewMutate(
       {
         grade_review_id: id ?? '',
+        updated_grade: newGrade ?? 0,
       },
       {
         onSuccess() {
           message.success('Grade review finished');
-          return queryClient.invalidateQueries({
+          queryClient.invalidateQueries({
             queryKey: classGradeReviewKey(classId),
+          });
+          return queryClient.invalidateQueries({
+            queryKey: allGradeReviewsKey,
           });
         },
         onError() {
@@ -136,7 +150,23 @@ function TeacherGradeReviewItem({
       key: '4',
       label: 'Review Reason',
       children: <p className="twp text-base">{review_reason}</p>,
-      span: 3,
+      span: 2,
+    },
+    {
+      key: '5',
+      label: 'New Update Grade',
+      children: isFinished ? (
+        <span className="text-base">{updated_grade}</span>
+      ) : (
+        <InputNumber
+          defaultValue={newGrade}
+          value={newGrade}
+          min={0}
+          max={10}
+          onChange={(value) => setNewGrade(Number(value))}
+        />
+      ),
+      span: 1,
     },
   ];
 
@@ -233,13 +263,22 @@ function TeacherGradeReviewItem({
       extra: !isFinished && (
         <div className="flex flex-row justify-end items-center gap-x-4">
           <Tooltip title="Finish this review">
-            <Button
-              type="primary"
-              shape="circle"
-              loading={isFinishGradeReviewPending}
-              icon={<CheckOutlined />}
-              onClick={handleFinishGradeReview}
-            ></Button>
+            <Popconfirm
+              title="Are you sure to finish this review?"
+              onConfirm={(e) => {
+                e?.stopPropagation();
+                handleFinishGradeReview();
+              }}
+              onCancel={(e) => e?.stopPropagation()}
+            >
+              <Button
+                type="primary"
+                shape="circle"
+                onClick={(e) => e.stopPropagation()}
+                loading={isFinishGradeReviewPending}
+                icon={<CheckOutlined />}
+              ></Button>
+            </Popconfirm>
           </Tooltip>
         </div>
       ),

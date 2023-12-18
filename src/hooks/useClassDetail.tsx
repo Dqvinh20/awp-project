@@ -4,6 +4,7 @@ import { useClassDetailQuery } from '@/app/store/server/features/classroom/queri
 
 export default function useClassDetail() {
   const { id } = useParams();
+  if (!id) throw new Error('Missing class id');
 
   return useClassDetailQuery(id as string);
 }
