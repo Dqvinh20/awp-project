@@ -8,13 +8,14 @@ import {
 
 import React, { useMemo, useState, useContext } from 'react';
 
+import { useQueryClient } from '@tanstack/react-query';
+
 import jwtService from '@/services/JwtService';
 import { useGetMyInfo } from '@/app/store/server/features/users/queries';
 import { USER_ROLE, User } from '@/app/store/server/features/users/interfaces';
 import authService from '@/services/AuthService';
 import EditProfileModal from '@/components/Modal/EditProfileModal';
 import { WebSocketContext } from '@/contexts/WebSocketContext.';
-import { useUserRole } from '@/hooks/useUserRole';
 
 const menuItemBuilder = (userInfo: User): MenuProps['items'] => {
   if (!userInfo) return [];
@@ -48,6 +49,7 @@ const menuItemBuilder = (userInfo: User): MenuProps['items'] => {
 // eslint-disable-next-line max-lines-per-function
 function AvatarMenu() {
   const [openEdit, setOpenEdit] = useState(false);
+  const queryClient = useQueryClient();
   const socket = useContext(WebSocketContext);
   const contentStyle: React.CSSProperties = {
     borderRadius: '28px',
@@ -55,6 +57,7 @@ function AvatarMenu() {
 
   const menuItemClick: MenuProps['onClick'] = async ({ key }) => {
     if (key === 'logout') {
+      await queryClient.removeQueries();
       await authService.logout();
       jwtService.removeToken();
       socket.disconnect();
