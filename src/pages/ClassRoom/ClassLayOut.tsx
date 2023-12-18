@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { NavLink, Outlet } from 'react-router-dom';
 import { ConfigProvider, Layout, Menu, MenuProps, Spin, App } from 'antd';
 import { AxiosError } from 'axios';
@@ -10,6 +11,7 @@ import useClassDetail from '@/hooks/useClassDetail';
 import UnauthImg from '@/assets/error_401.jpg';
 import { useUserRole } from '@/hooks/useUserRole';
 import { USER_ROLE } from '@/app/store/server/features/users/interfaces';
+import useClassGradeReview from '@/hooks/useClassGradeReview';
 
 const { Header, Content } = Layout;
 
@@ -17,6 +19,8 @@ export default function ClassLayOut() {
   const { notification } = App.useApp();
 
   const { isLoading, isError, error, isSuccess } = useClassDetail();
+  const { data: gradeReview } = useClassGradeReview();
+
   const userRole = useUserRole();
 
   const items = useMemo((): MenuProps['items'] => {
@@ -42,6 +46,13 @@ export default function ClassLayOut() {
       });
     }
 
+    if (gradeReview && gradeReview.length > 0) {
+      LinkMenuClassRoom.push({
+        label: 'Grade review',
+        path: 'grade-review',
+      });
+    }
+
     return LinkMenuClassRoom.map((item) => ({
       label: (
         <NavLink className="p-4" to={item.path}>
@@ -50,7 +61,7 @@ export default function ClassLayOut() {
       ),
       key: item.path,
     }));
-  }, [userRole]);
+  }, [userRole, gradeReview]);
 
   useEffect(() => {
     if (isError && error instanceof AxiosError) {

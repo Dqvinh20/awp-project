@@ -11,6 +11,7 @@ import { useClassesQuery } from '@/app/store/server/features/classroom/queries';
 import { USER_ROLE } from '@/app/store/server/features/users/interfaces';
 import GraduationCap from '@/assets/graduation-cap.png';
 import Lecture from '@/assets/lecture.png';
+import QuoteRequest from '@/assets/quote-request.png';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -54,8 +55,10 @@ export function useSideMenuItems(): MenuProps['items'] {
     if (!profileSuccess) return [];
 
     const icon =
-      profile.role !== USER_ROLE.Teacher ? (
+      profile.role === USER_ROLE.Teacher ? (
         <Icon
+          id="lecture-icon"
+          alt={'Teaching'}
           component={() => (
             <img
               src={Lecture}
@@ -68,6 +71,8 @@ export function useSideMenuItems(): MenuProps['items'] {
         />
       ) : (
         <Icon
+          id="graduation-cap-icon"
+          alt={'GraduationCap'}
           component={() => (
             <img
               src={GraduationCap}
@@ -82,6 +87,25 @@ export function useSideMenuItems(): MenuProps['items'] {
 
     // Role based
     return [
+      profile.role === USER_ROLE.Teacher
+        ? getItem(
+            <NavLink to={'pending-reviews'}>Pending reviews</NavLink>,
+            'pending-reviews',
+            <Icon
+              id="pending-reviews-icon"
+              alt={'Quote Request Icon'}
+              component={() => (
+                <img
+                  src={QuoteRequest}
+                  alt={'Quote Request Icon'}
+                  style={{
+                    width: '1em',
+                  }}
+                />
+              )}
+            />
+          )
+        : null,
       getItem(
         profile.role === USER_ROLE.Teacher ? 'Lectures' : 'Enrolled',
         'classes',

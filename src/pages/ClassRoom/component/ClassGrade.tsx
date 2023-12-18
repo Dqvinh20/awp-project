@@ -8,6 +8,8 @@ import GradeTable from './tables/GradeTable/GradeTable';
 
 import ToggleFinishGradeButton from './button/ToggleFinishGradeButton';
 
+import CreateRequestGradeReview from './button/CreateRequestGradeReview';
+
 import { useGetClassGrades } from '@/app/store/server/features/class_grade/queries';
 import { useUserRole } from '@/hooks/useUserRole';
 import { USER_ROLE } from '@/app/store/server/features/users/interfaces';
@@ -46,6 +48,7 @@ export default function ClassGrade() {
           <Spin />
         </div>
       )}
+
       {isSuccess && (
         <>
           <GradeTable
@@ -54,6 +57,7 @@ export default function ClassGrade() {
             isLoading={classGradesLoading}
             isTeacher={userRole === USER_ROLE.Teacher}
           />
+          {userRole === USER_ROLE.Student && <CreateRequestGradeReview />}
           {userRole === USER_ROLE.Teacher && (
             <div className="mt-4 mb-10 flex justify-end">
               <Space>

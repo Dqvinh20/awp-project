@@ -34,8 +34,8 @@ export interface ClassDTO {
   updated_at?: Date;
   /** ClassRoom deleted time. */
   deleted_at?: Date;
-  /**News */
-  news?:NotificationDTO[];
+  /** News. */
+  news?: NotificationDTO[];
 }
 
 /**
