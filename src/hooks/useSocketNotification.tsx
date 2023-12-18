@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { useCallback, useContext, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -23,9 +24,9 @@ export const useSocketNotification = () => {
   const queryClient = useQueryClient();
 
   const handleOnClickNotification = useCallback(
-    ({ ref_url, id, class: class_id }: NotificationDTO) => {
+    async ({ ref_url, id, class: class_id }: NotificationDTO) => {
       try {
-        markRead.mutateAsync(id!, {
+        await markRead.mutateAsync(id!, {
           onSuccess() {
             return queryClient.invalidateQueries({
               predicate: (query: any) =>
@@ -99,6 +100,50 @@ export const useSocketNotification = () => {
       },
     };
 
+    const teacherEvents = {
+      registering() {
+        socket.on(
+          'grade_review.created',
+          ({
+            class: class_id,
+            title,
+            message,
+            ref_url,
+            id,
+            ...rest
+          }: NotificationDTO) => {
+            queryClient.invalidateQueries({
+              predicate: (query: any) =>
+                query.queryKey[0] === 'notifications' ||
+                (query.queryKey[0] === 'class_grade_review' &&
+                  query.queryKey[1] === class_id),
+            });
+
+            notification.success({
+              key: id,
+              className: 'cursor-pointer',
+              message: title,
+              description: (
+                <div dangerouslySetInnerHTML={{ __html: message ?? '' }}></div>
+              ),
+              onClick: () =>
+                handleOnClickNotification({
+                  ref_url,
+                  class: class_id,
+                  id,
+                  title,
+                  ...rest,
+                }),
+            });
+          }
+        );
+      },
+
+      unregistering() {
+        socket.off('grade_review.created');
+      },
+    };
+
     socket.connect();
     socket.on('connect', () => {
       socket.emit('join', myId);
@@ -113,6 +158,8 @@ export const useSocketNotification = () => {
 
     if (userRole === USER_ROLE.Student) {
       studentEvents.registering();
+    } else if (userRole === USER_ROLE.Teacher) {
+      teacherEvents.registering();
     }
 
     return () => {
@@ -121,6 +168,8 @@ export const useSocketNotification = () => {
 
       if (userRole === USER_ROLE.Student) {
         studentEvents.unregistering();
+      } else if (userRole === USER_ROLE.Teacher) {
+        teacherEvents.unregistering();
       }
     };
   }, [myId, queryClient, socket, userRole]);

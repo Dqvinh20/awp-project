@@ -12,11 +12,12 @@ import {
 } from '@/app/store/server/features/notifications/queries';
 import { NotificationDTO } from '@/app/store/server/features/notifications/interfaces';
 import { useMarkReadNotification } from '@/app/store/server/features/notifications/mutations';
+import { useNotificationsStore } from '@/app/store/client/notifications/store';
 
 function NotificationButton() {
   const navigate = useNavigate();
   const markRead = useMarkReadNotification();
-
+  const notificationsStore = useNotificationsStore();
   const {
     data,
     fetchNextPage,
@@ -27,6 +28,7 @@ function NotificationButton() {
   } = useGetNotificationsInfinity();
   const { data: unreadCount, refetch: uncountRefetch } =
     useCountUnreadNotifications();
+  const setNotifOpen = useNotificationsStore((state) => state.setOpen);
 
   const loadMoreData = useCallback(() => {
     if (isFetchingNextPage) {
@@ -47,12 +49,13 @@ function NotificationButton() {
       } catch (error) {
         /* EMPTY */
       } finally {
+        setNotifOpen(false);
         if (ref_url) {
           navigate(ref_url);
         }
       }
     },
-    [markRead, navigate, notificationsRefetch, uncountRefetch]
+    [markRead, navigate, notificationsRefetch, setNotifOpen, uncountRefetch]
   );
 
   const dataSource = useMemo(() => data?.pages ?? [], [data]);
@@ -92,8 +95,13 @@ function NotificationButton() {
 
   return (
     <Dropdown
+      open={notificationsStore.open}
+      onOpenChange={(open) => {
+        notificationsStore.setOpen(open);
+      }}
       overlayClassName="!mt-12"
       trigger={['click']}
+      destroyPopupOnHide
       placement="bottomRight"
       dropdownRender={() => renderDropDown()}
     >
