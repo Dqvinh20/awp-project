@@ -16,6 +16,23 @@ const ClassGradeService = {
     return res.data;
   },
 
+  getOneColumnTemplate({
+    columnId,
+    classId,
+    file_type = 'xlsx',
+  }: {
+    columnId: string;
+    classId: string;
+    file_type?: string;
+  }) {
+    return axiosClient.get(`/class-grades/${classId}/template/${columnId}`, {
+      responseType: 'blob',
+      params: {
+        file_type,
+      },
+    });
+  },
+
   getGradeTemplate({
     classId,
     file_type = 'xlsx',
@@ -29,6 +46,28 @@ const ClassGradeService = {
         file_type,
       },
     });
+  },
+
+  importOneColumn({
+    classId,
+    file,
+    columnId,
+  }: {
+    classId: string;
+    file: File;
+    columnId: string;
+  }) {
+    const formData = new FormData();
+    formData.append('file', file);
+    return axiosClient.post(
+      `/class-grades/${classId}/import/${columnId}`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
   },
 
   importGradeBoard({ classId, file }: { classId: string; file: File }) {

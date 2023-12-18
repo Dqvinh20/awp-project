@@ -2,7 +2,7 @@ import { Space, Spin } from 'antd';
 
 import { useSearchParams } from 'react-router-dom';
 
-import CreateRequestGradeReview from './button/CreateRequestGradeReview';
+import CreateRequestGradeReviewFAB from './button/CreateRequestGradeReviewFAB';
 import StudentGradeReviewItem from './GradeReviewItem/StudentGradeReviewItem';
 
 import TeacherGradeReviewItem from './GradeReviewItem/TeacherGradeReviewItem';
@@ -29,7 +29,7 @@ function GradeReview() {
 
   return (
     <div className="h-full w-full p-4">
-      {userRole === USER_ROLE.Student && <CreateRequestGradeReview />}
+      {userRole === USER_ROLE.Student && <CreateRequestGradeReviewFAB />}
       {isGradeReviewLoading && (
         <div className="flex justify-center items-center h-full">
           <Spin />

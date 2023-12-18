@@ -17,6 +17,7 @@ import { useParams } from 'react-router';
 
 import {
   DeleteOutlined,
+  DownloadOutlined,
   LoadingOutlined,
   SearchOutlined,
 } from '@ant-design/icons';
@@ -33,6 +34,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import ImportGradeButton from '../../button/ImportGradeButton';
 
 import ExportGradeBoard from '../../button/ExportGradeBoard';
+
+import ImportOneColumnButton from '../../button/ImportOneColumnButton';
 
 import { ColumnTypes, GradeTableDataType, TableColumn } from './interfaces';
 import EditableRow from './EditableRow';
@@ -640,6 +643,7 @@ function GradeTable({
     ? {
         rowSelection: { rowSelection } as any,
         pagination: {
+          hideOnSinglePage: true,
           position: ['bottomRight'],
           showQuickJumper: true,
           showSizeChanger: true,
@@ -723,8 +727,9 @@ function GradeTable({
               </Button>
             </Popconfirm>
           )}
+          <ImportOneColumnButton columns={columns} />
           <ImportGradeButton />
-          <ExportGradeBoard />
+          <ExportGradeBoard className="bg-green-500 hover:!bg-green-500 hover:opacity-[.8] hover:!drop-shadow-lg" />
         </div>
       )}
       <Table

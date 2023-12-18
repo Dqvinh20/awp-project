@@ -2,7 +2,7 @@ import { Button } from 'antd';
 import { ImportOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 
-import ImportGradeTable from '../modal/ImportGradeTable';
+import ImportGradeTableModal from '../modal/ImportGradeTableModal';
 
 function ImportGradeButton({ className }: { className?: string }) {
   const [open, setOpen] = useState(false);
@@ -15,9 +15,9 @@ function ImportGradeButton({ className }: { className?: string }) {
         onClick={() => setOpen(true)}
         icon={<ImportOutlined />}
       >
-        Import Grade
+        Import Grade Board
       </Button>
-      <ImportGradeTable open={open} setOpen={setOpen} />
+      <ImportGradeTableModal open={open} setOpen={setOpen} />
     </>
   );
 }

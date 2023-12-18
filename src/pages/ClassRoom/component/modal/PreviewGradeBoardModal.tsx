@@ -116,6 +116,7 @@ function PreviewGradeBoardModal({
 
   return (
     <Modal
+      centered
       className="!w-[80%] top-10"
       open={open}
       okText="Import"
