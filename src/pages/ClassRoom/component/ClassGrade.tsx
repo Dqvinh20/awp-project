@@ -6,9 +6,9 @@ import { AxiosError } from 'axios';
 
 import GradeTable from './tables/GradeTable/GradeTable';
 
-import ToggleFinishGradeButton from './button/ToggleFinishGradeButton';
+import ToggleFinishGradeFAB from './button/ToggleFinishGradeFAB';
 
-import CreateRequestGradeReview from './button/CreateRequestGradeReview';
+import CreateRequestGradeReviewFAB from './button/CreateRequestGradeReviewFAB';
 
 import { useGetClassGrades } from '@/app/store/server/features/class_grade/queries';
 import { useUserRole } from '@/hooks/useUserRole';
@@ -22,7 +22,6 @@ export default function ClassGrade() {
     isSuccess,
     isError,
     error,
-    ...rests
   } = useGetClassGrades(class_id);
   const userRole = useUserRole();
 
@@ -57,14 +56,8 @@ export default function ClassGrade() {
             isLoading={classGradesLoading}
             isTeacher={userRole === USER_ROLE.Teacher}
           />
-          {userRole === USER_ROLE.Student && <CreateRequestGradeReview />}
-          {userRole === USER_ROLE.Teacher && (
-            <div className="mt-4 mb-10 flex justify-end">
-              <Space>
-                <ToggleFinishGradeButton />
-              </Space>
-            </div>
-          )}
+          {userRole === USER_ROLE.Student && <CreateRequestGradeReviewFAB />}
+          {userRole === USER_ROLE.Teacher && <ToggleFinishGradeFAB />}
         </>
       )}
       {isError && renderError()}

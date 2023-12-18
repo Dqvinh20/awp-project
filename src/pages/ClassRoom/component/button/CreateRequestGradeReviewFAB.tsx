@@ -25,7 +25,7 @@ import { classGradeReviewKey } from '@/app/store/server/features/grade_review/qu
 
 const { Option } = Select;
 
-function CreateRequestGradeReview() {
+function CreateRequestGradeReviewFAB() {
   const queryClient = useQueryClient();
   const { message } = App.useApp();
   const [form] = Form.useForm();
@@ -153,4 +153,4 @@ function CreateRequestGradeReview() {
   );
 }
 
-export default CreateRequestGradeReview;
+export default CreateRequestGradeReviewFAB;
