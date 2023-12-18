@@ -1,5 +1,7 @@
 import { Space, Spin } from 'antd';
 
+import { useSearchParams } from 'react-router-dom';
+
 import CreateRequestGradeReview from './button/CreateRequestGradeReview';
 import StudentGradeReviewItem from './GradeReviewItem/StudentGradeReviewItem';
 
@@ -14,6 +16,8 @@ import {
 import useClassGradeReview from '@/hooks/useClassGradeReview';
 
 function GradeReview() {
+  const [searchParams] = useSearchParams();
+  const defaultOpenReviewKey = searchParams.get('review');
   const {
     data,
     isSuccess: gradeReviewSuccess,
@@ -40,10 +44,18 @@ function GradeReview() {
         <Space direction="vertical" className="w-full">
           {userRole === USER_ROLE.Student
             ? data.map((gradeReview: StudentGradeReviewDto) => (
-                <StudentGradeReviewItem key={gradeReview.id} {...gradeReview} />
+                <StudentGradeReviewItem
+                  key={gradeReview.id}
+                  {...gradeReview}
+                  defaultOpenReviewKey={defaultOpenReviewKey}
+                />
               ))
             : data.map((gradeReview: TeacherGradeReviewDto) => (
-                <TeacherGradeReviewItem key={gradeReview.id} {...gradeReview} />
+                <TeacherGradeReviewItem
+                  key={gradeReview.id}
+                  {...gradeReview}
+                  defaultOpenReviewKey={defaultOpenReviewKey}
+                />
               ))}
         </Space>
       )}

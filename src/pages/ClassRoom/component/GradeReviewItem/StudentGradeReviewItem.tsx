@@ -38,7 +38,9 @@ dayjs.extend(LocalizedFormat);
 
 interface StudentGradeReviewItemProps
   extends Partial<StudentGradeReviewDto>,
-    HTMLAttributes<HTMLDivElement> {}
+    HTMLAttributes<HTMLDivElement> {
+  defaultOpenReviewKey?: string | null;
+}
 
 // eslint-disable-next-line max-lines-per-function
 function StudentGradeReviewItem({
@@ -51,6 +53,7 @@ function StudentGradeReviewItem({
   created_at,
   isFinished,
   comments = [],
+  defaultOpenReviewKey = '',
 }: StudentGradeReviewItemProps) {
   const { id: classId } = useParams<{ id: string }>();
   const { message } = App.useApp();
@@ -213,6 +216,7 @@ function StudentGradeReviewItem({
       <Collapse
         className="shadow-md hover:drop-shadow-lg bg-gray-100"
         bordered={false}
+        defaultActiveKey={[defaultOpenReviewKey ?? '']}
         expandIcon={({ isActive }) => (
           <CaretRightOutlined rotate={isActive ? 90 : 0} />
         )}

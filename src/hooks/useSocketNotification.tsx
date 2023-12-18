@@ -49,6 +49,32 @@ export const useSocketNotification = () => {
   );
 
   useEffect(() => {
+    const showNotfication = ({
+      class: class_id,
+      title,
+      message,
+      ref_url,
+      id,
+      ...rest
+    }: NotificationDTO) => {
+      notification.success({
+        key: id,
+        className: 'cursor-pointer',
+        message: title,
+        description: (
+          <div dangerouslySetInnerHTML={{ __html: message ?? '' }}></div>
+        ),
+        onClick: () =>
+          handleOnClickNotification({
+            ref_url,
+            class: class_id,
+            id,
+            title,
+            ...rest,
+          }),
+      });
+    };
+
     const studentEvents = {
       registering() {
         socket.on('grade.unfinished', ({ class_id }: { class_id: string }) => {
@@ -76,27 +102,43 @@ export const useSocketNotification = () => {
                 (query.queryKey[0] === 'class-grades' &&
                   query.queryKey[1] === class_id),
             });
-            notification.success({
-              key: id,
-              className: 'cursor-pointer',
-              message: title,
-              description: message,
-              onClick: () =>
-                handleOnClickNotification({
-                  ref_url,
-                  class: class_id,
-                  id,
-                  title,
-                  ...rest,
-                }),
+            showNotfication({
+              class: class_id,
+              title,
+              message,
+              ref_url,
+              id,
+              ...rest,
             });
           }
         );
+
+        socket.on('grade_review.finished', (data) => {
+          queryClient.invalidateQueries({
+            predicate: (query: any) =>
+              query.queryKey[0] === 'notifications' ||
+              (query.queryKey[0] === 'class_grade_review' &&
+                query.queryKey[1] === data.class_id),
+          });
+          showNotfication(data);
+        });
+
+        socket.on('grade_review.comment', (data) => {
+          queryClient.invalidateQueries({
+            predicate: (query: any) =>
+              query.queryKey[0] === 'notifications' ||
+              (query.queryKey[0] === 'class_grade_review' &&
+                query.queryKey[1] === data.class_id),
+          });
+          showNotfication(data);
+        });
       },
 
       unregistering() {
         socket.off('grade.unfinished');
         socket.off('grade.finished');
+        socket.off('grade_review.finished');
+        socket.off('grade_review.comment');
       },
     };
 
@@ -119,21 +161,13 @@ export const useSocketNotification = () => {
                   query.queryKey[1] === class_id),
             });
 
-            notification.success({
-              key: id,
-              className: 'cursor-pointer',
-              message: title,
-              description: (
-                <div dangerouslySetInnerHTML={{ __html: message ?? '' }}></div>
-              ),
-              onClick: () =>
-                handleOnClickNotification({
-                  ref_url,
-                  class: class_id,
-                  id,
-                  title,
-                  ...rest,
-                }),
+            showNotfication({
+              class: class_id,
+              title,
+              message,
+              ref_url,
+              id,
+              ...rest,
             });
           }
         );

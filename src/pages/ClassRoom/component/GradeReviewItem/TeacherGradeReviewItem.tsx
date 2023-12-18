@@ -31,7 +31,7 @@ import dayjs from 'dayjs';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 
@@ -54,7 +54,9 @@ dayjs.extend(LocalizedFormat);
 
 interface TeacherGradeReviewItemProps
   extends Partial<TeacherGradeReviewDto>,
-    HTMLAttributes<HTMLDivElement> {}
+    HTMLAttributes<HTMLDivElement> {
+  defaultOpenReviewKey?: string | null;
+}
 
 function TeacherGradeReviewItem({
   id,
@@ -67,9 +69,8 @@ function TeacherGradeReviewItem({
   created_at,
   isFinished,
   comments = [],
+  defaultOpenReviewKey,
 }: TeacherGradeReviewItemProps) {
-  const [searchParams] = useSearchParams();
-  const openReviewId = searchParams.get('review');
   const { id: classId } = useParams<{ id: string }>();
   const { message } = App.useApp();
   const queryClient = useQueryClient();
@@ -298,7 +299,7 @@ function TeacherGradeReviewItem({
       color={isFinished ? 'green' : ''}
     >
       <Collapse
-        defaultActiveKey={[openReviewId ?? '']}
+        defaultActiveKey={[defaultOpenReviewKey ?? '']}
         className="shadow-md hover:drop-shadow-lg bg-gray-100"
         bordered={false}
         expandIcon={({ isActive }) => (
