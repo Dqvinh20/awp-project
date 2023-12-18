@@ -1,4 +1,5 @@
 import { Layout, Flex } from 'antd';
+import { Link } from 'react-router-dom';
 
 import AvatarMenu from './AvatarMenu';
 
@@ -37,9 +38,9 @@ function AppHeader({ toggleCollapsed }: AppHeaderProps) {
             </svg>
           </div>
           <h2 className="antialiased font-semibold hidden sm:block sm:text-lg text-gray-600">
-            <a className="twp hover:text-gray-900" href="/home">
+            <Link className="twp hover:text-gray-900" to="/home">
               AWP Classroom
-            </a>
+            </Link>
           </h2>
         </Flex>
         <div className="flex flex-column items-center gap-x-2">
