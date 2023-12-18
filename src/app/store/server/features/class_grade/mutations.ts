@@ -1,12 +1,26 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import ClassGradeService from '@/services/ClassGradeService';
 
-export const useFinishedGrade = () =>
-  useMutation({
+export const useFinishedGrade = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
     mutationKey: ['finished-grade'],
     mutationFn: ClassGradeService.finishClassGrade,
+    onSuccess(data, variables) {
+      queryClient.invalidateQueries({
+        predicate(query) {
+          return (
+            (query.queryKey[0] === 'class-grades' &&
+              query.queryKey[1] === (variables as string)) ||
+            (query.queryKey[0] === 'class' &&
+              query.queryKey[1] === (variables as string))
+          );
+        },
+      });
+    },
   });
+};
 
 export const useUnFinishedGrade = () =>
   useMutation({

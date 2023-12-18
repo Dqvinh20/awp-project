@@ -10,7 +10,6 @@ import {
 
 import axiosClient from '@/app/AxiosClient';
 import { ClassDTO } from '@/app/store/server/features/classroom/interfaces';
-import { NotificationDTO } from '@/app/store/server/features/notifications/interfaces';
 import { PaginationResult } from '@/interfaces/common.interface';
 
 /**
@@ -41,7 +40,7 @@ const ClassRoomService = {
 
   async getClassDetail(classID: string): Promise<ClassDTO> {
     const response = await axiosClient.get<ClassDTO>(`/classes/${classID}`);
-    return {...response.data,news:generateRandomNotificationArray(2)};
+    return response.data;
   },
 
   async inviteMembers(body: InviteMembersByEmailDTO): Promise<ClassDTO> {
@@ -74,33 +73,31 @@ const ClassRoomService = {
 
 export default ClassRoomService;
 
-
-
 // function test gen list
 // Function to generate a random string
-function generateRandomString(length: number) {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let result = '';
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * characters.length));
-  }
-  return result;
-}
+// function generateRandomString(length: number) {
+//   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+//   let result = '';
+//   for (let i = 0; i < length; i++) {
+//     result += characters.charAt(Math.floor(Math.random() * characters.length));
+//   }
+//   return result;
+// }
 
-// Function to generate NotificationDTO objects with random titles and messages
-function generateRandomNotificationArray(count: number) {
-  const result = [];
+// // Function to generate NotificationDTO objects with random titles and messages
+// function generateRandomNotificationArray(count: number) {
+//   const result = [];
 
-  for (let i = 0; i < count; i++) {
-    const notification: NotificationDTO = {
-      title: generateRandomString(10), // Generate a random title
-      message: generateRandomString(20), // Generate a random message
-      created_at: new Date(),
-      updated_at: new Date(),
-    };
+//   for (let i = 0; i < count; i++) {
+//     const notification: NotificationDTO = {
+//       title: generateRandomString(10), // Generate a random title
+//       message: generateRandomString(20), // Generate a random message
+//       created_at: new Date(),
+//       updated_at: new Date(),
+//     };
 
-    result.push(notification);
-  }
+//     result.push(notification);
+//   }
 
-  return result;
-}
+//   return result;
+// }

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Dropdown, MenuProps, App } from 'antd';
 
 import { MoreOutlined } from '@ant-design/icons';
@@ -6,12 +7,13 @@ import { useMemo } from 'react';
 
 import BannerClass from './BannerClass';
 
+import NotificationCard from './card/NotificationCard';
+
 import useClassDetail from '@/hooks/useClassDetail';
 import { useUserRole } from '@/hooks/useUserRole';
 
 import { USER_ROLE } from '@/app/store/server/features/users/interfaces';
 import { NotificationDTO } from '@/app/store/server/features/notifications/interfaces';
-import NotificationCard from './card/NotificationCard';
 
 export default function ClassRoom() {
   const { message } = App.useApp();
@@ -57,7 +59,7 @@ export default function ClassRoom() {
 
   return (
     isSuccess && (
-      <div className="h-full w-full flex justify-center bg-slate-50 pt-6">
+      <div className="h-full w-full flex justify-center bg-slate-50 py-6">
         <div className="flex flex-col justify-center items-center h-fit w-full px-2 sm:w-11/12 lg:w-4/5 sm:px-0">
           <BannerClass title={data.name} />
           <div className="twp flex flex-col sm:flex-row gap-y-3 sm:gap-y-0 gap-x-3 pt-3 md:pt-6 w-full">
@@ -69,16 +71,16 @@ export default function ClassRoom() {
                     menu={{ items }}
                     arrow
                     placement="bottomLeft"
-                    trigger={['click']}
+                    trigger={['click', 'hover']}
                   >
-                    <a
+                    <button
                       onClick={(e) => e.preventDefault()}
                       className="text-gray-600 hover:text-gray-600 hover:bg-gray-300 hover:rounded-full flex items-center justify-center p-2"
                     >
                       <MoreOutlined
                         style={{ fontSize: '24px', color: 'inherit' }}
                       />
-                    </a>
+                    </button>
                   </Dropdown>
                 </div>
                 <div className=" text-2xl mt-2 text-[rgb(25,103,210)]">
@@ -97,13 +99,18 @@ export default function ClassRoom() {
                   {data.description ?? 'No description'}
                 </div>
               </div>
-              {
-                data?.news && data?.news.map((items: NotificationDTO) => (
-                  <NotificationCard title={items.title} message={items.message} />
-                ))
-              }
+              {data?.news && data?.news.length !== 0 && (
+                <div className="">
+                  <span className="text-left text-lg font-bold">News</span>
+                  <div className="flex flex-col gap-y-4 mt-2">
+                    {data?.news.map((notif: NotificationDTO) => (
+                      <NotificationCard key={notif.id} {...notif} />
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
-            
+
             {/* <div className="bg-white flex flex-col rounded-md border-solid border-2 border-slate-300">
               <div className="flex flex-row ">
                 <div className="text-left grow text-base">Class Code</div>
