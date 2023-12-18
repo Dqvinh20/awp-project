@@ -177,17 +177,18 @@ function ImportOneColumnModal({
       classId,
       file: selectedFile,
     })
-      .then(async (res) => {
+      .then(async () => {
         await onSuccess();
         const colName = columns.find((col) => col.id === columnId)?.name;
         notification.success({
-          message: 'Import Column Success',
-          description: "Grade of '' has been imported successfully",
+          message: `Import Column '${colName}' Successfully`,
+          description: `Grade of column '${colName}' has been imported successfully`,
         });
       })
       .catch((importError: Error) => {
+        const colName = columns.find((col) => col.id === columnId)?.name;
         notification.error({
-          message: 'Import Column Error',
+          message: `Import Column '${colName}' Error`,
           description: importError.message,
         });
       })
