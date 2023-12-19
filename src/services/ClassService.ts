@@ -2,6 +2,7 @@ import {
   AddClassDTO,
   InviteMembersByEmailDTO,
   KickMembersDTO,
+  UpdateClassDTO,
 } from './../app/store/server/features/classroom/interfaces';
 import {
   PaginationParams,
@@ -20,6 +21,13 @@ import { PaginationResult } from '@/interfaces/common.interface';
 const ClassRoomService = {
   async addClassRoom(body?: AddClassDTO): Promise<ClassDTO> {
     const response = await axiosClient.post(`/classes`, body);
+    return response.data;
+  },
+
+  async updateClassRoom(body: UpdateClassDTO): Promise<ClassDTO> {
+    const { classId } = body;
+    delete body.classId;
+    const response = await axiosClient.patch(`/classes/${classId}`, body);
     return response.data;
   },
 

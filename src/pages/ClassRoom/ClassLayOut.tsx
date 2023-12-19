@@ -1,11 +1,22 @@
 /* eslint-disable max-lines-per-function */
 import { NavLink, Outlet } from 'react-router-dom';
-import { ConfigProvider, Layout, Menu, MenuProps, Spin, App } from 'antd';
+import {
+  ConfigProvider,
+  Layout,
+  Menu,
+  MenuProps,
+  Spin,
+  App,
+  Button,
+  Tooltip,
+} from 'antd';
 import { AxiosError } from 'axios';
-
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { SettingOutlined } from '@ant-design/icons';
 
 import ErrorPage from '../ErrorPage';
+
+import ClassSetting from './component/ClassSetting';
 
 import useClassDetail from '@/hooks/useClassDetail';
 import UnauthImg from '@/assets/error_401.jpg';
@@ -17,8 +28,15 @@ const { Header, Content } = Layout;
 
 export default function ClassLayOut() {
   const { notification } = App.useApp();
+  const [openSetting, setOpenSetting] = useState(false);
 
-  const { isLoading, isError, error, isSuccess } = useClassDetail();
+  const {
+    data: classDetail,
+    isLoading,
+    isError,
+    error,
+    isSuccess,
+  } = useClassDetail();
   const { data: gradeReview } = useClassGradeReview();
 
   const userRole = useUserRole();
@@ -116,18 +134,36 @@ export default function ClassLayOut() {
         }}
       >
         <Layout className=" bg-white m-0 h-full w-full">
-          <Header className="twp p-0">
+          <Header className="twp bg-white p-0 flex justify-between items-center pr-4">
             <Menu
               theme="light"
               mode="horizontal"
-              className="px-4"
+              className="px-4 flex-1"
               defaultSelectedKeys={[
                 window.location.pathname.substring(
                   window.location.pathname.lastIndexOf('/') + 1
                 ),
               ]}
               items={items}
-            ></Menu>
+            />
+            {userRole === USER_ROLE.Teacher && (
+              <>
+                <Tooltip title="Class Setting" placement="bottomRight">
+                  <Button
+                    type="text"
+                    shape="circle"
+                    size="large"
+                    onClick={() => setOpenSetting(true)}
+                    icon={<SettingOutlined />}
+                  />
+                </Tooltip>
+                <ClassSetting
+                  open={openSetting}
+                  setOpen={setOpenSetting}
+                  {...classDetail}
+                />
+              </>
+            )}
           </Header>
           <Content className="bg-white m-0 h-full w-full d-flex justify-center items-center">
             <Outlet />

@@ -49,6 +49,12 @@ export interface AddClassDTO {
   description?: string;
 }
 
+export type UpdateClassDTO = AddClassDTO & {
+  classId?: string;
+  /** ClassRoom joinable. */
+  isJoinable?: string;
+};
+
 /**
  * Invite members to class by email.
  * @interface InviteMembersByEmailDTO

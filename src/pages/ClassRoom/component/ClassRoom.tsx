@@ -63,7 +63,7 @@ export default function ClassRoom() {
         <div className="flex flex-col justify-center items-center h-fit w-full px-2 sm:w-11/12 lg:w-4/5 sm:px-0">
           <BannerClass title={data.name} />
           <div className="twp flex flex-col sm:flex-row gap-y-3 sm:gap-y-0 gap-x-3 pt-3 md:pt-6 w-full">
-            {userRole === USER_ROLE.Teacher && (
+            {userRole === USER_ROLE.Teacher && data.isJoinable && (
               <div className="sm:block bg-white rounded-lg border border-gray-300 p-4 w-full sm:w-1/3 h-fit">
                 <div className="flex flex-row justify-between items-center">
                   <span className="text-base font-bold">Class Code</span>
