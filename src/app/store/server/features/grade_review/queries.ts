@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import GradeReviewService from '@/services/GradeReviewService';
 
 export const classGradeReviewKey = (classId?: string) => [
-  'class_grade_review',
+  'class-grade-review',
   classId,
 ];
 export const useClassGradeReviewQuery = (classId?: string) =>

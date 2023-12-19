@@ -17,7 +17,6 @@ import { useParams } from 'react-router';
 
 import {
   DeleteOutlined,
-  DownloadOutlined,
   LoadingOutlined,
   SearchOutlined,
 } from '@ant-design/icons';
@@ -795,16 +794,18 @@ function GradeTable({
           </Button>
         </div>
       )}
-      {userRole === USER_ROLE.Student && (
-        <div className="my-4 flex flex-col flex-end">
-          <span className="text-base font-medium text-right">
-            Final Grade:{' '}
-            {parseFloat(
-              calcFinalGrade(dataSource, columns)[0].finalGrade.toFixed(2)
-            )}
-          </span>
-        </div>
-      )}
+      {dataSource.length !== 0 &&
+        columns.length !== 0 &&
+        userRole === USER_ROLE.Student && (
+          <div className="my-4 flex flex-col flex-end">
+            <span className="text-base font-medium text-right">
+              Final Grade:{' '}
+              {parseFloat(
+                calcFinalGrade(dataSource, columns)[0].finalGrade.toFixed(2)
+              )}
+            </span>
+          </div>
+        )}
     </>
   );
 }

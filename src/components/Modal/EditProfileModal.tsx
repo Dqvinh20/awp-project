@@ -1,8 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { Form, Input, Modal, ModalProps, Select, Spin } from 'antd';
-import { useEffect } from 'react';
+import { App, Form, Input, Modal, ModalProps, Select, Spin } from 'antd';
 
-import Swal from 'sweetalert2';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useGetMyInfo } from '@/app/store/server/features/users/queries';
@@ -12,23 +10,10 @@ import { USER_ROLE } from '@/app/store/server/features/users/interfaces';
 type EditProfileModalProps = Omit<ModalProps, 'onOk'>;
 
 function EditProfileModal(props: EditProfileModalProps) {
+  const { message } = App.useApp();
   const queryClient = useQueryClient();
   const { data: myInfo, isLoading, isSuccess } = useGetMyInfo();
   const [form] = Form.useForm();
-
-  useEffect(() => {
-    if (myInfo) {
-      form.setFieldsValue({
-        ...(myInfo.role === USER_ROLE.Student
-          ? { student_id: myInfo.student_id }
-          : {}),
-        name: myInfo.full_name,
-        first_name: myInfo.first_name,
-        last_name: myInfo.last_name,
-        gender: myInfo?.gender,
-      });
-    }
-  }, [form, myInfo]);
 
   const updateProfile = useUpdateUser();
 
@@ -40,21 +25,30 @@ function EditProfileModal(props: EditProfileModalProps) {
       },
       {
         onSuccess() {
-          Swal.fire({
-            title: 'Success!',
-            text: "Update user's profile successfully!",
-            icon: 'success',
-          });
+          message.success('Update user profile successfully!');
           return queryClient.invalidateQueries({
-            queryKey: ['user'],
+            predicate(query) {
+              return (
+                (query.queryKey[0] === 'user' && query.queryKey[1] === 'me') ||
+                query.queryKey[0] === 'notifications' ||
+                query.queryKey[0] === 'classes' ||
+                query.queryKey[0] === 'class' ||
+                query.queryKey[0] === 'class-grades' ||
+                query.queryKey[0] === 'class-grade-review'
+              );
+            },
           });
         },
         onError(error: any) {
-          Swal.fire({
-            title: 'Error!',
-            text: error?.response?.data?.message[0] ?? 'Something went wrong!',
-            icon: 'error',
-          });
+          if (Array.isArray(error?.response?.data?.message)) {
+            return message.error(
+              error?.response?.data?.message[0] ??
+                'Updated user profile failure!'
+            );
+          }
+          return message.error(
+            error?.response?.data?.message ?? 'Updated user profile failure!'
+          );
         },
       }
     );
@@ -83,6 +77,15 @@ function EditProfileModal(props: EditProfileModalProps) {
                   labelCol={{
                     span: 6,
                     offset: 0,
+                  }}
+                  initialValues={{
+                    ...(myInfo.role === USER_ROLE.Student
+                      ? { student_id: myInfo.student_id }
+                      : {}),
+                    name: myInfo.full_name,
+                    first_name: myInfo.first_name,
+                    last_name: myInfo.last_name,
+                    gender: myInfo?.gender,
                   }}
                 >
                   <Form.Item name="email" label="Email">

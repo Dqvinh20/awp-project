@@ -40,6 +40,8 @@ export default function ClassGrade() {
     }
   };
 
+  const hasRows = classGrades?.grade_rows?.length > 0;
+
   return (
     <div className="antialiased p-4 h-full">
       {classGradesLoading && (
@@ -56,8 +58,14 @@ export default function ClassGrade() {
             isLoading={classGradesLoading}
             isTeacher={userRole === USER_ROLE.Teacher}
           />
-          {userRole === USER_ROLE.Student && <CreateRequestGradeReviewFAB />}
-          {userRole === USER_ROLE.Teacher && <ToggleFinishGradeFAB />}
+          {hasRows && (
+            <>
+              {userRole === USER_ROLE.Student && (
+                <CreateRequestGradeReviewFAB />
+              )}
+              {userRole === USER_ROLE.Teacher && <ToggleFinishGradeFAB />}
+            </>
+          )}
         </>
       )}
       {isError && renderError()}
