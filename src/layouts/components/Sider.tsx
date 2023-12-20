@@ -10,14 +10,15 @@ import { useSideMenuItems } from '@/hooks/useSideMenu';
 const extractSelectedKeysFromPathname = (pathname: string): string[] => {
   // Remove the first slash from the path
   const path = pathname.replace(/\//, '');
-  if (path.includes('class')) {
+
+  if (!path.includes('admin') && path.includes('class')) {
     return [path.split('/').slice(0, -1).join('/')];
   }
-
   return [path];
 };
 
 interface AppSiderProps {
+  menuItems: ReturnType<typeof useSideMenuItems>;
   collapsed: boolean;
   setCollapsed(value: boolean): void;
   isMobile: boolean;
@@ -29,8 +30,8 @@ function AppSider({
   setCollapsed,
   isMobile,
   setIsMobile,
+  menuItems = [],
 }: AppSiderProps) {
-  const menuItems = useSideMenuItems();
   const { pathname } = useLocation();
 
   const selectedKeys = useMemo(

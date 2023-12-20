@@ -51,3 +51,16 @@ export const useLeaveClass = () =>
   useMutation({
     mutationFn: ClassRoomService.leaveClass,
   });
+
+/** Admin can toggle class active. */
+export const useToggleClassActive = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ClassRoomService.toggleClassActive,
+    onSuccess() {
+      return queryClient.invalidateQueries({
+        queryKey: ['classes'],
+      });
+    },
+  });
+};

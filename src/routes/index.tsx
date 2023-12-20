@@ -1,24 +1,32 @@
 import { Navigate, createBrowserRouter } from 'react-router-dom';
 
+import { USER_ROLE } from '@/app/store/server/features/users/interfaces';
+
+import SuspenseWrapper from '@/components/SuspenseWrapper';
+
 import App from '@/app';
 import ErrorPage from '@/pages/ErrorPage';
-import AppLayout from '@/layouts/AppLayout/index';
-import Home from '@/pages/HomePage/index';
+import LandingPage from '@/pages/LandingPage/index';
 import AuthLayout from '@/layouts/AuthLayout';
 import SignInPage from '@/pages/Auth/SignInPage';
-import LandingPage from '@/pages/LandingPage/index';
-import ProtectedPage from '@/pages/ProtectedPage';
 import SignUpPage from '@/pages/Auth/SignUpPage';
-import EditUser from '@/pages/User/EditUser';
+import ProtectedPage from '@/pages/ProtectedPage';
+
+// Users Pages
+import AppLayout from '@/layouts/AppLayout/index';
+import Home from '@/pages/HomePage/index';
+import TeacherPages from '@/pages/TeacherPages';
 import ClassLayOut from '@/pages/ClassRoom/ClassLayOut';
 import ClassRoom from '@/pages/ClassRoom/component/ClassRoom';
 import MemberClass from '@/pages/ClassRoom/component/MemberClass';
 import ClassGrade from '@/pages/ClassRoom/component/ClassGrade';
-import SuspenseWrapper from '@/components/SuspenseWrapper';
-import EditUserLayout from '@/layouts/EditLayout/index';
 import GradeStructure from '@/pages/ClassRoom/component/GradeStructure';
 import GradeReview from '@/pages/ClassRoom/component/GradeReview';
-import TeacherPages from '@/pages/TeacherPages';
+
+// Admin Pages
+import AdminLayout from '@/layouts/AdminLayout/index';
+import AccountsManager from '@/pages/Admin/AccountsManager/index';
+import ClassesManager from '@/pages/Admin/ClassesManager/index';
 
 const router = createBrowserRouter([
   {
@@ -31,7 +39,9 @@ const router = createBrowserRouter([
         element: <LandingPage />,
       },
       {
-        element: <ProtectedPage />,
+        element: (
+          <ProtectedPage roles={[USER_ROLE.Student, USER_ROLE.Teacher]} />
+        ),
         children: [
           {
             element: <AppLayout />,
@@ -51,7 +61,6 @@ const router = createBrowserRouter([
                   },
                 ],
               },
-
               {
                 path: '/class/:id/*',
                 children: [
@@ -93,12 +102,26 @@ const router = createBrowserRouter([
               },
             ],
           },
+        ],
+      },
+      {
+        element: <ProtectedPage roles={[USER_ROLE.Admin]} />,
+        children: [
           {
-            element: <EditUserLayout />,
+            path: '/admin/*',
+            element: <AdminLayout />,
             children: [
               {
-                path: '/users/edit/:id',
-                element: <EditUser />,
+                path: 'accounts',
+                element: <AccountsManager />,
+              },
+              {
+                path: 'classes',
+                element: <ClassesManager />,
+              },
+              {
+                path: '*',
+                element: <Navigate to="/page-not-found" replace />,
               },
             ],
           },

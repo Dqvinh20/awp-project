@@ -1,21 +1,16 @@
 import { Layout } from 'antd';
-import { Outlet } from 'react-router-dom';
-
+import { Content } from 'antd/es/layout/layout';
 import { useState } from 'react';
+import { Outlet } from 'react-router-dom';
 
 import AppHeader from '../components/Header';
 import AppSider from '../components/Sider';
 
-import { useSocketNotification } from '@/hooks/useSocketNotification';
-import { useSideMenuItems } from '@/hooks/useSideMenu';
+import { useAdminSideMenuItems } from '@/hooks/useAdminSideMenu';
 
-const { Content } = Layout;
-
-function AppLayout() {
+function AdminLayout() {
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
-
-  useSocketNotification();
 
   const margin_left_sider = () => {
     if (isMobile && collapsed) return 0;
@@ -23,11 +18,15 @@ function AppLayout() {
     return 200;
   };
 
-  const menuItems = useSideMenuItems();
+  const menuItems = useAdminSideMenuItems();
 
   return (
     <Layout>
-      <AppHeader toggleCollapsed={() => setCollapsed(!collapsed)} />
+      <AppHeader
+        homeUrl="/admin/accounts"
+        isAdminHeader
+        toggleCollapsed={() => setCollapsed(!collapsed)}
+      />
       <Layout hasSider className="min-h-screen">
         <AppSider
           menuItems={menuItems}
@@ -52,4 +51,4 @@ function AppLayout() {
   );
 }
 
-export default AppLayout;
+export default AdminLayout;

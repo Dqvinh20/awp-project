@@ -26,6 +26,8 @@ export interface ClassDTO {
   owner: User;
   /** Class can join or not. */
   isJoinable: boolean;
+  /** Class is active or not. */
+  isActive: boolean;
   /** ClassRoom public join link. */
   public_invitation_link?: string;
   /** ClassRoom created time. */
@@ -52,8 +54,14 @@ export interface AddClassDTO {
 export type UpdateClassDTO = AddClassDTO & {
   classId?: string;
   /** ClassRoom joinable. */
-  isJoinable?: string;
+  isJoinable?: boolean;
 };
+
+export interface ToggleActiveClassDTO {
+  classId?: string;
+  /** ClassRoom active. */
+  isActive?: boolean;
+}
 
 /**
  * Invite members to class by email.

@@ -19,6 +19,11 @@ const userService = {
     return response.data;
   },
 
+  async getAllUser(): Promise<User> {
+    const response = await axiosClient.get<User>(`/users`);
+    return response.data;
+  },
+
   async searchEmails(
     params: SearchUserEmailParams
   ): Promise<{ count: number; emails: string[] }> {

@@ -4,6 +4,8 @@ import { SearchUserEmailParams, USER_ROLE, User } from './interfaces';
 
 import userService from '@/services/UserService';
 
+export const allUsersQueryKey = ['users'];
+
 /**
  * Get user by id.
  * @param userId - User id.
@@ -14,6 +16,16 @@ export const useGetUser = (userId?: string) =>
     queryKey: ['user', userId],
     queryFn: () => userService.getUser(userId),
     enabled: !!userId,
+  });
+
+/**
+ * Get all users.
+ * @returns
+ */
+export const useGetAllUsers = () =>
+  useQuery<User>({
+    queryKey: allUsersQueryKey,
+    queryFn: () => userService.getAllUser(),
   });
 
 /**
