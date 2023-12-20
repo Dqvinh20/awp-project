@@ -55,6 +55,7 @@ export type UpdateClassDTO = AddClassDTO & {
   classId?: string;
   /** ClassRoom joinable. */
   isJoinable?: boolean;
+  isActive?: boolean;
 };
 
 export interface ToggleActiveClassDTO {

@@ -32,9 +32,10 @@ type ClassDataIndex = keyof ClassDataType;
 
 interface ClassTableProps {
   classes?: ClassDTO[];
+  loading?: boolean;
 }
 
-function ClassTable({ classes = [] }: ClassTableProps) {
+function ClassTable({ classes = [], loading }: ClassTableProps) {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef<InputRef>(null);
@@ -144,7 +145,7 @@ function ClassTable({ classes = [] }: ClassTableProps) {
     render(text, { key }) {
       if (dataIndex === 'name') {
         return searchedColumn === dataIndex ? (
-          <Link to={`/classes/${key}`}>
+          <Link to={`/admin/classes/${key}`}>
             <Highlighter
               highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
               searchWords={[searchText]}
@@ -153,7 +154,7 @@ function ClassTable({ classes = [] }: ClassTableProps) {
             />
           </Link>
         ) : (
-          <Link to={`/classes/${key}`}>{text}</Link>
+          <Link to={`/admin/classes/${key}`}>{text}</Link>
         );
       }
 
@@ -276,6 +277,7 @@ function ClassTable({ classes = [] }: ClassTableProps) {
   return (
     <Table
       bordered
+      loading={loading}
       dataSource={dataSource}
       columns={columns as any}
       pagination={{

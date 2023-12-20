@@ -27,6 +27,7 @@ import GradeReview from '@/pages/ClassRoom/component/GradeReview';
 import AdminLayout from '@/layouts/AdminLayout/index';
 import AccountsManager from '@/pages/Admin/AccountsManager/index';
 import ClassesManager from '@/pages/Admin/ClassesManager/index';
+import ClassDetail from '@/pages/Admin/ClassesManager/pages/ClassDetail';
 
 const router = createBrowserRouter([
   {
@@ -114,6 +115,10 @@ const router = createBrowserRouter([
               {
                 path: 'accounts',
                 element: <AccountsManager />,
+              },
+              {
+                path: 'classes/:id',
+                element: <ClassDetail />,
               },
               {
                 path: 'classes',

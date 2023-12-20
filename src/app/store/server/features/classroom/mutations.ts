@@ -21,7 +21,13 @@ export const useUpdateClass = () => {
     mutationKey: [useUpdateClass.name],
     mutationFn: ClassRoomService.updateClassRoom,
     onSuccess() {
-      return queryClient.invalidateQueries({ queryKey: ['class', classId] });
+      queryClient.refetchQueries({
+        queryKey: ['classes'],
+      });
+      return queryClient.invalidateQueries({
+        queryKey: ['class', classId],
+        exact: true,
+      });
     },
   });
 };
