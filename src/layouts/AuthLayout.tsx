@@ -4,11 +4,15 @@ import { ConfigProvider } from 'antd';
 
 import useAuth from '@/hooks/useAuth';
 
-function AuthLayout() {
+interface AuthLayoutProps {
+  authRedirectUrl?: string;
+}
+
+function AuthLayout({ authRedirectUrl }: AuthLayoutProps) {
   const { user_id } = useAuth();
 
   if (user_id) {
-    return <Navigate to="/home" replace={true} />;
+    return <Navigate to={authRedirectUrl ?? '/home'} replace={true} />;
   }
 
   return (
@@ -20,7 +24,6 @@ function AuthLayout() {
       }}
     >
       <div
-        // style={{ '--image-url': `url(${getImgUrl(MountainImg1)})` }}
         className={`flex justify-center items-center h-screen bg-auth-bg bg-no-repeat bg-cover`}
       >
         <Outlet />

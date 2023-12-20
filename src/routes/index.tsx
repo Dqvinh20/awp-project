@@ -28,6 +28,7 @@ import AdminLayout from '@/layouts/AdminLayout/index';
 import AccountsManager from '@/pages/Admin/AccountsManager/index';
 import ClassesManager from '@/pages/Admin/ClassesManager/index';
 import ClassDetail from '@/pages/Admin/ClassesManager/pages/ClassDetail';
+import AuthPage from '@/pages/Admin/AuthPage';
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,7 @@ const router = createBrowserRouter([
         index: true,
         element: <LandingPage />,
       },
+
       {
         element: (
           <ProtectedPage roles={[USER_ROLE.Student, USER_ROLE.Teacher]} />
@@ -48,7 +50,7 @@ const router = createBrowserRouter([
             element: <AppLayout />,
             children: [
               {
-                path: '/home',
+                path: 'home',
                 element: <Home />,
               },
               {
@@ -106,6 +108,11 @@ const router = createBrowserRouter([
         ],
       },
       {
+        path: 'admin',
+        element: <AuthLayout authRedirectUrl="/admin/accounts" />,
+        children: [{ index: true, element: <AuthPage /> }],
+      },
+      {
         element: <ProtectedPage roles={[USER_ROLE.Admin]} />,
         children: [
           {
@@ -132,6 +139,7 @@ const router = createBrowserRouter([
           },
         ],
       },
+
       {
         path: '/google-oauth-success-redirect/:accessToken/:from',
         element: <SuspenseWrapper path="pages/Auth/OAuthSuccessRedirect" />,

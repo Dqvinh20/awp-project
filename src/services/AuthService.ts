@@ -1,3 +1,5 @@
+import { AxiosResponse } from 'axios';
+
 import {
   FinishSignupData,
   ResetPasswordDto,
@@ -11,7 +13,6 @@ import {
   RefreshTokenResponse,
   SignupResponse,
 } from '@/types/authService';
-import { AxiosError, AxiosResponse } from 'axios';
 
 /**
  * AuthService.ts.
@@ -23,12 +24,20 @@ const authService = {
    * Sign in to the server.
    * @param email - User email.
    * @param password - User password.
+   * @param isAdmin - Is admin try to login.
    */
-  async signin(email: string, password: string): Promise<LoginResponse> {
-    const response = await axiosClient.post('/auth/sign-in', {
-      email,
-      password,
-    });
+  async signin(
+    email: string,
+    password: string,
+    isAdmin = false
+  ): Promise<LoginResponse> {
+    const response = await axiosClient.post(
+      `/auth/sign-in${isAdmin ? '?isAdmin=true' : ''}`,
+      {
+        email,
+        password,
+      }
+    );
     return response.data;
   },
 

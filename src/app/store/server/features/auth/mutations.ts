@@ -12,7 +12,11 @@ import jwtService from '@/services/JwtService';
 export const useSignIn = () =>
   useMutation({
     mutationFn: (signinData: SigninData) =>
-      authService.signin(signinData.email, signinData.password),
+      authService.signin(
+        signinData.email,
+        signinData.password,
+        signinData.isAdmin
+      ),
     retry: false,
     onSuccess(data) {
       jwtService.saveToken(data.access_token);

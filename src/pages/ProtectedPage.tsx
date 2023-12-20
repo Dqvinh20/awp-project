@@ -37,7 +37,6 @@ function ProtectedPage({ roles }: ProtectedPageProps) {
       return <FinishSignUp />;
     }
   }
-
   const userHasRequiredRole = !!(user && roles.includes(user.role));
   if (!userHasRequiredRole) {
     return <AccessDenied />;
