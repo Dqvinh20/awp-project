@@ -28,6 +28,7 @@ import {
 import { User } from '@/app/store/server/features/users/interfaces';
 import { getUserFullNameOrEmail } from '@/utils/index';
 import { useUpdateClass } from '@/app/store/server/features/classroom/mutations';
+import DocumentTitle from '@/components/DocumentTitle';
 
 function ClassDetail() {
   const { message } = App.useApp();
@@ -213,52 +214,55 @@ function ClassDetail() {
 
   return (
     isSuccess && (
-      <div className="h-full p-6">
-        <Form form={form} initialValues={data} onFinish={handleUpdateClass}>
-          <Descriptions
-            layout="vertical"
-            title="Class Info"
-            size={'middle'}
-            items={items(data)}
-            extra={
-              <Space>
-                {editing ? (
-                  <>
+      <>
+        <DocumentTitle title={data.name} />
+        <div className="h-full p-6">
+          <Form form={form} initialValues={data} onFinish={handleUpdateClass}>
+            <Descriptions
+              layout="vertical"
+              title="Class Info"
+              size={'middle'}
+              items={items(data)}
+              extra={
+                <Space>
+                  {editing ? (
+                    <>
+                      <Button
+                        type="primary"
+                        loading={isPending}
+                        onClick={() => {
+                          form.validateFields().then(() => form.submit());
+                        }}
+                      >
+                        Save
+                      </Button>
+                      <Button
+                        type="default"
+                        disabled={isPending}
+                        onClick={() => {
+                          setEditing(false);
+                          form.resetFields();
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </>
+                  ) : (
                     <Button
                       type="primary"
-                      loading={isPending}
                       onClick={() => {
-                        form.validateFields().then(() => form.submit());
+                        setEditing(true);
                       }}
                     >
-                      Save
+                      Edit
                     </Button>
-                    <Button
-                      type="default"
-                      disabled={isPending}
-                      onClick={() => {
-                        setEditing(false);
-                        form.resetFields();
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                  </>
-                ) : (
-                  <Button
-                    type="primary"
-                    onClick={() => {
-                      setEditing(true);
-                    }}
-                  >
-                    Edit
-                  </Button>
-                )}
-              </Space>
-            }
-          />
-        </Form>
-      </div>
+                  )}
+                </Space>
+              }
+            />
+          </Form>
+        </div>
+      </>
     )
   );
 }

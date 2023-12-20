@@ -10,6 +10,7 @@ import { useGetMyInfo } from '@/app/store/server/features/users/queries';
 import { WebSocketProvider, socket } from '@/contexts/WebSocketContext.';
 import { USER_ROLE } from '@/app/store/server/features/users/interfaces';
 import jwtService from '@/services/JwtService';
+import DocumentTitle from '@/components/DocumentTitle';
 
 interface ProtectedPageProps {
   roles: Array<USER_ROLE>;
@@ -40,6 +41,15 @@ function ProtectedPage({ roles }: ProtectedPageProps) {
   const userHasRequiredRole = !!(user && roles.includes(user.role));
   if (!userHasRequiredRole) {
     return <AccessDenied />;
+  }
+
+  if (user.role === USER_ROLE.Admin) {
+    return (
+      <>
+        <DocumentTitle title="Home Admin" />
+        <Outlet />
+      </>
+    );
   }
 
   return (

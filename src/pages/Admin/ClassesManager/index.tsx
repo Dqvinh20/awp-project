@@ -1,5 +1,7 @@
 import ClassTable from './tables/ClassTable';
 
+import DocumentTitle from '@/components/DocumentTitle';
+
 import { useClassesQuery } from '@/app/store/server/features/classroom/queries';
 
 function ClassesManager() {
@@ -8,9 +10,12 @@ function ClassesManager() {
     pagination: false,
   });
   return (
-    <div className="bg-white h-full w-full p-6">
-      <ClassTable classes={data?.docs} loading={isLoading} />
-    </div>
+    <>
+      <DocumentTitle title="Classes Manager" />
+      <div className="bg-white h-full w-full p-6">
+        <ClassTable classes={data?.docs} loading={isLoading} />
+      </div>
+    </>
   );
 }
 

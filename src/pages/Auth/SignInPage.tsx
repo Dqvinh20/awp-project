@@ -12,6 +12,7 @@ import { SigninData } from '@/app/store/server/features/auth/interfaces';
 import GoogleLoginButton from '@/components/Button/GoogleLoginButton';
 import FacebookLoginButton from '@/components/Button/FacebookLoginButton';
 import { API_URL } from '@/config/index';
+import DocumentTitle from '@/components/DocumentTitle';
 
 function SignInPage() {
   const { notification } = App.useApp();
@@ -88,6 +89,7 @@ function SignInPage() {
   };
   return (
     <>
+      <DocumentTitle title="Sign In" />
       {loading && <Spin fullscreen />}
       <Card className="bg-white bg-opacity-50 backdrop-blur w-full h-fit m-4 text-center md:w-2/3 lg:w-1/3">
         <h1 className="text-xl sm:text-3xl font-bold ">Sign In</h1>

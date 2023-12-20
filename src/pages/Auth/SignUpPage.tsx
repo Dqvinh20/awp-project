@@ -14,6 +14,7 @@ import { SignupData } from '@/app/store/server/features/auth/interfaces';
 import FacebookLoginButton from '@/components/Button/FacebookLoginButton';
 import GoogleLoginButton from '@/components/Button/GoogleLoginButton';
 import { API_URL } from '@/config/index';
+import DocumentTitle from '@/components/DocumentTitle';
 
 function SignUpPage() {
   const { notification } = App.useApp();
@@ -26,16 +27,6 @@ function SignUpPage() {
 
   // React Query
   const signUp = useSignUp();
-
-  // useEffect(() => {
-  //   form.setFields([
-  //     { name: 'first_name', value: 'John' },
-  //     { name: 'last_name', value: 'Vinh' },
-  //     { name: 'email', value: 'duongquangvinh2210@gmail.com' },
-  //     { name: 'password', value: 'Admin@123!' },
-  //     { name: 'confirm-password', value: 'Admin@123!' },
-  //   ]);
-  // }, []);
 
   const onFinish = (values: SignupData) => {
     signUp.mutate(
@@ -108,6 +99,8 @@ function SignUpPage() {
 
   return (
     <>
+      <DocumentTitle title="Sign Up" />
+
       {loading && <Spin fullscreen />}
       <Card className="bg-white bg-opacity-50 backdrop-blur h-fit w-11/12 sm:w-4/5 md:w-2/3 xl:w-1/3">
         <h1 className="text-center text-3xl font-bold ">Sign Up</h1>

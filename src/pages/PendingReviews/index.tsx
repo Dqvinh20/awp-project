@@ -9,6 +9,7 @@ import TeacherGradeReviewItem from '../ClassRoom/component/GradeReviewItem/Teach
 import { useAllGradeReviewsQuery } from '@/app/store/server/features/grade_review/queries';
 import { TeacherGradeReviewDto } from '@/app/store/server/features/grade_review/interfaces';
 import { ClassDTO } from '@/app/store/server/features/classroom/interfaces';
+import DocumentTitle from '@/components/DocumentTitle';
 
 function PendingReviews() {
   const {
@@ -47,19 +48,22 @@ function PendingReviews() {
     });
 
   return (
-    <div className="h-full w-full flex justify-center items-start p-6">
-      {listLoading && <Spin />}
-      {listSuccess && !hasData && (
-        <div className="flex justify-center items-center h-full">
-          <div className="text-2xl">No grade reviews</div>
-        </div>
-      )}
-      {listSuccess && (
-        <Space direction="vertical" className="w-full">
-          {renderReviews(groupByClass ?? [])}
-        </Space>
-      )}
-    </div>
+    <>
+      <DocumentTitle title={'Pending Reviews'} />
+      <div className="h-full w-full flex justify-center items-start p-6">
+        {listLoading && <Spin />}
+        {listSuccess && !hasData && (
+          <div className="flex justify-center items-center h-full">
+            <div className="text-2xl">No grade reviews</div>
+          </div>
+        )}
+        {listSuccess && (
+          <Space direction="vertical" className="w-full">
+            {renderReviews(groupByClass ?? [])}
+          </Space>
+        )}
+      </div>
+    </>
   );
 }
 
