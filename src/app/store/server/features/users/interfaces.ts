@@ -45,7 +45,7 @@ export interface User {
 
 export interface SearchUserEmailParams {
   email: string;
-  role: USER_ROLE.Student | USER_ROLE.Teacher;
+  role?: USER_ROLE.Student | USER_ROLE.Teacher;
 }
 
 /**

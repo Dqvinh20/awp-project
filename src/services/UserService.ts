@@ -24,15 +24,10 @@ const userService = {
     return response.data;
   },
 
-  async searchEmails(
-    params: SearchUserEmailParams
-  ): Promise<{ count: number; emails: string[] }> {
-    const response = await axiosClient.get<{ count: number; emails: string[] }>(
-      `/users/search`,
-      {
-        params,
-      }
-    );
+  async searchEmails(params: SearchUserEmailParams) {
+    const response = await axiosClient.get(`/users/search`, {
+      params,
+    });
     return response.data;
   },
 

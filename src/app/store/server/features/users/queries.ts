@@ -34,12 +34,9 @@ export const useGetAllUsers = () =>
  * @param role - Role user to search for.
  * @returns
  */
-export const useSearchEmails = ({
-  email,
-  role = USER_ROLE.Student,
-}: SearchUserEmailParams) =>
+export const useSearchEmails = ({ email, role }: SearchUserEmailParams) =>
   useQuery({
-    queryKey: ['search', 'email', email],
+    queryKey: ['search', 'email', { email, role }],
     queryFn: () => userService.searchEmails({ email, role }),
     placeholderData: keepPreviousData,
     staleTime: 30000,
