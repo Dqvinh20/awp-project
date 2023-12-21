@@ -23,9 +23,9 @@ export const useGetUser = (userId?: string) =>
  * @returns
  */
 export const useGetAllUsers = () =>
-  useQuery<User>({
+  useQuery<{ count: number; items: User[] }>({
     queryKey: allUsersQueryKey,
-    queryFn: () => userService.getAllUser(),
+    queryFn: userService.getAllUsers,
   });
 
 /**

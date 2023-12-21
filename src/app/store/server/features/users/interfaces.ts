@@ -75,3 +75,8 @@ export interface Address {
   /** Address deleted time. */
   deleted_at?: Date;
 }
+
+export interface ToggleBlockAccountDTO {
+  userId: string;
+  isActive: boolean;
+}

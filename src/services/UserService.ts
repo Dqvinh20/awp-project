@@ -1,4 +1,7 @@
-import { SearchUserEmailParams } from './../app/store/server/features/users/interfaces';
+import {
+  SearchUserEmailParams,
+  ToggleBlockAccountDTO,
+} from './../app/store/server/features/users/interfaces';
 
 import axiosClient from '@/app/AxiosClient';
 import { User } from '@/app/store/server/features/users/interfaces';
@@ -19,8 +22,8 @@ const userService = {
     return response.data;
   },
 
-  async getAllUser(): Promise<User> {
-    const response = await axiosClient.get<User>(`/users`);
+  async getAllUsers() {
+    const response = await axiosClient.get(`/users`);
     return response.data;
   },
 
@@ -44,6 +47,16 @@ const userService = {
 
   async getMyInfo(): Promise<User> {
     const response = await axiosClient.get<User>(`users/me`);
+    return response.data;
+  },
+
+  async toggleBlockAccount({ userId, isActive }: ToggleBlockAccountDTO) {
+    if (isActive) {
+      const response = await axiosClient.get(`/users/${userId}/block`);
+      return response.data;
+    }
+
+    const response = await axiosClient.get(`/users/${userId}/unblock`);
     return response.data;
   },
 };
