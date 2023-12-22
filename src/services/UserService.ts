@@ -75,6 +75,12 @@ const userService = {
     const response = await axiosClient.delete(`/users/${userId}`);
     return response.data;
   },
+
+  downloadMapStudentIdTemplate() {
+    return axiosClient.get(`/users/template-student-id`, {
+      responseType: 'blob',
+    });
+  },
 };
 
 export default userService;
