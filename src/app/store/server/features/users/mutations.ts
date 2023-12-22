@@ -8,11 +8,24 @@ export const useUpdateUser = () =>
     mutationFn: userService.updateUser,
   });
 
-/** Admin can toggle class active. */
+/** Admin can toggle account block/unblock. */
 export const useToggleBlockAccount = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: userService.toggleBlockAccount,
+    onSuccess() {
+      return queryClient.invalidateQueries({
+        queryKey: ['users'],
+      });
+    },
+  });
+};
+
+/** Admin can create account. */
+export const useCreateAccount = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: userService.create,
     onSuccess() {
       return queryClient.invalidateQueries({
         queryKey: ['users'],

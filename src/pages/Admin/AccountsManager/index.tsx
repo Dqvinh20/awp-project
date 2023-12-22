@@ -12,9 +12,15 @@ function AccountsManager() {
   return (
     <>
       <DocumentTitle title="Accounts Manager" />
-      <div className="bg-white h-full w-full p-6">
+      <div className="bg-white h-full w-full px-6 py-4">
         <CreateAccountFAB />
-        <AccountTable accounts={userList?.items ?? []} loading={isLoading} />
+        <AccountTable
+          title={() => (
+            <span className="text-base font-semibold">Account Table</span>
+          )}
+          accounts={userList?.items ?? []}
+          loading={isLoading}
+        />
       </div>
     </>
   );
