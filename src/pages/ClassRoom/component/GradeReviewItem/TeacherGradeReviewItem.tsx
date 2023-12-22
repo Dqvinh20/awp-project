@@ -1,13 +1,11 @@
 /* eslint-disable max-lines-per-function */
-import { HTMLAttributes, memo, useState } from 'react';
-
+import { HTMLAttributes, memo, useRef, useState } from 'react';
 import {
   CaretRightOutlined,
   CheckOutlined,
   SendOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-
 import {
   DescriptionsProps,
   Descriptions,
@@ -15,7 +13,6 @@ import {
   Card,
   Avatar,
   Space,
-  Input,
   CollapseProps,
   App,
   theme,
@@ -26,14 +23,11 @@ import {
   InputNumber,
   Popconfirm,
 } from 'antd';
-
 import dayjs from 'dayjs';
-
 import { useQueryClient } from '@tanstack/react-query';
-
 import { useParams } from 'react-router-dom';
-
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
+import parse from 'html-react-parser';
 
 import { TeacherGradeReviewDto } from '@/app/store/server/features/grade_review/interfaces';
 import { User } from '@/app/store/server/features/users/interfaces';
@@ -48,6 +42,9 @@ import {
 } from '@/app/store/server/features/grade_review/queries';
 import { useGetMyInfo } from '@/app/store/server/features/users/queries';
 import { getUserFullNameOrEmail } from '@/utils/index';
+import QuillEditor, {
+  QuillEditorRefType,
+} from '@/components/Editor/QuillEditor';
 
 dayjs.locale('vi');
 dayjs.extend(LocalizedFormat);
@@ -83,6 +80,7 @@ function TeacherGradeReviewItem({
   } = useFinishGradeReviewMutation();
   const [newGrade, setNewGrade] = useState<number | undefined>(current_grade);
   const [newComment, setNewComment] = useState('');
+  const commentInputRef = useRef<QuillEditorRefType>(null);
 
   // Actions
   const handleAddNewComment = () => {
@@ -93,6 +91,12 @@ function TeacherGradeReviewItem({
       },
       {
         onSuccess() {
+          if (commentInputRef.current) {
+            commentInputRef.current
+              .getEditor()
+              .deleteText(0, newComment.length);
+            commentInputRef.current.blur();
+          }
           setNewComment('');
           message.success('New comment posted');
           queryClient.invalidateQueries({
@@ -222,7 +226,7 @@ function TeacherGradeReviewItem({
                           </span>
                         </Space>
                       }
-                      description={comment}
+                      description={parse(comment)}
                     />
                   );
                 }
@@ -232,24 +236,25 @@ function TeacherGradeReviewItem({
         )}
         {/* New Comment Section */}
         {!isFinished && isMyInfoSuccess && (
-          <div className="w-full px-2 flex flex-row justify-center items-center gap-x-2">
-            <Avatar src={myInfo?.avatar} icon={<UserOutlined />} />
-            <Input
-              className="!w-full rounded-full px-4 py-2 flex-1"
-              placeholder="Add new comment"
-              value={newComment}
-              onChange={(e) => {
-                setNewComment(e.target.value);
+          <div className="w-full px-2 flex flex-row justify-center items-stretch gap-x-2">
+            <div className="h-full pt-2">
+              <Avatar src={myInfo?.avatar} icon={<UserOutlined />} />
+            </div>
+            <QuillEditor
+              ref={commentInputRef}
+              onChange={(value) => {
+                setNewComment(value);
               }}
-              onPressEnter={handleAddNewComment}
             />
-            <button
-              disabled={newComment.length === 0}
-              onClick={handleAddNewComment}
-              className="twp w-[32px] h-[32px] flex justify-center items-center rounded-full disabled:text-inherit disabled:bg-inherit disabled:opacity-100 disabled:cursor-not-allowed hover:text-sky-500 hover:bg-gray-300 hover:opacity-70"
-            >
-              <SendOutlined className="text-[16px] " />
-            </button>
+            <div className="h-full self-end pb-2">
+              <button
+                disabled={newComment.length === 0}
+                onClick={handleAddNewComment}
+                className="twp w-[32px] h-[32px] flex justify-center items-center rounded-full disabled:text-inherit disabled:bg-inherit disabled:opacity-100 disabled:cursor-not-allowed hover:text-sky-500 hover:bg-gray-300 hover:opacity-70"
+              >
+                <SendOutlined className="text-[16px] " />
+              </button>
+            </div>
           </div>
         )}
       </div>

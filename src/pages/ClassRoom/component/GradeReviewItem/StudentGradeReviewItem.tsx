@@ -1,4 +1,4 @@
-import { HTMLAttributes, memo, useState } from 'react';
+import { HTMLAttributes, memo, useRef, useState } from 'react';
 
 import {
   App,
@@ -10,7 +10,6 @@ import {
   Descriptions,
   DescriptionsProps,
   Divider,
-  Input,
   Space,
   theme,
 } from 'antd';
@@ -25,6 +24,8 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { useParams } from 'react-router-dom';
 
+import parse from 'html-react-parser';
+
 import { StudentGradeReviewDto } from '@/app/store/server/features/grade_review/interfaces';
 import 'dayjs/locale/vi';
 import { User } from '@/app/store/server/features/users/interfaces';
@@ -32,6 +33,9 @@ import { useGetMyInfo } from '@/app/store/server/features/users/queries';
 import { useAddCommentMutation } from '@/app/store/server/features/grade_review/mutations';
 import { classGradeReviewKey } from '@/app/store/server/features/grade_review/queries';
 import { getUserFullNameOrEmail } from '@/utils/index';
+import QuillEditor, {
+  QuillEditorRefType,
+} from '@/components/Editor/QuillEditor';
 
 dayjs.locale('vi');
 dayjs.extend(LocalizedFormat);
@@ -62,6 +66,7 @@ function StudentGradeReviewItem({
   const { data: myInfo, isSuccess: isMyInfoSuccess } = useGetMyInfo();
   const { mutate: addCommentMutate } = useAddCommentMutation();
   const [newComment, setNewComment] = useState('');
+  const commentInputRef = useRef<QuillEditorRefType>(null);
 
   // Actions
   const handleAddNewComment = () => {
@@ -72,6 +77,12 @@ function StudentGradeReviewItem({
       },
       {
         onSuccess() {
+          if (commentInputRef.current) {
+            commentInputRef.current
+              .getEditor()
+              .deleteText(0, newComment.length);
+            commentInputRef.current.blur();
+          }
           setNewComment('');
           message.success('New comment posted');
           return queryClient.invalidateQueries({
@@ -161,7 +172,7 @@ function StudentGradeReviewItem({
                           </span>
                         </Space>
                       }
-                      description={comment}
+                      description={parse(comment)}
                     />
                   );
                 }
@@ -173,14 +184,11 @@ function StudentGradeReviewItem({
         {!isFinished && isMyInfoSuccess && (
           <div className="w-full px-2 flex flex-row justify-center items-center gap-x-4">
             <Avatar src={myInfo?.avatar} />
-            <Input
-              className="!w-full rounded-full px-4 py-2 flex-1"
-              placeholder="Add new comment"
-              value={newComment}
-              onChange={(e) => {
-                setNewComment(e.target.value);
+            <QuillEditor
+              ref={commentInputRef}
+              onChange={(value) => {
+                setNewComment(value);
               }}
-              onPressEnter={handleAddNewComment}
             />
             <button
               disabled={newComment.length === 0}
