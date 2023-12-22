@@ -43,6 +43,11 @@ export interface User {
   isEmailConfirmed?: boolean;
 }
 
+export type UpdateUserDto = Pick<
+  User,
+  'id' | 'last_name' | 'first_name' | 'gender' | 'student_id' | 'isActive'
+>;
+
 export interface SearchUserEmailParams {
   email: string;
   role?: USER_ROLE.Student | USER_ROLE.Teacher;

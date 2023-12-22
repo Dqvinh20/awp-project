@@ -149,7 +149,7 @@ function AccountTable({ accounts = [], loading }: AccountTableProps) {
     render(text, { key }) {
       if (dataIndex === 'email') {
         return searchedColumn === dataIndex ? (
-          <Link to={`/admin/classes/${key}`}>
+          <Link to={`/admin/accounts/${key}`}>
             <Highlighter
               highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
               searchWords={[searchText]}
@@ -158,7 +158,7 @@ function AccountTable({ accounts = [], loading }: AccountTableProps) {
             />
           </Link>
         ) : (
-          <Link to={`/admin/classes/${key}`}>{text}</Link>
+          <Link to={`/admin/accounts/${key}`}>{text}</Link>
         );
       }
 

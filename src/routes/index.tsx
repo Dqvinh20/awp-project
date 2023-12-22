@@ -29,6 +29,7 @@ import AccountsManager from '@/pages/Admin/AccountsManager/index';
 import ClassesManager from '@/pages/Admin/ClassesManager/index';
 import ClassDetail from '@/pages/Admin/ClassesManager/pages/ClassDetail';
 import AuthPage from '@/pages/Admin/AuthPage';
+import AccountDetail from '@/pages/Admin/AccountsManager/pages/AccountDetail';
 
 const router = createBrowserRouter([
   {
@@ -122,6 +123,10 @@ const router = createBrowserRouter([
               {
                 path: 'accounts',
                 element: <AccountsManager />,
+              },
+              {
+                path: 'accounts/:id',
+                element: <AccountDetail />,
               },
               {
                 path: 'classes/:id',

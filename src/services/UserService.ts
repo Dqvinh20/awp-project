@@ -1,6 +1,7 @@
 import {
   SearchUserEmailParams,
   ToggleBlockAccountDTO,
+  UpdateUserDto,
 } from './../app/store/server/features/users/interfaces';
 
 import axiosClient from '@/app/AxiosClient';
@@ -40,7 +41,7 @@ const userService = {
    * @param data - User data.
    * @returns
    */
-  async updateUser({ id, ...data }: User): Promise<any> {
+  async updateUser({ id, ...data }: UpdateUserDto): Promise<any> {
     const response = await axiosClient.patch(`/users/${id}`, data);
     return response.data;
   },
