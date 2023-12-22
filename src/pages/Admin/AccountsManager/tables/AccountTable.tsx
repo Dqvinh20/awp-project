@@ -14,18 +14,9 @@ import Highlighter from 'react-highlight-words';
 import { Link } from 'react-router-dom';
 
 import ToggleBlockAccount from '../button/ToggleBlockAccount';
+import DeleteAccount from '../button/DeleteAccount';
 
 import { USER_ROLE, User } from '@/app/store/server/features/users/interfaces';
-
-// interface AccountDataType {
-//   key: string;
-//   avatar: string;
-//   full_name: string;
-//   email: string;
-//   role: USER_ROLE;
-//   status: boolean;
-//   created_at: string;
-// }
 
 type AccountDataType = Required<
   Pick<User, 'avatar' | 'full_name' | 'role' | 'email' | 'isActive'>
@@ -280,6 +271,7 @@ function AccountTable({
       render: (_, record) => (
         <Space size="middle">
           <ToggleBlockAccount userId={record.key} isActive={record.isActive} />
+          <DeleteAccount userId={record.key} />
         </Space>
       ),
     },

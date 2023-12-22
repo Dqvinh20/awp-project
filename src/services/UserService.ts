@@ -70,6 +70,11 @@ const userService = {
     const response = await axiosClient.get(`/users/${userId}/unblock`);
     return response.data;
   },
+
+  async deleteUser(userId: string) {
+    const response = await axiosClient.delete(`/users/${userId}`);
+    return response.data;
+  },
 };
 
 export default userService;

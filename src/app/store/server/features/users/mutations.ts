@@ -33,3 +33,16 @@ export const useCreateAccount = () => {
     },
   });
 };
+
+/** Admin can delete user account. */
+export const useDeleteAccounts = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: userService.deleteUser,
+    onSuccess() {
+      return queryClient.invalidateQueries({
+        queryKey: ['users'],
+      });
+    },
+  });
+};
