@@ -23,7 +23,7 @@ function JoinClass() {
 
   const joinClassMutation = useJoinClass();
 
-  const handleJoin = (params: { t: string } | { c: string } | any) => {
+  const handleJoin = (params: { t: string } | { c: string } | object) => {
     joinClassMutation.mutate(params, {
       async onSuccess(data) {
         await queryClient.invalidateQueries({ queryKey: ['classes'] });
@@ -56,18 +56,18 @@ function JoinClass() {
         const data = await joinClassMutation.mutateAsync({ t });
         await queryClient.invalidateQueries({ queryKey: ['classes'] });
         navigate(`/class/${data.id}/news`);
-      } catch (error: any) {
+      } catch (error) {
         if (error instanceof AxiosError) {
           await notification.error({
-            message: 'Error Occurred',
+            message: 'Join Class Failed',
             description: error?.response?.data.message ?? error.message,
           });
           navigate('/home');
           return;
         }
         notification.error({
-          message: 'Error Occured',
-          description: error.message,
+          message: 'Join Class Failed',
+          description: (error as Error).message,
         });
       }
     };

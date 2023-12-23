@@ -35,7 +35,7 @@ export const useGetAllUsers = () =>
  * @returns
  */
 export const useSearchEmails = ({ email, role }: SearchUserEmailParams) =>
-  useQuery({
+  useQuery<{ count: number; emails: string[] }>({
     queryKey: ['search', 'email', { email, role }],
     queryFn: () => userService.searchEmails({ email, role }),
     placeholderData: keepPreviousData,

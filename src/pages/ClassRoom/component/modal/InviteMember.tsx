@@ -30,7 +30,11 @@ function InviteMember({ isInviteTeacher = false }: InviteMemberProps) {
   const [searchText, setSearchText] = useState('');
 
   const debouncedSearchQuery = useDebounce(searchText, 600);
-  const { data, isLoading, isFetching } = useSearchEmails({
+  const {
+    data: emailsSearchResult,
+    isLoading,
+    isFetching,
+  } = useSearchEmails({
     email: debouncedSearchQuery,
     role: isInviteTeacher ? USER_ROLE.Teacher : USER_ROLE.Student,
   });
@@ -71,8 +75,8 @@ function InviteMember({ isInviteTeacher = false }: InviteMemberProps) {
   };
 
   const options: SelectProps['options'] = useMemo(() => {
-    if (data?.emails) {
-      return data.emails
+    if (emailsSearchResult?.emails) {
+      return emailsSearchResult.emails
         .filter((email) => {
           // Filter out emails that are already in the class
           const isInClass = [
@@ -88,7 +92,7 @@ function InviteMember({ isInviteTeacher = false }: InviteMemberProps) {
           value: email,
         }));
     }
-  }, [data, classDetail]);
+  }, [emailsSearchResult, classDetail]);
 
   const handleTextChange = (value: string) => {
     setSearchText(value);
