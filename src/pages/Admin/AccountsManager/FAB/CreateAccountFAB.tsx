@@ -9,7 +9,7 @@ function CreateAccountFAB() {
   return (
     <>
       <FloatButton
-        type="primary"
+        type="default"
         tooltip="Create account"
         onClick={() => setOpenModal(true)}
         icon={<PlusOutlined />}
