@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { MoreOutlined, SmileOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Card, CardProps, Dropdown, MenuProps, Space } from 'antd';
+import { MoreOutlined } from '@ant-design/icons';
+import { CardProps, Dropdown, MenuProps, Space } from 'antd';
 import Meta from 'antd/es/card/Meta';
 import { useNavigate } from 'react-router-dom';
 

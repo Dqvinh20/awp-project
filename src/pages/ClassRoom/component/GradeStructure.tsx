@@ -16,7 +16,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import {
   App,
   Button,
-  Input,
   Popconfirm,
   Spin,
   Table,
@@ -26,7 +25,7 @@ import {
 import { Rule } from 'antd/es/form';
 
 import { CloseOutlined, ReloadOutlined } from '@ant-design/icons';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -169,15 +168,11 @@ export default function GradeStructure() {
         title: 'Name',
         dataIndex: 'name',
         editable: true,
-        render: (value) => {
-          if(!value){
-            return (
-              <span className='text-red-700' >Click here to input</span>
-            )
-          }else{
-              return <span className='text-slate-950' >{value}</span>
+        render(value) {
+          if (!value) {
+            return <span className="text-red-700">Click here to input</span>;
           }
-          
+          return <span className="text-slate-950">{value}</span>;
         },
       },
       {
