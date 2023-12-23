@@ -14,9 +14,15 @@ function ClassesManager() {
   return (
     <>
       <DocumentTitle title="Classes Manager" />
-      <div className="bg-white h-full w-full p-6">
-        <ClassTable classes={data?.docs} loading={isLoading} />
+      <div className="bg-white h-full w-full px-6 py-4">
         <CreateClassFAB />
+        <ClassTable
+          title={() => (
+            <span className="text-base font-semibold">Class Table</span>
+          )}
+          classes={data?.docs}
+          loading={isLoading}
+        />
       </div>
     </>
   );

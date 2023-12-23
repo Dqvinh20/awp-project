@@ -94,7 +94,7 @@ function ImportOneColumnModal({
 
         duplicateStudentId = _.pickBy(
           duplicateStudentId,
-          (value, key) => value > 1
+          (value, key) => value >= 1
         );
         const duplicateStudentIdKeys = Object.keys(duplicateStudentId);
         if (duplicateStudentIdKeys.length !== 0) {

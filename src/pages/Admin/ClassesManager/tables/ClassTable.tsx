@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Avatar, Button, Input, InputRef, Space, Table, Tag } from 'antd';
 import { memo, useMemo, useRef, useState } from 'react';
-import { ColumnsType } from 'antd/es/table';
+import { ColumnsType, TableProps } from 'antd/es/table';
 import { SearchOutlined, UserOutlined } from '@ant-design/icons';
 import {
   ColumnFilterItem,
@@ -30,12 +30,20 @@ interface ClassDataType {
 
 type ClassDataIndex = keyof ClassDataType;
 
-interface ClassTableProps {
+type ClassTableProps = Pick<
+  TableProps<ClassDataType>,
+  | 'loading'
+  | 'title'
+  | 'footer'
+  | 'bordered'
+  | 'rowClassName'
+  | 'showHeader'
+  | 'summary'
+> & {
   classes?: ClassDTO[];
-  loading?: boolean;
-}
+};
 
-function ClassTable({ classes = [], loading }: ClassTableProps) {
+function ClassTable({ classes = [], loading, ...tableProps }: ClassTableProps) {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef<InputRef>(null);
@@ -267,7 +275,7 @@ function ClassTable({ classes = [], loading }: ClassTableProps) {
         name: classObj.name,
         isActive: classObj.isActive,
         owner: classObj.owner,
-        created_at: classObj.created_at,
+        created_at: classObj.created_at?.toString() ?? '',
         count_teacher: classObj.teachers.length,
         count_student: classObj.students.length,
       })),
@@ -279,7 +287,7 @@ function ClassTable({ classes = [], loading }: ClassTableProps) {
       bordered
       loading={loading}
       dataSource={dataSource}
-      columns={columns as any}
+      columns={columns}
       pagination={{
         hideOnSinglePage: true,
         showLessItems: true,
@@ -289,6 +297,7 @@ function ClassTable({ classes = [], loading }: ClassTableProps) {
         showTitle: true,
         showTotal: (total, range) => `${range[0]}-${range[1]} of ${total}`,
       }}
+      {...tableProps}
     />
   );
 }

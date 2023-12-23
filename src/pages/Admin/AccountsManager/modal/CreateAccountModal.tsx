@@ -1,25 +1,15 @@
 /* eslint-disable max-lines-per-function */
-import React, { useEffect, useState } from 'react';
-import {
-  App,
-  Button,
-  Checkbox,
-  Form,
-  Input,
-  Modal,
-  Select,
-  SelectProps,
-} from 'antd';
-import { useQueryClient } from '@tanstack/react-query';
+import { App, Form, Input, Modal, Select } from 'antd';
 
 import { AxiosError } from 'axios';
 
-import { UserOutlined, MailOutlined, LockOutlined } from '@ant-design/icons';
+import { UserOutlined, MailOutlined } from '@ant-design/icons';
 
-import { useAddClass } from '@/app/store/server/features/classroom/mutations';
-import { useSearchEmails } from '@/app/store/server/features/users/queries';
-import useDebounce from '@/hooks/useDebounce';
-import { USER_ROLE, User } from '@/app/store/server/features/users/interfaces';
+import {
+  CreateUserDTO,
+  USER_ROLE,
+} from '@/app/store/server/features/users/interfaces';
+import { useCreateAccount } from '@/app/store/server/features/users/mutations';
 
 interface CreateClassProps {
   title?: string;
@@ -33,72 +23,53 @@ export default function CreateAccountModal({
   setOpen,
 }: CreateClassProps) {
   const [form] = Form.useForm();
-  const [confirmLoading, setConfirmLoading] = useState(false);
-  const queryClient = useQueryClient();
-  const addClass = useAddClass();
+  const createAccount = useCreateAccount();
   const { notification, message } = App.useApp();
-  const [selectedEmails, setSelectedEmails] = useState<{
-    owner: string | null;
-    students: string[];
-    teachers: string[];
-  }>({
-    owner: null,
-    students: [],
-    teachers: [],
-  });
-  const [options, setOptions] = useState<SelectProps['options']>([]);
-  const [searchForTeacher, setSearchForTeacher] = useState(true);
-  const [searchText, setSearchText] = useState('');
 
-  const debouncedSearchQuery = useDebounce(searchText, 300);
-
-  const { data, isLoading, isFetching } = useSearchEmails({
-    email: debouncedSearchQuery,
-    role: searchForTeacher ? USER_ROLE.Teacher : USER_ROLE.Student,
-  });
-
-  const handleSubmit = (values: any) => {
-    setConfirmLoading(true);
-
-    addClass.mutate(values, {
-      onSuccess() {
-        setConfirmLoading(false);
-        setSelectedEmails({
-          owner: null,
-          students: [],
-          teachers: [],
-        });
-        setSearchForTeacher(true);
-        setSearchText('');
-        setOpen(false);
-        form.resetFields();
-
-        queryClient.invalidateQueries({ queryKey: ['classes'] });
-        return message.success('Create class successfully');
+  const handleSubmit = ({
+    first_name,
+    last_name,
+    email,
+    role,
+    student_id,
+  }: CreateUserDTO) => {
+    createAccount.mutate(
+      {
+        first_name: first_name?.trim() ?? '',
+        last_name: last_name?.trim() ?? '',
+        email,
+        role,
+        student_id,
       },
-      onError(error) {
-        setConfirmLoading(false);
-        if (error instanceof AxiosError) {
-          const { response } = error;
-          if (response?.data.statusCode === 403) {
-            notification.error({
-              message: 'Create class failed',
-              description: "You don't have permission to create class",
+      {
+        onSuccess() {
+          form.resetFields();
+          setOpen(false);
+          return message.success('Create account successfully');
+        },
+        onError(error) {
+          if (error instanceof AxiosError) {
+            const { response } = error;
+            if (response?.data.statusCode === 403) {
+              notification.error({
+                message: 'Create account failed',
+                description: "You don't have permission to create account",
+              });
+              return;
+            }
+
+            return notification.error({
+              message: 'Create account failed',
+              description: response?.data.message ?? 'Some thing went wrong!',
             });
-            return;
           }
-
-          return notification.error({
-            message: 'Create class failed',
-            description: response?.data.message ?? 'Some thing went wrong!',
+          notification.error({
+            message: 'Create account failed',
+            description: error.message,
           });
-        }
-        notification.error({
-          message: 'Create class failed',
-          description: error.message,
-        });
-      },
-    });
+        },
+      }
+    );
   };
 
   const handleOk = () => {
@@ -109,108 +80,94 @@ export default function CreateAccountModal({
 
   const handleCancel = () => {
     form.resetFields();
-    setSelectedEmails({
-      owner: null,
-      students: [],
-      teachers: [],
-    });
-    setSearchForTeacher(true);
-    setSearchText('');
     setOpen(false);
   };
-
-  const handleSearch = (value: string) => {
-    setSearchText(value);
-  };
-
-  useEffect(() => {
-    const optionsBuilder = (items?: User[]): SelectProps['options'] => {
-      if (!items) {
-        return;
-      }
-      const { owner, students, teachers } = selectedEmails;
-      const selectedList = [...students, ...teachers, owner].filter(
-        (email) => email
-      ) as string[];
-
-      return items
-        .filter(({ id }) => !selectedList.includes(id))
-        .map(({ id, email }) => ({
-          label: email,
-          value: id,
-        }));
-    };
-    setOptions(optionsBuilder(data?.items));
-  }, [data?.items, selectedEmails]);
-
-  useEffect(() => {
-    setOpen(false);
-    setConfirmLoading(false);
-  }, [addClass.isSuccess, setOpen]);
 
   return (
     <Modal
       title={title}
       open={open}
       onOk={handleOk}
+      okText="Create"
       onCancel={handleCancel}
-      confirmLoading={confirmLoading}
+      confirmLoading={createAccount.isPending}
       centered
       destroyOnClose
     >
-      <Form form={form} onFinish={handleSubmit} layout="vertical">
-        <Form
-          className="color-primary-500"
-          form={form}
-          initialValues={{
-            remember: true,
-          }}
-          // onFinish={onFinish}
-        >
-          <div className="w-full flex flex-col justify-between gap-0 sm:flex-row sm:gap-2">
-            <Form.Item
-              className="w-full"
-              name="first_name"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please input your First Name!',
-                },
-              ]}
-            >
-              <Input
-                prefix={<UserOutlined className="site-form-item-icon" />}
-                placeholder="First Name"
-              />
-            </Form.Item>
-            <Form.Item
-              className="w-full"
-              name="last_name"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please input your Last Name!',
-                },
-              ]}
-            >
-              <Input placeholder="Last Name" />
-            </Form.Item>
-          </div>
+      <Form
+        form={form}
+        onFinish={handleSubmit}
+        layout="vertical"
+        initialValues={{ role: USER_ROLE.Student }}
+      >
+        <div className="flex items-center justify-between gap-x-2">
           <Form.Item
-            name="email"
+            className="flex-1"
+            name="first_name"
+            label="First Name"
             rules={[
               {
                 required: true,
-                message: 'Please input your Email!',
+                message: 'Please input your First Name!',
               },
             ]}
           >
-            <Input
-              prefix={<MailOutlined className="site-form-item-icon" />}
-              placeholder="Email"
-            />
+            <Input prefix={<UserOutlined />} placeholder="First Name" />
           </Form.Item>
-        </Form>
+          <Form.Item
+            className="flex-1"
+            name="last_name"
+            label="First Name"
+            rules={[
+              {
+                required: true,
+                message: 'Please input your Last Name!',
+              },
+            ]}
+          >
+            <Input placeholder="Last Name" />
+          </Form.Item>
+        </div>
+        <Form.Item
+          name="email"
+          label="Email"
+          rules={[
+            {
+              required: true,
+              message: 'Please input your Email!',
+            },
+            {
+              type: 'email',
+              message: 'Please input a valid email!',
+            },
+          ]}
+        >
+          <Input prefix={<MailOutlined />} placeholder="Email" />
+        </Form.Item>
+        <Form.Item name="role" label="Role" rules={[{ required: true }]}>
+          <Select placeholder="Choose account's role">
+            <Select.Option value={USER_ROLE.Teacher}>Teacher</Select.Option>
+            <Select.Option value={USER_ROLE.Student}>Student</Select.Option>
+          </Select>
+        </Form.Item>
+        <Form.Item
+          noStyle
+          shouldUpdate={(prevValues, currentValues) =>
+            prevValues.role !== currentValues.role
+          }
+        >
+          {({ getFieldValue }) =>
+            getFieldValue('role') === USER_ROLE.Student ? (
+              <Form.Item
+                name="student_id"
+                label="Student ID"
+                rules={[{ required: true }]}
+              >
+                <Input />
+              </Form.Item>
+            ) : null
+          }
+        </Form.Item>
       </Form>
     </Modal>
   );

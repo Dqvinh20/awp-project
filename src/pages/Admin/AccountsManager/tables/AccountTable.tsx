@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { useMemo, useRef, useState } from 'react';
 
-import Table, { ColumnType, ColumnsType } from 'antd/es/table';
+import Table, { ColumnType, ColumnsType, TableProps } from 'antd/es/table';
 
 import { Avatar, Button, Input, InputRef, Space, Tag } from 'antd';
 
@@ -14,41 +14,48 @@ import Highlighter from 'react-highlight-words';
 import { Link } from 'react-router-dom';
 
 import ToggleBlockAccount from '../button/ToggleBlockAccount';
+import DeleteAccount from '../button/DeleteAccount';
 
 import { USER_ROLE, User } from '@/app/store/server/features/users/interfaces';
 
-interface AccountDataType {
-  key: string;
-  avatar: string;
-  full_name: string;
-  email: string;
-  role: USER_ROLE;
-  isActive: boolean;
-  created_at: string;
-}
+type AccountDataType = Required<
+  Pick<User, 'avatar' | 'full_name' | 'role' | 'email' | 'isActive'>
+> & { key: string; created_at: string };
 
 type AccountDataIndex = keyof AccountDataType;
 
-interface AccountTableProps {
+type AccountTableProps = Pick<
+  TableProps<AccountDataType>,
+  | 'loading'
+  | 'title'
+  | 'footer'
+  | 'bordered'
+  | 'rowClassName'
+  | 'showHeader'
+  | 'summary'
+> & {
   accounts: User[];
-  loading?: boolean;
-}
+};
 
-function AccountTable({ accounts = [], loading }: AccountTableProps) {
+function AccountTable({
+  accounts = [],
+  loading,
+  ...tableProps
+}: AccountTableProps) {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef<InputRef>(null);
 
-  const dataSource = useMemo(
+  const dataSource: AccountDataType[] = useMemo(
     () =>
       accounts.map((user) => ({
         key: user.id,
         avatar: user.avatar,
-        full_name: user.full_name,
+        full_name: user.full_name ?? '',
         email: user.email,
         role: user.role,
-        status: user.isActive,
-        created_at: user.created_at,
+        isActive: user.isActive ?? false,
+        created_at: user.created_at?.toString() ?? '',
       })),
     [accounts]
   );
@@ -224,11 +231,11 @@ function AccountTable({ accounts = [], loading }: AccountTableProps) {
     },
     {
       title: 'Status',
-      dataIndex: 'status',
+      dataIndex: 'isActive',
       align: 'center',
-      render: (_, { status, key }: any) => (
-        <Tag color={status ? 'green' : 'red'} key={`status-${key}`}>
-          {status ? 'Active'.toUpperCase() : 'Blocked'.toUpperCase()}
+      render: (_, { isActive, key }: any) => (
+        <Tag color={isActive ? 'green' : 'red'} key={`isActive-${key}`}>
+          {isActive ? 'Active'.toUpperCase() : 'Blocked'.toUpperCase()}
         </Tag>
       ),
       filters: [
@@ -241,8 +248,8 @@ function AccountTable({ accounts = [], loading }: AccountTableProps) {
           value: false,
         },
       ],
-      onFilter(value, record: any) {
-        return record.status === value;
+      onFilter(value, record) {
+        return record.isActive === value;
       },
     },
     {
@@ -261,9 +268,10 @@ function AccountTable({ accounts = [], loading }: AccountTableProps) {
       key: 'action',
       width: '5%',
       fixed: 'right',
-      render: (_, record: any) => (
+      render: (_, record) => (
         <Space size="middle">
-          <ToggleBlockAccount userId={record.key} isActive={record.status} />
+          <ToggleBlockAccount userId={record.key} isActive={record.isActive} />
+          <DeleteAccount userId={record.key} />
         </Space>
       ),
     },
@@ -284,6 +292,7 @@ function AccountTable({ accounts = [], loading }: AccountTableProps) {
         showTitle: true,
         showTotal: (total, range) => `${range[0]}-${range[1]} of ${total}`,
       }}
+      {...tableProps}
     />
   );
 }

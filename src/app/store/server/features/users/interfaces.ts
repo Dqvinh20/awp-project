@@ -22,11 +22,7 @@ export interface User {
   /** User email. */
   email: string;
   /** User avatar. */
-  avatar?: string;
-  /** User Address.
-   * @see {@link Address}.
-   */
-  address?: Address[];
+  avatar: string;
   /** Created time. */
   created_at?: Date;
   /** Updated time. */
@@ -47,6 +43,11 @@ export type UpdateUserDto = Pick<
   User,
   'id' | 'last_name' | 'first_name' | 'gender' | 'student_id' | 'isActive'
 >;
+
+export type CreateUserDTO = Partial<
+  Pick<User, 'first_name' | 'last_name' | 'student_id'>
+> &
+  Required<Pick<User, 'email' | 'role'>>;
 
 export interface SearchUserEmailParams {
   email: string;

@@ -1,4 +1,5 @@
 import {
+  CreateUserDTO,
   SearchUserEmailParams,
   ToggleBlockAccountDTO,
   UpdateUserDto,
@@ -13,6 +14,16 @@ import { User } from '@/app/store/server/features/users/interfaces';
  * @author Vo Minh Thong <vmthong20@clc.fitus.edu.vn>
  */
 const userService = {
+  /**
+   * Create new user.
+   * @param data - User data.
+   * @returns
+   */
+  async create(data: CreateUserDTO): Promise<User> {
+    const response = await axiosClient.post(`/users`, data);
+    return response.data;
+  },
+
   /**
    * Get user by id.
    * @param id - Get user.
@@ -59,6 +70,17 @@ const userService = {
 
     const response = await axiosClient.get(`/users/${userId}/unblock`);
     return response.data;
+  },
+
+  async deleteUser(userId: string) {
+    const response = await axiosClient.delete(`/users/${userId}`);
+    return response.data;
+  },
+
+  downloadMapStudentIdTemplate() {
+    return axiosClient.get(`/users/template-student-id`, {
+      responseType: 'blob',
+    });
   },
 };
 
