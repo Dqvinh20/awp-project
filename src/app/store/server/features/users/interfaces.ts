@@ -39,6 +39,11 @@ export interface User {
   isEmailConfirmed?: boolean;
 }
 
+export type UpdateUserDto = Pick<
+  User,
+  'id' | 'last_name' | 'first_name' | 'gender' | 'student_id' | 'isActive'
+>;
+
 export type CreateUserDTO = Partial<
   Pick<User, 'first_name' | 'last_name' | 'student_id'>
 > &
