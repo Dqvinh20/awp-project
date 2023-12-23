@@ -4,6 +4,8 @@ import { SearchUserEmailParams, USER_ROLE, User } from './interfaces';
 
 import userService from '@/services/UserService';
 
+export const allUsersQueryKey = ['users'];
+
 /**
  * Get user by id.
  * @param userId - User id.
@@ -17,17 +19,24 @@ export const useGetUser = (userId?: string) =>
   });
 
 /**
+ * Get all users.
+ * @returns
+ */
+export const useGetAllUsers = () =>
+  useQuery<{ count: number; items: User[] }>({
+    queryKey: allUsersQueryKey,
+    queryFn: userService.getAllUsers,
+  });
+
+/**
  * Search for user emails.
  * @param email - Email to search for.
  * @param role - Role user to search for.
  * @returns
  */
-export const useSearchEmails = ({
-  email,
-  role = USER_ROLE.Student,
-}: SearchUserEmailParams) =>
+export const useSearchEmails = ({ email, role }: SearchUserEmailParams) =>
   useQuery({
-    queryKey: ['search', 'email', email],
+    queryKey: ['search', 'email', { email, role }],
     queryFn: () => userService.searchEmails({ email, role }),
     placeholderData: keepPreviousData,
     staleTime: 30000,

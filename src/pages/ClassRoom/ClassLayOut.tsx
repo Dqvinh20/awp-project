@@ -23,6 +23,7 @@ import UnauthImg from '@/assets/error_401.jpg';
 import { useUserRole } from '@/hooks/useUserRole';
 import { USER_ROLE } from '@/app/store/server/features/users/interfaces';
 import useClassGradeReview from '@/hooks/useClassGradeReview';
+import DocumentTitle from '@/components/DocumentTitle';
 
 const { Header, Content } = Layout;
 
@@ -133,6 +134,7 @@ export default function ClassLayOut() {
           },
         }}
       >
+        <DocumentTitle title={classDetail.name} />
         <Layout className=" bg-white m-0 h-full w-full">
           <Header className="twp bg-white p-0 flex justify-between items-center pr-4">
             <Menu

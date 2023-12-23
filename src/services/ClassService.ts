@@ -2,6 +2,7 @@ import {
   AddClassDTO,
   InviteMembersByEmailDTO,
   KickMembersDTO,
+  ToggleActiveClassDTO,
   UpdateClassDTO,
 } from './../app/store/server/features/classroom/interfaces';
 import {
@@ -75,6 +76,16 @@ const ClassRoomService = {
 
   async leaveClass(classId: string) {
     const response = await axiosClient.delete(`/classes/${classId}/leave`);
+    return response.data;
+  },
+
+  async toggleClassActive({ classId, isActive }: ToggleActiveClassDTO) {
+    if (isActive) {
+      const response = await axiosClient.patch(`/classes/${classId}/deactive`);
+      return response.data;
+    }
+
+    const response = await axiosClient.patch(`/classes/${classId}/active`);
     return response.data;
   },
 };

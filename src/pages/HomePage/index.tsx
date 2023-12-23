@@ -7,6 +7,7 @@ import ClassCard from '@/components/Card/ClassCard';
 import { useClassesQuery } from '@/app/store/server/features/classroom/queries';
 import { useGetMyInfo } from '@/app/store/server/features/users/queries';
 import { USER_ROLE } from '@/app/store/server/features/users/interfaces';
+import DocumentTitle from '@/components/DocumentTitle';
 
 // const avatarSrc = 'https://xsgames.co/randomusers/avatar.php?g=pixel';
 // const coverImageSrc =
@@ -21,31 +22,34 @@ function HomePage() {
   if (isSuccess && data?.docs?.length === 0) return <NoContent />;
 
   return (
-    <div className="w-full p-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-x-4 lg:grid-cols-3">
-      {isLoading && (
-        <>
-          <ClassCardSkeleton />
-          <ClassCardSkeleton />
-          <ClassCardSkeleton />
-          <ClassCardSkeleton />
-          <ClassCardSkeleton />
-          <ClassCardSkeleton />
-          <ClassCardSkeleton />
-          <ClassCardSkeleton />
-        </>
-      )}
-      {isSuccess &&
-        data.docs &&
-        data?.docs?.map((classDetail, index) => (
-          <ClassCard
-            key={`class-card-${classDetail.id}-${index}`}
-            {...classDetail}
-            classId={classDetail.id}
-            isTeacher={user?.role === USER_ROLE.Teacher}
-            isOwner={classDetail.owner.id === user?.id}
-          />
-        ))}
-    </div>
+    <>
+      <DocumentTitle title="Home" />
+      <div className="w-full p-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-x-4 lg:grid-cols-3">
+        {isLoading && (
+          <>
+            <ClassCardSkeleton />
+            <ClassCardSkeleton />
+            <ClassCardSkeleton />
+            <ClassCardSkeleton />
+            <ClassCardSkeleton />
+            <ClassCardSkeleton />
+            <ClassCardSkeleton />
+            <ClassCardSkeleton />
+          </>
+        )}
+        {isSuccess &&
+          data.docs &&
+          data?.docs?.map((classDetail, index) => (
+            <ClassCard
+              key={`class-card-${classDetail.id}-${index}`}
+              {...classDetail}
+              classId={classDetail.id}
+              isTeacher={user?.role === USER_ROLE.Teacher}
+              isOwner={classDetail.owner.id === user?.id}
+            />
+          ))}
+      </div>
+    </>
   );
 }
 

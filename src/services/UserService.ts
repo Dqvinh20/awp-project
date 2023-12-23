@@ -1,4 +1,8 @@
-import { SearchUserEmailParams } from './../app/store/server/features/users/interfaces';
+import {
+  CreateUserDTO,
+  SearchUserEmailParams,
+  ToggleBlockAccountDTO,
+} from './../app/store/server/features/users/interfaces';
 
 import axiosClient from '@/app/AxiosClient';
 import { User } from '@/app/store/server/features/users/interfaces';
@@ -10,6 +14,16 @@ import { User } from '@/app/store/server/features/users/interfaces';
  */
 const userService = {
   /**
+   * Create new user.
+   * @param data - User data.
+   * @returns
+   */
+  async create(data: CreateUserDTO): Promise<User> {
+    const response = await axiosClient.post(`/users`, data);
+    return response.data;
+  },
+
+  /**
    * Get user by id.
    * @param id - Get user.
    * @returns
@@ -19,15 +33,15 @@ const userService = {
     return response.data;
   },
 
-  async searchEmails(
-    params: SearchUserEmailParams
-  ): Promise<{ count: number; emails: string[] }> {
-    const response = await axiosClient.get<{ count: number; emails: string[] }>(
-      `/users/search`,
-      {
-        params,
-      }
-    );
+  async getAllUsers() {
+    const response = await axiosClient.get(`/users`);
+    return response.data;
+  },
+
+  async searchEmails(params: SearchUserEmailParams) {
+    const response = await axiosClient.get(`/users/search`, {
+      params,
+    });
     return response.data;
   },
 
@@ -44,6 +58,21 @@ const userService = {
 
   async getMyInfo(): Promise<User> {
     const response = await axiosClient.get<User>(`users/me`);
+    return response.data;
+  },
+
+  async toggleBlockAccount({ userId, isActive }: ToggleBlockAccountDTO) {
+    if (isActive) {
+      const response = await axiosClient.get(`/users/${userId}/block`);
+      return response.data;
+    }
+
+    const response = await axiosClient.get(`/users/${userId}/unblock`);
+    return response.data;
+  },
+
+  async deleteUser(userId: string) {
+    const response = await axiosClient.delete(`/users/${userId}`);
     return response.data;
   },
 };

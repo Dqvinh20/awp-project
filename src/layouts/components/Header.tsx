@@ -7,10 +7,16 @@ import AddNewClass from '@/components/Button/AddNewClass';
 import NotificationButton from '@/components/Button/NotificationButton/NotificationButton';
 
 interface AppHeaderProps {
+  homeUrl?: string;
+  isAdminHeader?: boolean;
   toggleCollapsed: () => void;
 }
 
-function AppHeader({ toggleCollapsed }: AppHeaderProps) {
+function AppHeader({
+  toggleCollapsed,
+  homeUrl = '/home',
+  isAdminHeader = false,
+}: AppHeaderProps) {
   return (
     <Layout.Header
       style={{
@@ -38,14 +44,18 @@ function AppHeader({ toggleCollapsed }: AppHeaderProps) {
             </svg>
           </div>
           <h2 className="antialiased font-semibold hidden sm:block sm:text-lg text-gray-600">
-            <Link className="twp hover:text-gray-900" to="/home">
+            <Link className="twp hover:text-gray-900" to={homeUrl}>
               AWP Classroom
             </Link>
           </h2>
         </Flex>
         <div className="flex flex-column items-center gap-x-2">
-          <AddNewClass />
-          <NotificationButton />
+          {!isAdminHeader && (
+            <>
+              <AddNewClass />
+              <NotificationButton />
+            </>
+          )}
           <AvatarMenu />
         </div>
       </div>
