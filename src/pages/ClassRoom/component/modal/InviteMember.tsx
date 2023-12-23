@@ -15,7 +15,10 @@ import { useMemo, useState } from 'react';
 import { useSearchEmails } from '@/app/store/server/features/users/queries';
 import useDebounce from '@/hooks/useDebounce';
 import useClassDetail from '@/hooks/useClassDetail';
-import { USER_ROLE } from '@/app/store/server/features/users/interfaces';
+import {
+  NormalUserSearchResult,
+  USER_ROLE,
+} from '@/app/store/server/features/users/interfaces';
 import { useInviteMembers } from '@/app/store/server/features/classroom/mutations';
 
 interface InviteMemberProps {
@@ -34,7 +37,7 @@ function InviteMember({ isInviteTeacher = false }: InviteMemberProps) {
     data: emailsSearchResult,
     isLoading,
     isFetching,
-  } = useSearchEmails({
+  } = useSearchEmails<NormalUserSearchResult>({
     email: debouncedSearchQuery,
     role: isInviteTeacher ? USER_ROLE.Teacher : USER_ROLE.Student,
   });

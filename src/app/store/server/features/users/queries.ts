@@ -1,6 +1,6 @@
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
 
-import { SearchUserEmailParams, USER_ROLE, User } from './interfaces';
+import { SearchUserEmailParams, User, UserSearchResult } from './interfaces';
 
 import userService from '@/services/UserService';
 
@@ -34,8 +34,11 @@ export const useGetAllUsers = () =>
  * @param role - Role user to search for.
  * @returns
  */
-export const useSearchEmails = ({ email, role }: SearchUserEmailParams) =>
-  useQuery<{ count: number; emails: string[] }>({
+export const useSearchEmails = <T = UserSearchResult>({
+  email,
+  role,
+}: SearchUserEmailParams) =>
+  useQuery<T>({
     queryKey: ['search', 'email', { email, role }],
     queryFn: () => userService.searchEmails({ email, role }),
     placeholderData: keepPreviousData,

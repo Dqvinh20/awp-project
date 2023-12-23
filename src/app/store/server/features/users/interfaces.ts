@@ -49,6 +49,18 @@ export type CreateUserDTO = Partial<
 > &
   Required<Pick<User, 'email' | 'role'>>;
 
+export interface AdminUserSearchResult {
+  count: number;
+  items: User[];
+}
+
+export interface NormalUserSearchResult {
+  count: number;
+  emails: string[];
+}
+
+export type UserSearchResult = AdminUserSearchResult | NormalUserSearchResult;
+
 export interface SearchUserEmailParams {
   email: string;
   role?: USER_ROLE.Student | USER_ROLE.Teacher;

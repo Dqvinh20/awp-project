@@ -8,7 +8,11 @@ import { AxiosError } from 'axios';
 import { useAddClass } from '@/app/store/server/features/classroom/mutations';
 import { useSearchEmails } from '@/app/store/server/features/users/queries';
 import useDebounce from '@/hooks/useDebounce';
-import { USER_ROLE, User } from '@/app/store/server/features/users/interfaces';
+import {
+  AdminUserSearchResult,
+  USER_ROLE,
+  User,
+} from '@/app/store/server/features/users/interfaces';
 
 interface CreateClassProps {
   title?: string;
@@ -41,10 +45,11 @@ export default function CreateClassAdminModal({
 
   const debouncedSearchQuery = useDebounce(searchText, 300);
 
-  const { data, isLoading, isFetching } = useSearchEmails({
-    email: debouncedSearchQuery,
-    role: searchForTeacher ? USER_ROLE.Teacher : USER_ROLE.Student,
-  });
+  const { data, isLoading, isFetching } =
+    useSearchEmails<AdminUserSearchResult>({
+      email: debouncedSearchQuery,
+      role: searchForTeacher ? USER_ROLE.Teacher : USER_ROLE.Student,
+    });
 
   const handleSubmit = (values: any) => {
     setConfirmLoading(true);
