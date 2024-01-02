@@ -1,4 +1,4 @@
-import { Space, Spin } from 'antd';
+import { Empty, Space, Spin } from 'antd';
 
 import { useSearchParams } from 'react-router-dom';
 
@@ -37,7 +37,16 @@ function GradeReview() {
       )}
       {gradeReviewSuccess && !hasData && (
         <div className="flex justify-center items-center h-full">
-          <div className="text-2xl">No grade review was made</div>
+          {
+            <Empty
+              description={
+                userRole === USER_ROLE.Student
+                  ? 'You have made no grade review request'
+                  : 'No grade review request'
+              }
+              image={Empty.PRESENTED_IMAGE_SIMPLE}
+            />
+          }
         </div>
       )}
       {gradeReviewSuccess && (

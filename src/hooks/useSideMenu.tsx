@@ -124,7 +124,5 @@ export function useSideMenuItems(): MenuProps['items'] {
     getItem(<NavLink to={'home'}>Home</NavLink>, 'home', <HomeOutlined />),
     { type: 'divider' },
     ...loadInnerMenu(),
-    { type: 'divider' },
-    getItem('Setting', 'setting', <SettingOutlined />),
   ];
 }

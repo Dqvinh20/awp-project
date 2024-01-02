@@ -19,4 +19,5 @@ export const useAllGradeReviewsQuery = () =>
   useQuery({
     queryKey: allGradeReviewsKey,
     queryFn: GradeReviewService.getAllGradeReviews,
+    retry: 1,
   });

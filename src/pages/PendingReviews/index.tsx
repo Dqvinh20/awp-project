@@ -1,4 +1,4 @@
-import { Collapse, Space, Spin } from 'antd';
+import { Collapse, Empty, Space, Spin } from 'antd';
 
 import groupBy from 'lodash/groupBy';
 
@@ -51,11 +51,16 @@ function PendingReviews() {
     <>
       <DocumentTitle title={'Pending Reviews'} />
       <div className="h-full w-full flex justify-center items-start p-6">
-        {listLoading && <Spin />}
-        {listSuccess && !hasData && (
-          <div className="flex justify-center items-center h-full">
-            <div className="text-2xl">No grade reviews</div>
+        {listLoading && (
+          <div className="mt-4">
+            <Spin />
           </div>
+        )}
+        {listSuccess && !hasData && (
+          <Empty
+            description="No pending reviews"
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+          />
         )}
         {listSuccess && (
           <Space direction="vertical" className="w-full">

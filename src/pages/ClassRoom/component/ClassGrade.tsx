@@ -1,4 +1,4 @@
-import { Space, Spin } from 'antd';
+import { Empty, Space, Spin } from 'antd';
 
 import { useParams } from 'react-router';
 
@@ -31,9 +31,10 @@ export default function ClassGrade() {
       if (message === 'You are not allowed to view this class grade') {
         return (
           <div className="twp text-center flex items-center justify-center h-full">
-            <p className="text-xl font-medium">
-              Teacher is not finished with the grade
-            </p>
+            <Empty
+              description="You are not allowed to view this class grade"
+              image={Empty.PRESENTED_IMAGE_SIMPLE}
+            />
           </div>
         );
       }
