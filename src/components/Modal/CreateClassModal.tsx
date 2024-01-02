@@ -85,7 +85,12 @@ export default function CreateClassModal({
         </Form.Item>
 
         <Form.Item label="Class Description" name="description">
-          <Input placeholder="Input class description" />
+          <Input.TextArea
+            maxLength={500}
+            rows={3}
+            showCount
+            placeholder="Input class description"
+          />
         </Form.Item>
       </Form>
     </Modal>
