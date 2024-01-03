@@ -171,10 +171,21 @@ export const useSocketNotification = () => {
             });
           }
         );
+
+        socket.on('grade_review.comment', (data) => {
+          queryClient.invalidateQueries({
+            predicate: (query: any) =>
+              query.queryKey[0] === 'notifications' ||
+              (query.queryKey[0] === 'class_grade_review' &&
+                query.queryKey[1] === data.class_id),
+          });
+          showNotfication(data);
+        });
       },
 
       unregistering() {
         socket.off('grade_review.created');
+        socket.off('grade_review.comment');
       },
     };
 
