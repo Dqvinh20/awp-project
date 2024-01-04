@@ -241,6 +241,7 @@ function TeacherGradeReviewItem({
               <Avatar src={myInfo?.avatar} icon={<UserOutlined />} />
             </div>
             <QuillEditor
+              reviewId={id}
               ref={commentInputRef}
               onChange={(value) => {
                 setNewComment(value);

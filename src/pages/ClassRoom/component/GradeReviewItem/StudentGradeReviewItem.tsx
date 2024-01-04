@@ -185,6 +185,7 @@ function StudentGradeReviewItem({
           <div className="w-full px-2 flex flex-row justify-center items-center gap-x-4">
             <Avatar src={myInfo?.avatar} />
             <QuillEditor
+              reviewId={id}
               ref={commentInputRef}
               onChange={(value) => {
                 setNewComment(value);

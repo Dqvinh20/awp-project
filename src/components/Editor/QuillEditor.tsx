@@ -4,9 +4,15 @@ import 'react-quill/dist/quill.snow.css';
 import 'react-quill/dist/quill.bubble.css';
 import { Space } from 'antd';
 
-const CustomToolbar = ({ visibity = false }: { visibity: boolean }) => (
+const CustomToolbar = ({
+  visibity = false,
+  toolbarId = 'quill-toolbar',
+}: {
+  visibity: boolean;
+  toolbarId: string;
+}) => (
   <div
-    id="toolbar"
+    id={toolbarId}
     className={`${visibity ? 'w-full ql-toolbar ql-snow' : 'hidden'}`}
   >
     <Space>
@@ -26,10 +32,11 @@ const CustomToolbar = ({ visibity = false }: { visibity: boolean }) => (
 export type QuillEditorRefType = ReactQuill;
 
 interface QuillEditorProps {
+  reviewId?: string;
   onChange: (value: string) => void;
 }
 
-function QuillEditor({ onChange }: QuillEditorProps, ref: any) {
+function QuillEditor({ onChange, reviewId }: QuillEditorProps, ref: any) {
   const [editorState, setEditorState] = useState({
     value: '',
     isFocused: false,
@@ -48,10 +55,10 @@ function QuillEditor({ onChange }: QuillEditorProps, ref: any) {
     'link',
     'image',
   ];
-
+  const toolbarId = `quill-toolbar-${reviewId}`;
   const customToolbar = {
     toolbar: {
-      container: '#toolbar',
+      container: `#${toolbarId}`,
     },
     clipboard: {
       // toggle to add extra line breaks when pasting HTML:
@@ -96,7 +103,7 @@ function QuillEditor({ onChange }: QuillEditorProps, ref: any) {
         }}
         placeholder="Write your comment here..."
       />
-      <CustomToolbar visibity={editorState.isFocused} />
+      <CustomToolbar toolbarId={toolbarId} visibity={editorState.isFocused} />
     </div>
   );
 }
