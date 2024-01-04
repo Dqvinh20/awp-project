@@ -109,6 +109,11 @@ function GradeTable({
     setDataSource(data);
   }, [data]);
 
+  const finalTotalGrades = useMemo(
+    () => calcFinalGrade(dataSource, columns),
+    [dataSource, columns]
+  );
+
   // Row and cell editing
   // --------------------------------------------------
   const handleAddRow = () => {
@@ -557,6 +562,21 @@ function GradeTable({
 
     const result = [...defaultColumns, ...restCols()];
     if (dataSource.length >= 1 && columns.length >= 1 && isTeacher) {
+      result.push({
+        title: 'Total',
+        dataIndex: 'total',
+        width: '1%',
+        align: 'center',
+        fixed: 'right',
+        render(_: any, record: { key: React.Key; id?: string }) {
+          return parseFloat(
+            finalTotalGrades
+              .find((item: any) => item.student_id === record.key)
+              ?.finalGrade.toFixed(2) ?? '0'
+          );
+        },
+      } as unknown as TableColumn);
+
       result.push({
         title: '',
         dataIndex: 'operation',

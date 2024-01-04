@@ -83,19 +83,18 @@ function NotificationInfinityScroll({
           >
             <List.Item>
               <List.Item.Meta
-                avatar={<Avatar src={item.sender? item.sender.avatar : 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png'} />}
+                avatar={
+                  <Avatar
+                    src={
+                      item.sender
+                        ? item.sender.avatar
+                        : 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png'
+                    }
+                  />
+                }
                 title={
                   <Tooltip title={`View ${item.title}`} placement="topLeft">
-                    <div
-                      className="hover:text-blue-400 line-clamp-1"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleOnClickNotification(item);
-                        navigate(`/class/${item.class}/news`);
-                      }}
-                    >
-                      {item.title}
-                    </div>
+                    <div className="line-clamp-1">{item.title}</div>
                   </Tooltip>
                 }
                 description={
